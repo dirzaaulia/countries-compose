@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+.kotlin
+screen_*.png
+screen.png
+app/release/
+keystore.jks
+

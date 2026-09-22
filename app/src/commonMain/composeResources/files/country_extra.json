@@ -1,0 +1,6936 @@
+{
+  "ABW": {
+    "capital": "Oranjestad",
+    "capitalLat": 12.5,
+    "capitalLng": -69.96666666,
+    "area": 180.0,
+    "landlocked": false,
+    "languages": [
+      "Dutch",
+      "Papiamento"
+    ],
+    "currencies": [
+      "Aruban florin (ƒ • AWG)"
+    ],
+    "demonym": "Aruban",
+    "callingCode": "+297",
+    "tld": ".aw",
+    "timezones": [
+      "UTC-04:00 (America/Aruba)"
+    ],
+    "borders": [],
+    "officialName": "Aruba",
+    "nativeName": "Aruba",
+    "unMember": false
+  },
+  "AFG": {
+    "capital": "Kabul",
+    "capitalLat": 33.0,
+    "capitalLng": 65.0,
+    "area": 652230.0,
+    "landlocked": true,
+    "languages": [
+      "Dari",
+      "Pashto",
+      "Turkmen"
+    ],
+    "currencies": [
+      "Afghan afghani (؋ • AFN)"
+    ],
+    "demonym": "Afghan",
+    "callingCode": "+93",
+    "tld": ".af",
+    "timezones": [
+      "UTC+04:30 (Asia/Kabul)"
+    ],
+    "borders": [
+      "IRN",
+      "PAK",
+      "TKM",
+      "UZB",
+      "TJK",
+      "CHN"
+    ],
+    "officialName": "Islamic Republic of Afghanistan",
+    "nativeName": "جمهوری اسلامی افغانستان",
+    "unMember": true
+  },
+  "AGO": {
+    "capital": "Luanda",
+    "capitalLat": -12.5,
+    "capitalLng": 18.5,
+    "area": 1246700.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "Angolan kwanza (Kz • AOA)"
+    ],
+    "demonym": "Angolan",
+    "callingCode": "+244",
+    "tld": ".ao",
+    "timezones": [
+      "UTC+01:00 (Africa/Luanda)"
+    ],
+    "borders": [
+      "COG",
+      "COD",
+      "ZMB",
+      "NAM"
+    ],
+    "officialName": "Republic of Angola",
+    "nativeName": "República de Angola",
+    "unMember": true
+  },
+  "AIA": {
+    "capital": "The Valley",
+    "capitalLat": 18.25,
+    "capitalLng": -63.16666666,
+    "area": 91.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Anguillan",
+    "callingCode": "+1",
+    "tld": ".ai",
+    "timezones": [
+      "UTC-04:00 (America/Anguilla)"
+    ],
+    "borders": [],
+    "officialName": "Anguilla",
+    "nativeName": "Anguilla",
+    "unMember": false
+  },
+  "ALA": {
+    "capital": "Mariehamn",
+    "capitalLat": 60.116667,
+    "capitalLng": 19.9,
+    "area": 1580.0,
+    "landlocked": false,
+    "languages": [
+      "Swedish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Aland Island",
+    "callingCode": "+358",
+    "tld": ".ax",
+    "timezones": [
+      "UTC+02:00 (Europe/Mariehamn)"
+    ],
+    "borders": [],
+    "officialName": "Åland Islands",
+    "nativeName": "Landskapet Åland",
+    "unMember": false
+  },
+  "ALB": {
+    "capital": "Tirana",
+    "capitalLat": 41.0,
+    "capitalLng": 20.0,
+    "area": 28748.0,
+    "landlocked": false,
+    "languages": [
+      "Albanian"
+    ],
+    "currencies": [
+      "Albanian lek (L • ALL)"
+    ],
+    "demonym": "Albanian ",
+    "callingCode": "+355",
+    "tld": ".al",
+    "timezones": [
+      "UTC+01:00 (Europe/Tirane)"
+    ],
+    "borders": [
+      "MNE",
+      "GRC",
+      "MKD",
+      "UNK"
+    ],
+    "officialName": "Republic of Albania",
+    "nativeName": "Republika e Shqipërisë",
+    "unMember": true
+  },
+  "AND": {
+    "capital": "Andorra la Vella",
+    "capitalLat": 42.5,
+    "capitalLng": 1.5,
+    "area": 468.0,
+    "landlocked": true,
+    "languages": [
+      "Catalan"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Andorran",
+    "callingCode": "+376",
+    "tld": ".ad",
+    "timezones": [
+      "UTC+01:00 (Europe/Andorra)"
+    ],
+    "borders": [
+      "FRA",
+      "ESP"
+    ],
+    "officialName": "Principality of Andorra",
+    "nativeName": "Principat d'Andorra",
+    "unMember": true
+  },
+  "ARE": {
+    "capital": "Abu Dhabi",
+    "capitalLat": 24.0,
+    "capitalLng": 54.0,
+    "area": 83600.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "United Arab Emirates dirham (د.إ • AED)"
+    ],
+    "demonym": "Emirati, Emirian, Emiri",
+    "callingCode": "+971",
+    "tld": ".ae",
+    "timezones": [
+      "UTC+04:00 (Asia/Dubai)"
+    ],
+    "borders": [
+      "OMN",
+      "SAU"
+    ],
+    "officialName": "United Arab Emirates",
+    "nativeName": "الإمارات العربية المتحدة",
+    "unMember": true
+  },
+  "ARG": {
+    "capital": "Buenos Aires",
+    "capitalLat": -34.0,
+    "capitalLng": -64.0,
+    "area": 2780400.0,
+    "landlocked": false,
+    "languages": [
+      "Guaraní",
+      "Spanish"
+    ],
+    "currencies": [
+      "Argentine peso ($ • ARS)"
+    ],
+    "demonym": "Argentine",
+    "callingCode": "+54",
+    "tld": ".ar",
+    "timezones": [
+      "UTC-03:00 (America/Argentina/Buenos_Aires)",
+      "UTC-03:00 (America/Argentina/Catamarca)",
+      "UTC-03:00 (America/Argentina/Cordoba)",
+      "UTC-03:00 (America/Argentina/Jujuy)",
+      "UTC-03:00 (America/Argentina/La_Rioja)",
+      "UTC-03:00 (America/Argentina/Mendoza)",
+      "UTC-03:00 (America/Argentina/Rio_Gallegos)",
+      "UTC-03:00 (America/Argentina/Salta)",
+      "UTC-03:00 (America/Argentina/San_Juan)",
+      "UTC-03:00 (America/Argentina/San_Luis)",
+      "UTC-03:00 (America/Argentina/Tucuman)",
+      "UTC-03:00 (America/Argentina/Ushuaia)"
+    ],
+    "borders": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "PRY",
+      "URY"
+    ],
+    "officialName": "Argentine Republic",
+    "nativeName": "Argentine Republic",
+    "unMember": true
+  },
+  "ARM": {
+    "capital": "Yerevan",
+    "capitalLat": 40.0,
+    "capitalLng": 45.0,
+    "area": 29743.0,
+    "landlocked": true,
+    "languages": [
+      "Armenian"
+    ],
+    "currencies": [
+      "Armenian dram (֏ • AMD)"
+    ],
+    "demonym": "Armenian",
+    "callingCode": "+374",
+    "tld": ".am",
+    "timezones": [
+      "UTC+04:00 (Asia/Yerevan)"
+    ],
+    "borders": [
+      "AZE",
+      "GEO",
+      "IRN",
+      "TUR"
+    ],
+    "officialName": "Republic of Armenia",
+    "nativeName": "Հայաստանի Հանրապետություն",
+    "unMember": true
+  },
+  "ASM": {
+    "capital": "Pago Pago",
+    "capitalLat": -14.33333333,
+    "capitalLng": -170.0,
+    "area": 199.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Samoan"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "American Samoan",
+    "callingCode": "+1",
+    "tld": ".as",
+    "timezones": [
+      "UTC-11:00 (Pacific/Pago_Pago)"
+    ],
+    "borders": [],
+    "officialName": "American Samoa",
+    "nativeName": "American Samoa",
+    "unMember": false
+  },
+  "ATA": {
+    "capital": "N/A",
+    "capitalLat": -74.65,
+    "capitalLng": 4.48,
+    "area": 14000000.0,
+    "landlocked": false,
+    "languages": [],
+    "currencies": [
+      "Antarctican dollar ($ • AAD)"
+    ],
+    "demonym": "Antarctic",
+    "callingCode": "+672",
+    "tld": ".aq",
+    "timezones": [
+      "UTC+11:00 (Antarctica/Casey)",
+      "UTC+07:00 (Antarctica/Davis)",
+      "UTC+10:00 (Antarctica/DumontDUrville)",
+      "UTC+05:00 (Antarctica/Mawson)",
+      "UTC+13:00 (Antarctica/McMurdo)",
+      "UTC-03:00 (Antarctica/Palmer)",
+      "UTC-03:00 (Antarctica/Rothera)",
+      "UTC+03:00 (Antarctica/Syowa)",
+      "UTC±00 (Antarctica/Troll)",
+      "UTC+06:00 (Antarctica/Vostok)"
+    ],
+    "borders": [],
+    "officialName": "Antarctica",
+    "nativeName": "Antarctica",
+    "unMember": false
+  },
+  "ATF": {
+    "capital": "Port-aux-Français",
+    "capitalLat": -49.25,
+    "capitalLng": 69.167,
+    "area": 7747.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "French Southern Territories",
+    "callingCode": "+262",
+    "tld": ".tf",
+    "timezones": [
+      "UTC+05:00 (Indian/Kerguelen)"
+    ],
+    "borders": [],
+    "officialName": "Territory of the French Southern and Antarctic Lands",
+    "nativeName": "Territoire des Terres australes et antarctiques françaises",
+    "unMember": false
+  },
+  "ATG": {
+    "capital": "Saint John's",
+    "capitalLat": 17.05,
+    "capitalLng": -61.8,
+    "area": 442.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Antiguan or Barbudan",
+    "callingCode": "+1",
+    "tld": ".ag",
+    "timezones": [
+      "UTC-04:00 (America/Antigua)"
+    ],
+    "borders": [],
+    "officialName": "Antigua and Barbuda",
+    "nativeName": "Antigua and Barbuda",
+    "unMember": true
+  },
+  "AUS": {
+    "capital": "Canberra",
+    "capitalLat": -27.0,
+    "capitalLng": 133.0,
+    "area": 7692024.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Australian",
+    "callingCode": "+61",
+    "tld": ".au",
+    "timezones": [
+      "UTC+11:00 (Antarctica/Macquarie)",
+      "UTC+10:30 (Australia/Adelaide)",
+      "UTC+10:00 (Australia/Brisbane)",
+      "UTC+10:30 (Australia/Broken_Hill)",
+      "UTC+11:00 (Australia/Currie)",
+      "UTC+09:30 (Australia/Darwin)",
+      "UTC+08:45 (Australia/Eucla)",
+      "UTC+11:00 (Australia/Hobart)",
+      "UTC+10:00 (Australia/Lindeman)",
+      "UTC+11:00 (Australia/Lord_Howe)",
+      "UTC+11:00 (Australia/Melbourne)",
+      "UTC+08:00 (Australia/Perth)",
+      "UTC+11:00 (Australia/Sydney)"
+    ],
+    "borders": [],
+    "officialName": "Commonwealth of Australia",
+    "nativeName": "Commonwealth of Australia",
+    "unMember": true
+  },
+  "AUT": {
+    "capital": "Vienna",
+    "capitalLat": 47.33333333,
+    "capitalLng": 13.33333333,
+    "area": 83871.0,
+    "landlocked": true,
+    "languages": [
+      "Austro-Bavarian German"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Austrian",
+    "callingCode": "+43",
+    "tld": ".at",
+    "timezones": [
+      "UTC+01:00 (Europe/Vienna)"
+    ],
+    "borders": [
+      "CZE",
+      "DEU",
+      "HUN",
+      "ITA",
+      "LIE",
+      "SVK",
+      "SVN",
+      "CHE"
+    ],
+    "officialName": "Republic of Austria",
+    "nativeName": "Republik Österreich",
+    "unMember": true
+  },
+  "AZE": {
+    "capital": "Baku",
+    "capitalLat": 40.5,
+    "capitalLng": 47.5,
+    "area": 86600.0,
+    "landlocked": true,
+    "languages": [
+      "Azerbaijani",
+      "Russian"
+    ],
+    "currencies": [
+      "Azerbaijani manat (₼ • AZN)"
+    ],
+    "demonym": "Azerbaijani, Azeri",
+    "callingCode": "+994",
+    "tld": ".az",
+    "timezones": [
+      "UTC+04:00 (Asia/Baku)"
+    ],
+    "borders": [
+      "ARM",
+      "GEO",
+      "IRN",
+      "RUS",
+      "TUR"
+    ],
+    "officialName": "Republic of Azerbaijan",
+    "nativeName": "Azərbaycan Respublikası",
+    "unMember": true
+  },
+  "BDI": {
+    "capital": "Gitega",
+    "capitalLat": -3.5,
+    "capitalLng": 30.0,
+    "area": 27834.0,
+    "landlocked": true,
+    "languages": [
+      "French",
+      "Kirundi"
+    ],
+    "currencies": [
+      "Burundian franc (Fr • BIF)"
+    ],
+    "demonym": "Burundian",
+    "callingCode": "+257",
+    "tld": ".bi",
+    "timezones": [
+      "UTC+02:00 (Africa/Bujumbura)"
+    ],
+    "borders": [
+      "COD",
+      "RWA",
+      "TZA"
+    ],
+    "officialName": "Republic of Burundi",
+    "nativeName": "République du Burundi",
+    "unMember": true
+  },
+  "BEL": {
+    "capital": "Brussels",
+    "capitalLat": 50.83333333,
+    "capitalLng": 4.0,
+    "area": 30528.0,
+    "landlocked": false,
+    "languages": [
+      "German",
+      "French",
+      "Dutch"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Belgian",
+    "callingCode": "+32",
+    "tld": ".be",
+    "timezones": [
+      "UTC+01:00 (Europe/Brussels)"
+    ],
+    "borders": [
+      "FRA",
+      "DEU",
+      "LUX",
+      "NLD"
+    ],
+    "officialName": "Kingdom of Belgium",
+    "nativeName": "Königreich Belgien",
+    "unMember": true
+  },
+  "BEN": {
+    "capital": "Porto-Novo",
+    "capitalLat": 9.5,
+    "capitalLng": 2.25,
+    "area": 112622.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Beninese, Beninois",
+    "callingCode": "+229",
+    "tld": ".bj",
+    "timezones": [
+      "UTC+01:00 (Africa/Porto-Novo)"
+    ],
+    "borders": [
+      "BFA",
+      "NER",
+      "NGA",
+      "TGO"
+    ],
+    "officialName": "Republic of Benin",
+    "nativeName": "République du Bénin",
+    "unMember": true
+  },
+  "BFA": {
+    "capital": "Ouagadougou",
+    "capitalLat": 13.0,
+    "capitalLng": -2.0,
+    "area": 272967.0,
+    "landlocked": true,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Burkinabe",
+    "callingCode": "+226",
+    "tld": ".bf",
+    "timezones": [
+      "UTC±00 (Africa/Ouagadougou)"
+    ],
+    "borders": [
+      "BEN",
+      "CIV",
+      "GHA",
+      "MLI",
+      "NER",
+      "TGO"
+    ],
+    "officialName": "Burkina Faso",
+    "nativeName": "République du Burkina",
+    "unMember": true
+  },
+  "BGD": {
+    "capital": "Dhaka",
+    "capitalLat": 24.0,
+    "capitalLng": 90.0,
+    "area": 147570.0,
+    "landlocked": false,
+    "languages": [
+      "Bengali"
+    ],
+    "currencies": [
+      "Bangladeshi taka (৳ • BDT)"
+    ],
+    "demonym": "Bangladeshi",
+    "callingCode": "+880",
+    "tld": ".bd",
+    "timezones": [
+      "UTC+06:00 (Asia/Dhaka)"
+    ],
+    "borders": [
+      "MMR",
+      "IND"
+    ],
+    "officialName": "People's Republic of Bangladesh",
+    "nativeName": "বাংলাদেশ গণপ্রজাতন্ত্রী",
+    "unMember": true
+  },
+  "BGR": {
+    "capital": "Sofia",
+    "capitalLat": 43.0,
+    "capitalLng": 25.0,
+    "area": 110879.0,
+    "landlocked": false,
+    "languages": [
+      "Bulgarian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Bulgarian",
+    "callingCode": "+359",
+    "tld": ".bg",
+    "timezones": [
+      "UTC+02:00 (Europe/Sofia)"
+    ],
+    "borders": [
+      "GRC",
+      "MKD",
+      "ROU",
+      "SRB",
+      "TUR"
+    ],
+    "officialName": "Republic of Bulgaria",
+    "nativeName": "Република България",
+    "unMember": true
+  },
+  "BHR": {
+    "capital": "Manama",
+    "capitalLat": 26.0,
+    "capitalLng": 50.55,
+    "area": 765.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Bahraini dinar (.د.ب • BHD)"
+    ],
+    "demonym": "Bahraini",
+    "callingCode": "+973",
+    "tld": ".bh",
+    "timezones": [
+      "UTC+03:00 (Asia/Bahrain)"
+    ],
+    "borders": [],
+    "officialName": "Kingdom of Bahrain",
+    "nativeName": "مملكة البحرين",
+    "unMember": true
+  },
+  "BHS": {
+    "capital": "Nassau",
+    "capitalLat": 24.25,
+    "capitalLng": -76.0,
+    "area": 13943.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Bahamian dollar ($ • BSD)",
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Bahamian",
+    "callingCode": "+1",
+    "tld": ".bs",
+    "timezones": [
+      "UTC-05:00 (America/Nassau)"
+    ],
+    "borders": [],
+    "officialName": "Commonwealth of the Bahamas",
+    "nativeName": "Commonwealth of the Bahamas",
+    "unMember": true
+  },
+  "BIH": {
+    "capital": "Sarajevo",
+    "capitalLat": 44.0,
+    "capitalLng": 18.0,
+    "area": 51209.0,
+    "landlocked": false,
+    "languages": [
+      "Bosnian",
+      "Croatian",
+      "Serbian"
+    ],
+    "currencies": [
+      "Bosnia and Herzegovina convertible mark (KM • BAM)"
+    ],
+    "demonym": "Bosnian or Herzegovinian",
+    "callingCode": "+387",
+    "tld": ".ba",
+    "timezones": [
+      "UTC+01:00 (Europe/Sarajevo)"
+    ],
+    "borders": [
+      "HRV",
+      "MNE",
+      "SRB"
+    ],
+    "officialName": "Bosnia and Herzegovina",
+    "nativeName": "Bosna i Hercegovina",
+    "unMember": true
+  },
+  "BLM": {
+    "capital": "Gustavia",
+    "capitalLat": 18.5,
+    "capitalLng": -63.41666666,
+    "area": 21.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Barthelemois",
+    "callingCode": "+590",
+    "tld": ".bl",
+    "timezones": [
+      "UTC-04:00 (America/St_Barthelemy)"
+    ],
+    "borders": [],
+    "officialName": "Collectivity of Saint Barthélemy",
+    "nativeName": "Collectivité de Saint-Barthélemy",
+    "unMember": false
+  },
+  "SHN": {
+    "capital": "Jamestown",
+    "capitalLat": -15.95,
+    "capitalLng": -5.7,
+    "area": 394.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Pound sterling (£ • GBP)",
+      "Saint Helena pound (£ • SHP)"
+    ],
+    "demonym": "Saint Helenian",
+    "callingCode": "+290",
+    "tld": ".sh",
+    "timezones": [
+      "UTC±00 (Atlantic/St_Helena)"
+    ],
+    "borders": [],
+    "officialName": "Saint Helena, Ascension and Tristan da Cunha",
+    "nativeName": "Saint Helena, Ascension and Tristan da Cunha",
+    "unMember": false
+  },
+  "BLR": {
+    "capital": "Minsk",
+    "capitalLat": 53.0,
+    "capitalLng": 28.0,
+    "area": 207600.0,
+    "landlocked": true,
+    "languages": [
+      "Belarusian",
+      "Russian"
+    ],
+    "currencies": [
+      "Belarusian ruble (Br • BYN)"
+    ],
+    "demonym": "Belarusian",
+    "callingCode": "+375",
+    "tld": ".by",
+    "timezones": [
+      "UTC+03:00 (Europe/Minsk)"
+    ],
+    "borders": [
+      "LVA",
+      "LTU",
+      "POL",
+      "RUS",
+      "UKR"
+    ],
+    "officialName": "Republic of Belarus",
+    "nativeName": "Рэспубліка Беларусь",
+    "unMember": true
+  },
+  "BLZ": {
+    "capital": "Belmopan",
+    "capitalLat": 17.25,
+    "capitalLng": -88.75,
+    "area": 22966.0,
+    "landlocked": false,
+    "languages": [
+      "Belizean Creole",
+      "English",
+      "Spanish"
+    ],
+    "currencies": [
+      "Belize dollar ($ • BZD)"
+    ],
+    "demonym": "Belizean",
+    "callingCode": "+501",
+    "tld": ".bz",
+    "timezones": [
+      "UTC-06:00 (America/Belize)"
+    ],
+    "borders": [
+      "GTM",
+      "MEX"
+    ],
+    "officialName": "Belize",
+    "nativeName": "Belize",
+    "unMember": true
+  },
+  "BMU": {
+    "capital": "Hamilton",
+    "capitalLat": 32.33333333,
+    "capitalLng": -64.75,
+    "area": 54.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Bermudian dollar ($ • BMD)"
+    ],
+    "demonym": "Bermudian, Bermudan",
+    "callingCode": "+1",
+    "tld": ".bm",
+    "timezones": [
+      "UTC-04:00 (Atlantic/Bermuda)"
+    ],
+    "borders": [],
+    "officialName": "Bermuda",
+    "nativeName": "Bermuda",
+    "unMember": false
+  },
+  "BOL": {
+    "capital": "Sucre",
+    "capitalLat": -17.0,
+    "capitalLng": -65.0,
+    "area": 1098581.0,
+    "landlocked": true,
+    "languages": [
+      "Aymara",
+      "Guaraní",
+      "Quechua",
+      "Spanish"
+    ],
+    "currencies": [
+      "Bolivian boliviano (Bs. • BOB)"
+    ],
+    "demonym": "Bolivian",
+    "callingCode": "+591",
+    "tld": ".bo",
+    "timezones": [
+      "UTC-04:00 (America/La_Paz)"
+    ],
+    "borders": [
+      "ARG",
+      "BRA",
+      "CHL",
+      "PRY",
+      "PER"
+    ],
+    "officialName": "Plurinational State of Bolivia",
+    "nativeName": "Wuliwya Suyu",
+    "unMember": true
+  },
+  "BES": {
+    "capital": "Kralendijk",
+    "capitalLat": 12.15,
+    "capitalLng": -68.266667,
+    "area": 328.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Dutch",
+      "Papiamento"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Bonaire",
+    "callingCode": "+599",
+    "tld": ".an",
+    "timezones": [
+      "UTC-04:00 (America/Kralendijk)"
+    ],
+    "borders": [],
+    "officialName": "Bonaire, Sint Eustatius and Saba",
+    "nativeName": "Bonaire, Sint Eustatius en Saba",
+    "unMember": false
+  },
+  "BRA": {
+    "capital": "Brasília",
+    "capitalLat": -10.0,
+    "capitalLng": -55.0,
+    "area": 8515767.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "Brazilian real (R$ • BRL)"
+    ],
+    "demonym": "Brazilian",
+    "callingCode": "+55",
+    "tld": ".br",
+    "timezones": [
+      "UTC-03:00 (America/Araguaina)",
+      "UTC-03:00 (America/Bahia)",
+      "UTC-03:00 (America/Belem)",
+      "UTC-04:00 (America/Boa_Vista)",
+      "UTC-04:00 (America/Campo_Grande)",
+      "UTC-04:00 (America/Cuiaba)",
+      "UTC-05:00 (America/Eirunepe)",
+      "UTC-03:00 (America/Fortaleza)",
+      "UTC-03:00 (America/Maceio)",
+      "UTC-04:00 (America/Manaus)",
+      "UTC-02:00 (America/Noronha)",
+      "UTC-04:00 (America/Porto_Velho)",
+      "UTC-03:00 (America/Recife)",
+      "UTC-05:00 (America/Rio_Branco)",
+      "UTC-03:00 (America/Santarem)",
+      "UTC-03:00 (America/Sao_Paulo)"
+    ],
+    "borders": [
+      "ARG",
+      "BOL",
+      "COL",
+      "GUF",
+      "GUY",
+      "PRY",
+      "PER",
+      "SUR",
+      "URY",
+      "VEN"
+    ],
+    "officialName": "Federative Republic of Brazil",
+    "nativeName": "República Federativa do Brasil",
+    "unMember": true
+  },
+  "BRB": {
+    "capital": "Bridgetown",
+    "capitalLat": 13.16666666,
+    "capitalLng": -59.53333333,
+    "area": 430.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Barbadian dollar ($ • BBD)"
+    ],
+    "demonym": "Barbadian",
+    "callingCode": "+1",
+    "tld": ".bb",
+    "timezones": [
+      "UTC-04:00 (America/Barbados)"
+    ],
+    "borders": [],
+    "officialName": "Barbados",
+    "nativeName": "Barbados",
+    "unMember": true
+  },
+  "BRN": {
+    "capital": "Bandar Seri Begawan",
+    "capitalLat": 4.5,
+    "capitalLng": 114.66666666,
+    "area": 5765.0,
+    "landlocked": false,
+    "languages": [
+      "Malay"
+    ],
+    "currencies": [
+      "Brunei dollar ($ • BND)",
+      "Singapore dollar ($ • SGD)"
+    ],
+    "demonym": "Bruneian",
+    "callingCode": "+673",
+    "tld": ".bn",
+    "timezones": [
+      "UTC+08:00 (Asia/Brunei)"
+    ],
+    "borders": [
+      "MYS"
+    ],
+    "officialName": "Nation of Brunei, Abode of Peace",
+    "nativeName": "Nation of Brunei, Abode Damai",
+    "unMember": true
+  },
+  "BTN": {
+    "capital": "Thimphu",
+    "capitalLat": 27.5,
+    "capitalLng": 90.5,
+    "area": 38394.0,
+    "landlocked": true,
+    "languages": [
+      "Dzongkha"
+    ],
+    "currencies": [
+      "Bhutanese ngultrum (Nu. • BTN)",
+      "Indian rupee (₹ • INR)"
+    ],
+    "demonym": "Bhutanese",
+    "callingCode": "+975",
+    "tld": ".bt",
+    "timezones": [
+      "UTC+06:00 (Asia/Thimphu)"
+    ],
+    "borders": [
+      "CHN",
+      "IND"
+    ],
+    "officialName": "Kingdom of Bhutan",
+    "nativeName": "འབྲུག་རྒྱལ་ཁབ་",
+    "unMember": true
+  },
+  "BVT": {
+    "capital": "N/A",
+    "capitalLat": -54.43333333,
+    "capitalLng": 3.4,
+    "area": 49.0,
+    "landlocked": false,
+    "languages": [
+      "Norwegian"
+    ],
+    "currencies": [
+      "Norwegian krone (ko • NOK)"
+    ],
+    "demonym": "Bouvet Island",
+    "callingCode": "+0055",
+    "tld": ".bv",
+    "timezones": [
+      "UTC+01:00 (Europe/Oslo)"
+    ],
+    "borders": [],
+    "officialName": "Bouvet Island",
+    "nativeName": "Bouvetøya",
+    "unMember": false
+  },
+  "BWA": {
+    "capital": "Gaborone",
+    "capitalLat": -22.0,
+    "capitalLng": 24.0,
+    "area": 582000.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "Tswana"
+    ],
+    "currencies": [
+      "Botswana pula (P • BWP)"
+    ],
+    "demonym": "Motswana, Botswanan",
+    "callingCode": "+267",
+    "tld": ".bw",
+    "timezones": [
+      "UTC+02:00 (Africa/Gaborone)"
+    ],
+    "borders": [
+      "NAM",
+      "ZAF",
+      "ZMB",
+      "ZWE"
+    ],
+    "officialName": "Republic of Botswana",
+    "nativeName": "Republic of Botswana",
+    "unMember": true
+  },
+  "CAF": {
+    "capital": "Bangui",
+    "capitalLat": 7.0,
+    "capitalLng": 21.0,
+    "area": 622984.0,
+    "landlocked": true,
+    "languages": [
+      "French",
+      "Sango"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Central African",
+    "callingCode": "+236",
+    "tld": ".cf",
+    "timezones": [
+      "UTC+01:00 (Africa/Bangui)"
+    ],
+    "borders": [
+      "CMR",
+      "TCD",
+      "COD",
+      "COG",
+      "SSD",
+      "SDN"
+    ],
+    "officialName": "Central African Republic",
+    "nativeName": "République centrafricaine",
+    "unMember": true
+  },
+  "CAN": {
+    "capital": "Ottawa",
+    "capitalLat": 60.0,
+    "capitalLng": -95.0,
+    "area": 9984670.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French"
+    ],
+    "currencies": [
+      "Canadian dollar ($ • CAD)"
+    ],
+    "demonym": "Canadian",
+    "callingCode": "+1",
+    "tld": ".ca",
+    "timezones": [
+      "UTC-05:00 (America/Atikokan)",
+      "UTC-04:00 (America/Blanc-Sablon)",
+      "UTC-07:00 (America/Cambridge_Bay)",
+      "UTC-07:00 (America/Creston)",
+      "UTC-07:00 (America/Dawson)",
+      "UTC-07:00 (America/Dawson_Creek)",
+      "UTC-07:00 (America/Edmonton)",
+      "UTC-07:00 (America/Fort_Nelson)",
+      "UTC-04:00 (America/Glace_Bay)",
+      "UTC-04:00 (America/Goose_Bay)",
+      "UTC-04:00 (America/Halifax)",
+      "UTC-07:00 (America/Inuvik)",
+      "UTC-05:00 (America/Iqaluit)",
+      "UTC-04:00 (America/Moncton)",
+      "UTC-05:00 (America/Nipigon)",
+      "UTC-05:00 (America/Pangnirtung)",
+      "UTC-06:00 (America/Rainy_River)",
+      "UTC-06:00 (America/Rankin_Inlet)",
+      "UTC-06:00 (America/Regina)",
+      "UTC-06:00 (America/Resolute)",
+      "UTC-03:30 (America/St_Johns)",
+      "UTC-06:00 (America/Swift_Current)",
+      "UTC-05:00 (America/Thunder_Bay)",
+      "UTC-05:00 (America/Toronto)",
+      "UTC-08:00 (America/Vancouver)",
+      "UTC-07:00 (America/Whitehorse)",
+      "UTC-06:00 (America/Winnipeg)",
+      "UTC-07:00 (America/Yellowknife)"
+    ],
+    "borders": [
+      "USA"
+    ],
+    "officialName": "Canada",
+    "nativeName": "Canada",
+    "unMember": true
+  },
+  "CCK": {
+    "capital": "West Island",
+    "capitalLat": -12.5,
+    "capitalLng": 96.83333333,
+    "area": 14.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Cocos Island",
+    "callingCode": "+61",
+    "tld": ".cc",
+    "timezones": [
+      "UTC+06:30 (Indian/Cocos)"
+    ],
+    "borders": [],
+    "officialName": "Territory of the Cocos (Keeling) Islands",
+    "nativeName": "Territory of the Cocos (Keeling) Islands",
+    "unMember": false
+  },
+  "CHE": {
+    "capital": "Bern",
+    "capitalLat": 47.0,
+    "capitalLng": 8.0,
+    "area": 41284.0,
+    "landlocked": true,
+    "languages": [
+      "French",
+      "Swiss German",
+      "Italian",
+      "Romansh"
+    ],
+    "currencies": [
+      "Swiss franc (Fr. • CHF)"
+    ],
+    "demonym": "Swiss",
+    "callingCode": "+41",
+    "tld": ".ch",
+    "timezones": [
+      "UTC+01:00 (Europe/Zurich)"
+    ],
+    "borders": [
+      "AUT",
+      "FRA",
+      "ITA",
+      "LIE",
+      "DEU"
+    ],
+    "officialName": "Swiss Confederation",
+    "nativeName": "Confédération suisse",
+    "unMember": true
+  },
+  "CHL": {
+    "capital": "Santiago",
+    "capitalLat": -30.0,
+    "capitalLng": -71.0,
+    "area": 756102.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Chilean peso ($ • CLP)"
+    ],
+    "demonym": "Chilean",
+    "callingCode": "+56",
+    "tld": ".cl",
+    "timezones": [
+      "UTC-03:00 (America/Punta_Arenas)",
+      "UTC-03:00 (America/Santiago)",
+      "UTC-05:00 (Pacific/Easter)",
+      "UTC-03:00 (America/Coyhaique)"
+    ],
+    "borders": [
+      "ARG",
+      "BOL",
+      "PER"
+    ],
+    "officialName": "Republic of Chile",
+    "nativeName": "República de Chile",
+    "unMember": true
+  },
+  "CHN": {
+    "capital": "Beijing",
+    "capitalLat": 35.0,
+    "capitalLng": 105.0,
+    "area": 9706961.0,
+    "landlocked": false,
+    "languages": [
+      "Chinese"
+    ],
+    "currencies": [
+      "Chinese yuan (¥ • CNY)"
+    ],
+    "demonym": "Chinese",
+    "callingCode": "+86",
+    "tld": ".cn",
+    "timezones": [
+      "UTC+08:00 (Asia/Shanghai)",
+      "UTC+06:00 (Asia/Urumqi)"
+    ],
+    "borders": [
+      "AFG",
+      "BTN",
+      "MMR",
+      "HKG",
+      "IND",
+      "KAZ",
+      "NPL",
+      "PRK",
+      "KGZ",
+      "LAO",
+      "MAC",
+      "MNG",
+      "PAK",
+      "RUS",
+      "TJK",
+      "VNM"
+    ],
+    "officialName": "People's Republic of China",
+    "nativeName": "中华人民共和国",
+    "unMember": true
+  },
+  "CIV": {
+    "capital": "Yamoussoukro",
+    "capitalLat": 8.0,
+    "capitalLng": -5.0,
+    "area": 322463.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Ivorian",
+    "callingCode": "+225",
+    "tld": ".ci",
+    "timezones": [
+      "UTC±00 (Africa/Abidjan)"
+    ],
+    "borders": [
+      "BFA",
+      "GHA",
+      "GIN",
+      "LBR",
+      "MLI"
+    ],
+    "officialName": "Republic of Côte d'Ivoire",
+    "nativeName": "République de Côte d'Ivoire",
+    "unMember": true
+  },
+  "CMR": {
+    "capital": "Yaoundé",
+    "capitalLat": 6.0,
+    "capitalLng": 12.0,
+    "area": 475442.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Cameroonian",
+    "callingCode": "+237",
+    "tld": ".cm",
+    "timezones": [
+      "UTC+01:00 (Africa/Douala)"
+    ],
+    "borders": [
+      "CAF",
+      "TCD",
+      "COG",
+      "GNQ",
+      "GAB",
+      "NGA"
+    ],
+    "officialName": "Republic of Cameroon",
+    "nativeName": "Republic of Cameroon",
+    "unMember": true
+  },
+  "COD": {
+    "capital": "Kinshasa",
+    "capitalLat": 0.0,
+    "capitalLng": 25.0,
+    "area": 2344858.0,
+    "landlocked": false,
+    "languages": [
+      "French",
+      "Kikongo",
+      "Lingala",
+      "Tshiluba",
+      "Swahili"
+    ],
+    "currencies": [
+      "Congolese franc (FC • CDF)"
+    ],
+    "demonym": "Congolese",
+    "callingCode": "+243",
+    "tld": ".cd",
+    "timezones": [
+      "UTC+01:00 (Africa/Kinshasa)",
+      "UTC+02:00 (Africa/Lubumbashi)"
+    ],
+    "borders": [
+      "AGO",
+      "BDI",
+      "CAF",
+      "COG",
+      "RWA",
+      "SSD",
+      "TZA",
+      "UGA",
+      "ZMB"
+    ],
+    "officialName": "Democratic Republic of the Congo",
+    "nativeName": "République démocratique du Congo",
+    "unMember": true
+  },
+  "COG": {
+    "capital": "Brazzaville",
+    "capitalLat": -1.0,
+    "capitalLng": 15.0,
+    "area": 342000.0,
+    "landlocked": false,
+    "languages": [
+      "French",
+      "Kikongo",
+      "Lingala"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Congolese",
+    "callingCode": "+242",
+    "tld": ".cg",
+    "timezones": [
+      "UTC+01:00 (Africa/Brazzaville)"
+    ],
+    "borders": [
+      "AGO",
+      "CMR",
+      "CAF",
+      "COD",
+      "GAB"
+    ],
+    "officialName": "Republic of the Congo",
+    "nativeName": "République du Congo",
+    "unMember": true
+  },
+  "COK": {
+    "capital": "Avarua",
+    "capitalLat": -21.23333333,
+    "capitalLng": -159.76666666,
+    "area": 236.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Cook Islands Māori"
+    ],
+    "currencies": [
+      "Cook Islands dollar ($ • CKD)",
+      "New Zealand dollar ($ • NZD)"
+    ],
+    "demonym": "Cook Island",
+    "callingCode": "+682",
+    "tld": ".ck",
+    "timezones": [
+      "UTC-10:00 (Pacific/Rarotonga)"
+    ],
+    "borders": [],
+    "officialName": "Cook Islands",
+    "nativeName": "Cook Islands",
+    "unMember": false
+  },
+  "COL": {
+    "capital": "Bogotá",
+    "capitalLat": 4.0,
+    "capitalLng": -72.0,
+    "area": 1141748.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Colombian peso ($ • COP)"
+    ],
+    "demonym": "Colombian",
+    "callingCode": "+57",
+    "tld": ".co",
+    "timezones": [
+      "UTC-05:00 (America/Bogota)"
+    ],
+    "borders": [
+      "BRA",
+      "ECU",
+      "PAN",
+      "PER",
+      "VEN"
+    ],
+    "officialName": "Republic of Colombia",
+    "nativeName": "República de Colombia",
+    "unMember": true
+  },
+  "COM": {
+    "capital": "Moroni",
+    "capitalLat": -12.16666666,
+    "capitalLng": 44.25,
+    "area": 1862.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "French",
+      "Comorian"
+    ],
+    "currencies": [
+      "Comorian franc (Fr • KMF)"
+    ],
+    "demonym": "Comoran, Comorian",
+    "callingCode": "+269",
+    "tld": ".km",
+    "timezones": [
+      "UTC+03:00 (Indian/Comoro)"
+    ],
+    "borders": [],
+    "officialName": "Union of the Comoros",
+    "nativeName": "الاتحاد القمري",
+    "unMember": true
+  },
+  "CPV": {
+    "capital": "Praia",
+    "capitalLat": 16.0,
+    "capitalLng": -24.0,
+    "area": 4033.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "Cape Verdean escudo (Esc • CVE)"
+    ],
+    "demonym": "Verdean",
+    "callingCode": "+238",
+    "tld": ".cv",
+    "timezones": [
+      "UTC-01:00 (Atlantic/Cape_Verde)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Cabo Verde",
+    "nativeName": "República de Cabo Verde",
+    "unMember": true
+  },
+  "CRI": {
+    "capital": "San José",
+    "capitalLat": 10.0,
+    "capitalLng": -84.0,
+    "area": 51100.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Costa Rican colón (₡ • CRC)"
+    ],
+    "demonym": "Costa Rican",
+    "callingCode": "+506",
+    "tld": ".cr",
+    "timezones": [
+      "UTC-06:00 (America/Costa_Rica)"
+    ],
+    "borders": [
+      "NIC",
+      "PAN"
+    ],
+    "officialName": "Republic of Costa Rica",
+    "nativeName": "República de Costa Rica",
+    "unMember": true
+  },
+  "CUB": {
+    "capital": "Havana",
+    "capitalLat": 21.5,
+    "capitalLng": -80.0,
+    "area": 109884.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Cuban convertible peso ($ • CUC)",
+      "Cuban peso ($ • CUP)"
+    ],
+    "demonym": "Cuban",
+    "callingCode": "+53",
+    "tld": ".cu",
+    "timezones": [
+      "UTC-05:00 (America/Havana)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Cuba",
+    "nativeName": "República de Cuba",
+    "unMember": true
+  },
+  "CUW": {
+    "capital": "Willemstad",
+    "capitalLat": 12.116667,
+    "capitalLng": -68.933333,
+    "area": 444.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Dutch",
+      "Papiamento"
+    ],
+    "currencies": [
+      "Netherlands Antillean guilder (ƒ • ANG)"
+    ],
+    "demonym": "Curacaoan",
+    "callingCode": "+599",
+    "tld": ".cw",
+    "timezones": [
+      "UTC-04:00 (America/Curacao)"
+    ],
+    "borders": [],
+    "officialName": "Country of Curaçao",
+    "nativeName": "Country of Curaçao",
+    "unMember": false
+  },
+  "CXR": {
+    "capital": "Flying Fish Cove",
+    "capitalLat": -10.5,
+    "capitalLng": 105.66666666,
+    "area": 135.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Christmas Island",
+    "callingCode": "+61",
+    "tld": ".cx",
+    "timezones": [
+      "UTC+07:00 (Indian/Christmas)"
+    ],
+    "borders": [],
+    "officialName": "Territory of Christmas Island",
+    "nativeName": "Territory of Christmas Island",
+    "unMember": false
+  },
+  "CYM": {
+    "capital": "George Town",
+    "capitalLat": 19.5,
+    "capitalLng": -80.5,
+    "area": 264.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Cayman Islands dollar ($ • KYD)"
+    ],
+    "demonym": "Caymanian",
+    "callingCode": "+1",
+    "tld": ".ky",
+    "timezones": [
+      "UTC-05:00 (America/Cayman)"
+    ],
+    "borders": [],
+    "officialName": "Cayman Islands",
+    "nativeName": "Cayman Islands",
+    "unMember": false
+  },
+  "CYP": {
+    "capital": "Nicosia",
+    "capitalLat": 35.0,
+    "capitalLng": 33.0,
+    "area": 9251.0,
+    "landlocked": false,
+    "languages": [
+      "Greek",
+      "Turkish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Cypriot",
+    "callingCode": "+357",
+    "tld": ".cy",
+    "timezones": [
+      "UTC+02:00 (Asia/Famagusta)",
+      "UTC+02:00 (Asia/Nicosia)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Cyprus",
+    "nativeName": "Δημοκρατία της Κύπρος",
+    "unMember": true
+  },
+  "CZE": {
+    "capital": "Prague",
+    "capitalLat": 49.75,
+    "capitalLng": 15.5,
+    "area": 78865.0,
+    "landlocked": true,
+    "languages": [
+      "Czech",
+      "Slovak"
+    ],
+    "currencies": [
+      "Czech koruna (Kč • CZK)"
+    ],
+    "demonym": "Czech",
+    "callingCode": "+420",
+    "tld": ".cz",
+    "timezones": [
+      "UTC+01:00 (Europe/Prague)"
+    ],
+    "borders": [
+      "AUT",
+      "DEU",
+      "POL",
+      "SVK"
+    ],
+    "officialName": "Czech Republic",
+    "nativeName": "Česká republika",
+    "unMember": true
+  },
+  "DEU": {
+    "capital": "Berlin",
+    "capitalLat": 51.0,
+    "capitalLng": 9.0,
+    "area": 357114.0,
+    "landlocked": false,
+    "languages": [
+      "German"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "German",
+    "callingCode": "+49",
+    "tld": ".de",
+    "timezones": [
+      "UTC+01:00 (Europe/Berlin)",
+      "UTC+01:00 (Europe/Busingen)"
+    ],
+    "borders": [
+      "AUT",
+      "BEL",
+      "CZE",
+      "DNK",
+      "FRA",
+      "LUX",
+      "NLD",
+      "POL",
+      "CHE"
+    ],
+    "officialName": "Federal Republic of Germany",
+    "nativeName": "Bundesrepublik Deutschland",
+    "unMember": true
+  },
+  "DJI": {
+    "capital": "Djibouti",
+    "capitalLat": 11.5,
+    "capitalLng": 43.0,
+    "area": 23200.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "French"
+    ],
+    "currencies": [
+      "Djiboutian franc (Fr • DJF)"
+    ],
+    "demonym": "Djiboutian",
+    "callingCode": "+253",
+    "tld": ".dj",
+    "timezones": [
+      "UTC+03:00 (Africa/Djibouti)"
+    ],
+    "borders": [
+      "ERI",
+      "ETH",
+      "SOM"
+    ],
+    "officialName": "Republic of Djibouti",
+    "nativeName": "جمهورية جيبوتي",
+    "unMember": true
+  },
+  "DMA": {
+    "capital": "Roseau",
+    "capitalLat": 15.41666666,
+    "capitalLng": -61.33333333,
+    "area": 751.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Dominican",
+    "callingCode": "+1",
+    "tld": ".dm",
+    "timezones": [
+      "UTC-04:00 (America/Dominica)"
+    ],
+    "borders": [],
+    "officialName": "Commonwealth of Dominica",
+    "nativeName": "Commonwealth of Dominica",
+    "unMember": true
+  },
+  "DNK": {
+    "capital": "Copenhagen",
+    "capitalLat": 56.0,
+    "capitalLng": 10.0,
+    "area": 43094.0,
+    "landlocked": false,
+    "languages": [
+      "Danish"
+    ],
+    "currencies": [
+      "Danish krone (kr • DKK)"
+    ],
+    "demonym": "Danish",
+    "callingCode": "+45",
+    "tld": ".dk",
+    "timezones": [
+      "UTC+01:00 (Europe/Copenhagen)"
+    ],
+    "borders": [
+      "DEU"
+    ],
+    "officialName": "Kingdom of Denmark",
+    "nativeName": "Kongeriget Danmark",
+    "unMember": true
+  },
+  "DOM": {
+    "capital": "Santo Domingo",
+    "capitalLat": 19.0,
+    "capitalLng": -70.66666666,
+    "area": 48671.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Dominican peso ($ • DOP)"
+    ],
+    "demonym": "Dominican",
+    "callingCode": "+1",
+    "tld": ".do",
+    "timezones": [
+      "UTC-04:00 (America/Santo_Domingo)"
+    ],
+    "borders": [
+      "HTI"
+    ],
+    "officialName": "Dominican Republic",
+    "nativeName": "República Dominicana",
+    "unMember": true
+  },
+  "DZA": {
+    "capital": "Algiers",
+    "capitalLat": 28.0,
+    "capitalLng": 3.0,
+    "area": 2381741.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Algerian dinar (د.ج • DZD)"
+    ],
+    "demonym": "Algerian",
+    "callingCode": "+213",
+    "tld": ".dz",
+    "timezones": [
+      "UTC+01:00 (Africa/Algiers)"
+    ],
+    "borders": [
+      "TUN",
+      "LBY",
+      "NER",
+      "ESH",
+      "MRT",
+      "MLI",
+      "MAR"
+    ],
+    "officialName": "People's Democratic Republic of Algeria",
+    "nativeName": "الجمهورية الديمقراطية الشعبية الجزائرية",
+    "unMember": true
+  },
+  "ECU": {
+    "capital": "Quito",
+    "capitalLat": -2.0,
+    "capitalLng": -77.5,
+    "area": 276841.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Ecuadorian",
+    "callingCode": "+593",
+    "tld": ".ec",
+    "timezones": [
+      "UTC-05:00 (America/Guayaquil)",
+      "UTC-06:00 (Pacific/Galapagos)"
+    ],
+    "borders": [
+      "COL",
+      "PER"
+    ],
+    "officialName": "Republic of Ecuador",
+    "nativeName": "República del Ecuador",
+    "unMember": true
+  },
+  "EGY": {
+    "capital": "Cairo",
+    "capitalLat": 27.0,
+    "capitalLng": 30.0,
+    "area": 1002450.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Egyptian pound (£ • EGP)"
+    ],
+    "demonym": "Egyptian",
+    "callingCode": "+20",
+    "tld": ".eg",
+    "timezones": [
+      "UTC+02:00 (Africa/Cairo)"
+    ],
+    "borders": [
+      "ISR",
+      "LBY",
+      "PSE",
+      "SDN"
+    ],
+    "officialName": "Arab Republic of Egypt",
+    "nativeName": "جمهورية مصر العربية",
+    "unMember": true
+  },
+  "ERI": {
+    "capital": "Asmara",
+    "capitalLat": 15.0,
+    "capitalLng": 39.0,
+    "area": 117600.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "English",
+      "Tigrinya"
+    ],
+    "currencies": [
+      "Eritrean nakfa (Nfk • ERN)"
+    ],
+    "demonym": "Eritrean",
+    "callingCode": "+291",
+    "tld": ".er",
+    "timezones": [
+      "UTC+03:00 (Africa/Asmara)"
+    ],
+    "borders": [
+      "DJI",
+      "ETH",
+      "SDN"
+    ],
+    "officialName": "State of Eritrea",
+    "nativeName": "دولة إريتريا",
+    "unMember": true
+  },
+  "ESH": {
+    "capital": "El Aaiún",
+    "capitalLat": 24.5,
+    "capitalLng": -13.0,
+    "area": 266000.0,
+    "landlocked": false,
+    "languages": [
+      "Berber",
+      "Hassaniya",
+      "Spanish"
+    ],
+    "currencies": [
+      "Algerian dinar (دج • DZD)",
+      "Moroccan dirham (DH • MAD)",
+      "Mauritanian ouguiya (UM • MRU)"
+    ],
+    "demonym": "Sahrawi, Sahrawian, Sahraouian",
+    "callingCode": "+212",
+    "tld": ".eh",
+    "timezones": [
+      "UTC+01:00 (Africa/El_Aaiun)"
+    ],
+    "borders": [
+      "DZA",
+      "MRT",
+      "MAR"
+    ],
+    "officialName": "Sahrawi Arab Democratic Republic",
+    "nativeName": "Sahrawi Arab Democratic Republic",
+    "unMember": false
+  },
+  "ESP": {
+    "capital": "Madrid",
+    "capitalLat": 40.0,
+    "capitalLng": -4.0,
+    "area": 505992.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Spanish",
+    "callingCode": "+34",
+    "tld": ".es",
+    "timezones": [
+      "UTC+01:00 (Africa/Ceuta)",
+      "UTC±00 (Atlantic/Canary)",
+      "UTC+01:00 (Europe/Madrid)"
+    ],
+    "borders": [
+      "AND",
+      "FRA",
+      "GIB",
+      "PRT",
+      "MAR"
+    ],
+    "officialName": "Kingdom of Spain",
+    "nativeName": "Reino de España",
+    "unMember": true
+  },
+  "EST": {
+    "capital": "Tallinn",
+    "capitalLat": 59.0,
+    "capitalLng": 26.0,
+    "area": 45227.0,
+    "landlocked": false,
+    "languages": [
+      "Estonian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Estonian",
+    "callingCode": "+372",
+    "tld": ".ee",
+    "timezones": [
+      "UTC+02:00 (Europe/Tallinn)"
+    ],
+    "borders": [
+      "LVA",
+      "RUS"
+    ],
+    "officialName": "Republic of Estonia",
+    "nativeName": "Eesti Vabariik",
+    "unMember": true
+  },
+  "ETH": {
+    "capital": "Addis Ababa",
+    "capitalLat": 8.0,
+    "capitalLng": 38.0,
+    "area": 1104300.0,
+    "landlocked": true,
+    "languages": [
+      "Amharic"
+    ],
+    "currencies": [
+      "Ethiopian birr (Br • ETB)"
+    ],
+    "demonym": "Ethiopian",
+    "callingCode": "+251",
+    "tld": ".et",
+    "timezones": [
+      "UTC+03:00 (Africa/Addis_Ababa)"
+    ],
+    "borders": [
+      "DJI",
+      "ERI",
+      "KEN",
+      "SOM",
+      "SSD",
+      "SDN"
+    ],
+    "officialName": "Federal Democratic Republic of Ethiopia",
+    "nativeName": "የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ",
+    "unMember": true
+  },
+  "FIN": {
+    "capital": "Helsinki",
+    "capitalLat": 64.0,
+    "capitalLng": 26.0,
+    "area": 338424.0,
+    "landlocked": false,
+    "languages": [
+      "Finnish",
+      "Swedish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Finnish",
+    "callingCode": "+358",
+    "tld": ".fi",
+    "timezones": [
+      "UTC+02:00 (Europe/Helsinki)"
+    ],
+    "borders": [
+      "NOR",
+      "SWE",
+      "RUS"
+    ],
+    "officialName": "Republic of Finland",
+    "nativeName": "Suomen tasavalta",
+    "unMember": true
+  },
+  "FJI": {
+    "capital": "Suva",
+    "capitalLat": -18.0,
+    "capitalLng": 175.0,
+    "area": 18272.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Fijian",
+      "Fiji Hindi"
+    ],
+    "currencies": [
+      "Fijian dollar ($ • FJD)"
+    ],
+    "demonym": "Fijian",
+    "callingCode": "+679",
+    "tld": ".fj",
+    "timezones": [
+      "UTC+12:00 (Pacific/Fiji)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Fiji",
+    "nativeName": "Republic of Fiji",
+    "unMember": true
+  },
+  "FLK": {
+    "capital": "Stanley",
+    "capitalLat": -51.75,
+    "capitalLng": -59.0,
+    "area": 12173.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Falkland Islands pound (£ • FKP)"
+    ],
+    "demonym": "Falkland Island",
+    "callingCode": "+500",
+    "tld": ".fk",
+    "timezones": [
+      "UTC-03:00 (Atlantic/Stanley)"
+    ],
+    "borders": [],
+    "officialName": "Falkland Islands",
+    "nativeName": "Falkland Islands",
+    "unMember": false
+  },
+  "FRA": {
+    "capital": "Paris",
+    "capitalLat": 46.0,
+    "capitalLng": 2.0,
+    "area": 551695.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "French",
+    "callingCode": "+33",
+    "tld": ".fr",
+    "timezones": [
+      "UTC+01:00 (Europe/Paris)"
+    ],
+    "borders": [
+      "AND",
+      "BEL",
+      "DEU",
+      "ITA",
+      "LUX",
+      "MCO",
+      "ESP",
+      "CHE"
+    ],
+    "officialName": "French Republic",
+    "nativeName": "République française",
+    "unMember": true
+  },
+  "FRO": {
+    "capital": "Tórshavn",
+    "capitalLat": 62.0,
+    "capitalLng": -7.0,
+    "area": 1393.0,
+    "landlocked": false,
+    "languages": [
+      "Danish",
+      "Faroese"
+    ],
+    "currencies": [
+      "Danish krone (kr • DKK)",
+      "Faroese króna (kr • FOK)"
+    ],
+    "demonym": "Faroese",
+    "callingCode": "+298",
+    "tld": ".fo",
+    "timezones": [
+      "UTC±00 (Atlantic/Faroe)"
+    ],
+    "borders": [],
+    "officialName": "Faroe Islands",
+    "nativeName": "Færøerne",
+    "unMember": false
+  },
+  "FSM": {
+    "capital": "Palikir",
+    "capitalLat": 6.91666666,
+    "capitalLng": 158.25,
+    "area": 702.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Micronesian",
+    "callingCode": "+691",
+    "tld": ".fm",
+    "timezones": [
+      "UTC+10:00 (Pacific/Chuuk)",
+      "UTC+11:00 (Pacific/Kosrae)",
+      "UTC+11:00 (Pacific/Pohnpei)"
+    ],
+    "borders": [],
+    "officialName": "Federated States of Micronesia",
+    "nativeName": "Federated States of Micronesia",
+    "unMember": true
+  },
+  "GAB": {
+    "capital": "Libreville",
+    "capitalLat": -1.0,
+    "capitalLng": 11.75,
+    "area": 267668.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Gabonese",
+    "callingCode": "+241",
+    "tld": ".ga",
+    "timezones": [
+      "UTC+01:00 (Africa/Libreville)"
+    ],
+    "borders": [
+      "CMR",
+      "COG",
+      "GNQ"
+    ],
+    "officialName": "Gabonese Republic",
+    "nativeName": "République gabonaise",
+    "unMember": true
+  },
+  "GBR": {
+    "capital": "London",
+    "capitalLat": 54.0,
+    "capitalLng": -2.0,
+    "area": 242900.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "British pound (£ • GBP)"
+    ],
+    "demonym": "British, UK",
+    "callingCode": "+44",
+    "tld": ".uk",
+    "timezones": [
+      "UTC±00 (Europe/London)"
+    ],
+    "borders": [
+      "IRL"
+    ],
+    "officialName": "United Kingdom of Great Britain and Northern Ireland",
+    "nativeName": "United Kingdom of Great Britain and Northern Ireland",
+    "unMember": true
+  },
+  "GEO": {
+    "capital": "Tbilisi",
+    "capitalLat": 42.0,
+    "capitalLng": 43.5,
+    "area": 69700.0,
+    "landlocked": false,
+    "languages": [
+      "Georgian"
+    ],
+    "currencies": [
+      "lari (₾ • GEL)"
+    ],
+    "demonym": "Georgian",
+    "callingCode": "+995",
+    "tld": ".ge",
+    "timezones": [
+      "UTC+04:00 (Asia/Tbilisi)"
+    ],
+    "borders": [
+      "ARM",
+      "AZE",
+      "RUS",
+      "TUR"
+    ],
+    "officialName": "Georgia",
+    "nativeName": "საქართველო",
+    "unMember": true
+  },
+  "GGY": {
+    "capital": "St. Peter Port",
+    "capitalLat": 49.46666666,
+    "capitalLng": -2.58333333,
+    "area": 78.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French",
+      "Guernésiais"
+    ],
+    "currencies": [
+      "British pound (£ • GBP)",
+      "Guernsey pound (£ • GGP)"
+    ],
+    "demonym": "Channel Island",
+    "callingCode": "+44",
+    "tld": ".gg",
+    "timezones": [
+      "UTC±00 (Europe/Guernsey)"
+    ],
+    "borders": [],
+    "officialName": "Bailiwick of Guernsey",
+    "nativeName": "Bailiwick of Guernsey",
+    "unMember": false
+  },
+  "GHA": {
+    "capital": "Accra",
+    "capitalLat": 8.0,
+    "capitalLng": -2.0,
+    "area": 238533.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Ghanaian cedi (₵ • GHS)"
+    ],
+    "demonym": "Ghanaian",
+    "callingCode": "+233",
+    "tld": ".gh",
+    "timezones": [
+      "UTC±00 (Africa/Accra)"
+    ],
+    "borders": [
+      "BFA",
+      "CIV",
+      "TGO"
+    ],
+    "officialName": "Republic of Ghana",
+    "nativeName": "Republic of Ghana",
+    "unMember": true
+  },
+  "GIB": {
+    "capital": "Gibraltar",
+    "capitalLat": 36.13333333,
+    "capitalLng": -5.35,
+    "area": 6.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Gibraltar pound (£ • GIP)"
+    ],
+    "demonym": "Gibraltar",
+    "callingCode": "+350",
+    "tld": ".gi",
+    "timezones": [
+      "UTC+01:00 (Europe/Gibraltar)"
+    ],
+    "borders": [
+      "ESP"
+    ],
+    "officialName": "Gibraltar",
+    "nativeName": "Gibraltar",
+    "unMember": false
+  },
+  "GIN": {
+    "capital": "Conakry",
+    "capitalLat": 11.0,
+    "capitalLng": -10.0,
+    "area": 245857.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Guinean franc (Fr • GNF)"
+    ],
+    "demonym": "Guinean",
+    "callingCode": "+224",
+    "tld": ".gn",
+    "timezones": [
+      "UTC±00 (Africa/Conakry)"
+    ],
+    "borders": [
+      "CIV",
+      "GNB",
+      "LBR",
+      "MLI",
+      "SEN",
+      "SLE"
+    ],
+    "officialName": "Republic of Guinea",
+    "nativeName": "République de Guinée",
+    "unMember": true
+  },
+  "GLP": {
+    "capital": "Basse-Terre",
+    "capitalLat": 16.25,
+    "capitalLng": -61.583333,
+    "area": 1628.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Guadeloupe",
+    "callingCode": "+590",
+    "tld": ".gp",
+    "timezones": [
+      "UTC-04:00 (America/Guadeloupe)"
+    ],
+    "borders": [],
+    "officialName": "Guadeloupe",
+    "nativeName": "Guadeloupe",
+    "unMember": false
+  },
+  "GMB": {
+    "capital": "Banjul",
+    "capitalLat": 13.46666666,
+    "capitalLng": -16.56666666,
+    "area": 10689.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "dalasi (D • GMD)"
+    ],
+    "demonym": "Gambian",
+    "callingCode": "+220",
+    "tld": ".gm",
+    "timezones": [
+      "UTC±00 (Africa/Banjul)"
+    ],
+    "borders": [
+      "SEN"
+    ],
+    "officialName": "Republic of the Gambia",
+    "nativeName": "Republic of the Gambia",
+    "unMember": true
+  },
+  "GNB": {
+    "capital": "Bissau",
+    "capitalLat": 12.0,
+    "capitalLng": -15.0,
+    "area": 36125.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese",
+      "Upper Guinea Creole"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Bissau-Guinean",
+    "callingCode": "+245",
+    "tld": ".gw",
+    "timezones": [
+      "UTC±00 (Africa/Bissau)"
+    ],
+    "borders": [
+      "GIN",
+      "SEN"
+    ],
+    "officialName": "Republic of Guinea-Bissau",
+    "nativeName": "República da Guiné-Bissau",
+    "unMember": true
+  },
+  "GNQ": {
+    "capital": "Malabo",
+    "capitalLat": 2.0,
+    "capitalLng": 10.0,
+    "area": 28051.0,
+    "landlocked": false,
+    "languages": [
+      "French",
+      "Portuguese",
+      "Spanish"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Equatorial Guinean, Equatoguinean",
+    "callingCode": "+240",
+    "tld": ".gq",
+    "timezones": [
+      "UTC+01:00 (Africa/Malabo)"
+    ],
+    "borders": [
+      "CMR",
+      "GAB"
+    ],
+    "officialName": "Republic of Equatorial Guinea",
+    "nativeName": "République de la Guinée Équatoriale",
+    "unMember": true
+  },
+  "GRC": {
+    "capital": "Athens",
+    "capitalLat": 39.0,
+    "capitalLng": 22.0,
+    "area": 131990.0,
+    "landlocked": false,
+    "languages": [
+      "Greek"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Greek, Hellenic",
+    "callingCode": "+30",
+    "tld": ".gr",
+    "timezones": [
+      "UTC+02:00 (Europe/Athens)"
+    ],
+    "borders": [
+      "ALB",
+      "BGR",
+      "TUR",
+      "MKD"
+    ],
+    "officialName": "Hellenic Republic",
+    "nativeName": "Ελληνική Δημοκρατία",
+    "unMember": true
+  },
+  "GRD": {
+    "capital": "St. George's",
+    "capitalLat": 12.11666666,
+    "capitalLng": -61.66666666,
+    "area": 344.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Grenadian",
+    "callingCode": "+1",
+    "tld": ".gd",
+    "timezones": [
+      "UTC-04:00 (America/Grenada)"
+    ],
+    "borders": [],
+    "officialName": "Grenada",
+    "nativeName": "Grenada",
+    "unMember": true
+  },
+  "GRL": {
+    "capital": "Nuuk",
+    "capitalLat": 72.0,
+    "capitalLng": -40.0,
+    "area": 2166086.0,
+    "landlocked": false,
+    "languages": [
+      "Greenlandic"
+    ],
+    "currencies": [
+      "krone (kr. • DKK)"
+    ],
+    "demonym": "Greenlandic",
+    "callingCode": "+299",
+    "tld": ".gl",
+    "timezones": [
+      "UTC±00 (America/Danmarkshavn)",
+      "UTC-03:00 (America/Nuuk)",
+      "UTC-01:00 (America/Scoresbysund)",
+      "UTC-04:00 (America/Thule)"
+    ],
+    "borders": [],
+    "officialName": "Greenland",
+    "nativeName": "Kalaallit Nunaat",
+    "unMember": false
+  },
+  "GTM": {
+    "capital": "Guatemala City",
+    "capitalLat": 15.5,
+    "capitalLng": -90.25,
+    "area": 108889.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Guatemalan quetzal (Q • GTQ)"
+    ],
+    "demonym": "Guatemalan",
+    "callingCode": "+502",
+    "tld": ".gt",
+    "timezones": [
+      "UTC-06:00 (America/Guatemala)"
+    ],
+    "borders": [
+      "BLZ",
+      "SLV",
+      "HND",
+      "MEX"
+    ],
+    "officialName": "Republic of Guatemala",
+    "nativeName": "República de Guatemala",
+    "unMember": true
+  },
+  "GUF": {
+    "capital": "Cayenne",
+    "capitalLat": 4.0,
+    "capitalLng": -53.0,
+    "area": 83534.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "French Guianese",
+    "callingCode": "+594",
+    "tld": ".gf",
+    "timezones": [
+      "UTC-03:00 (America/Cayenne)"
+    ],
+    "borders": [
+      "BRA",
+      "SUR"
+    ],
+    "officialName": "Guiana",
+    "nativeName": "Guyane",
+    "unMember": false
+  },
+  "GUM": {
+    "capital": "Hagåtña",
+    "capitalLat": 13.46666666,
+    "capitalLng": 144.78333333,
+    "area": 549.0,
+    "landlocked": false,
+    "languages": [
+      "Chamorro",
+      "English",
+      "Spanish"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Guamanian, Guambat",
+    "callingCode": "+1",
+    "tld": ".gu",
+    "timezones": [
+      "UTC+10:00 (Pacific/Guam)"
+    ],
+    "borders": [],
+    "officialName": "Guam",
+    "nativeName": "Guåhån",
+    "unMember": false
+  },
+  "GUY": {
+    "capital": "Georgetown",
+    "capitalLat": 5.0,
+    "capitalLng": -59.0,
+    "area": 214969.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Guyanese dollar ($ • GYD)"
+    ],
+    "demonym": "Guyanese",
+    "callingCode": "+592",
+    "tld": ".gy",
+    "timezones": [
+      "UTC-04:00 (America/Guyana)"
+    ],
+    "borders": [
+      "BRA",
+      "SUR",
+      "VEN"
+    ],
+    "officialName": "Co-operative Republic of Guyana",
+    "nativeName": "Co-operative Republic of Guyana",
+    "unMember": true
+  },
+  "HKG": {
+    "capital": "City of Victoria",
+    "capitalLat": 22.25,
+    "capitalLng": 114.16666666,
+    "area": 1104.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "currencies": [
+      "Hong Kong dollar ($ • HKD)"
+    ],
+    "demonym": "Hong Kong, Hong Kongese",
+    "callingCode": "+852",
+    "tld": ".hk",
+    "timezones": [
+      "UTC+08:00 (Asia/Hong_Kong)"
+    ],
+    "borders": [
+      "CHN"
+    ],
+    "officialName": "Hong Kong Special Administrative Region of the People's Republic of China",
+    "nativeName": "Hong Kong Special Administrative Region of the People's Republic of China",
+    "unMember": false
+  },
+  "HMD": {
+    "capital": "N/A",
+    "capitalLat": -53.1,
+    "capitalLng": 72.51666666,
+    "area": 412.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Heard Island or McDonald Islands",
+    "callingCode": "+672",
+    "tld": ".hm",
+    "timezones": [
+      "UTC+05:00 (Indian/Kerguelen)"
+    ],
+    "borders": [],
+    "officialName": "Heard Island and McDonald Islands",
+    "nativeName": "Heard Island and McDonald Islands",
+    "unMember": false
+  },
+  "HND": {
+    "capital": "Tegucigalpa",
+    "capitalLat": 15.0,
+    "capitalLng": -86.5,
+    "area": 112492.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Honduran lempira (L • HNL)"
+    ],
+    "demonym": "Honduran",
+    "callingCode": "+504",
+    "tld": ".hn",
+    "timezones": [
+      "UTC-06:00 (America/Tegucigalpa)"
+    ],
+    "borders": [
+      "GTM",
+      "SLV",
+      "NIC"
+    ],
+    "officialName": "Republic of Honduras",
+    "nativeName": "República de Honduras",
+    "unMember": true
+  },
+  "HRV": {
+    "capital": "Zagreb",
+    "capitalLat": 45.16666666,
+    "capitalLng": 15.5,
+    "area": 56594.0,
+    "landlocked": false,
+    "languages": [
+      "Croatian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Croatian",
+    "callingCode": "+385",
+    "tld": ".hr",
+    "timezones": [
+      "UTC+01:00 (Europe/Zagreb)"
+    ],
+    "borders": [
+      "BIH",
+      "HUN",
+      "MNE",
+      "SRB",
+      "SVN"
+    ],
+    "officialName": "Republic of Croatia",
+    "nativeName": "Republika Hrvatska",
+    "unMember": true
+  },
+  "HTI": {
+    "capital": "Port-au-Prince",
+    "capitalLat": 19.0,
+    "capitalLng": -72.41666666,
+    "area": 27750.0,
+    "landlocked": false,
+    "languages": [
+      "French",
+      "Haitian Creole"
+    ],
+    "currencies": [
+      "Haitian gourde (G • HTG)"
+    ],
+    "demonym": "Haitian",
+    "callingCode": "+509",
+    "tld": ".ht",
+    "timezones": [
+      "UTC-05:00 (America/Port-au-Prince)"
+    ],
+    "borders": [
+      "DOM"
+    ],
+    "officialName": "Republic of Haiti",
+    "nativeName": "République d'Haïti",
+    "unMember": true
+  },
+  "HUN": {
+    "capital": "Budapest",
+    "capitalLat": 47.0,
+    "capitalLng": 20.0,
+    "area": 93028.0,
+    "landlocked": true,
+    "languages": [
+      "Hungarian"
+    ],
+    "currencies": [
+      "Hungarian forint (Ft • HUF)"
+    ],
+    "demonym": "Hungarian, Magyar",
+    "callingCode": "+36",
+    "tld": ".hu",
+    "timezones": [
+      "UTC+01:00 (Europe/Budapest)"
+    ],
+    "borders": [
+      "AUT",
+      "HRV",
+      "ROU",
+      "SRB",
+      "SVK",
+      "SVN",
+      "UKR"
+    ],
+    "officialName": "Hungary",
+    "nativeName": "Magyarország",
+    "unMember": true
+  },
+  "IDN": {
+    "capital": "Jakarta",
+    "capitalLat": -5.0,
+    "capitalLng": 120.0,
+    "area": 1904569.0,
+    "landlocked": false,
+    "languages": [
+      "Indonesian"
+    ],
+    "currencies": [
+      "Indonesian rupiah (Rp • IDR)"
+    ],
+    "demonym": "Indonesian",
+    "callingCode": "+62",
+    "tld": ".id",
+    "timezones": [
+      "UTC+07:00 (Asia/Jakarta)",
+      "UTC+09:00 (Asia/Jayapura)",
+      "UTC+08:00 (Asia/Makassar)",
+      "UTC+07:00 (Asia/Pontianak)"
+    ],
+    "borders": [
+      "TLS",
+      "MYS",
+      "PNG"
+    ],
+    "officialName": "Republic of Indonesia",
+    "nativeName": "Republik Indonesia",
+    "unMember": true
+  },
+  "IMN": {
+    "capital": "Douglas",
+    "capitalLat": 54.25,
+    "capitalLng": -4.5,
+    "area": 572.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Manx"
+    ],
+    "currencies": [
+      "British pound (£ • GBP)",
+      "Manx pound (£ • IMP)"
+    ],
+    "demonym": "Manx",
+    "callingCode": "+44",
+    "tld": ".im",
+    "timezones": [
+      "UTC±00 (Europe/Isle_of_Man)"
+    ],
+    "borders": [],
+    "officialName": "Isle of Man",
+    "nativeName": "Isle of Man",
+    "unMember": false
+  },
+  "IND": {
+    "capital": "New Delhi",
+    "capitalLat": 20.0,
+    "capitalLng": 77.0,
+    "area": 3287590.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Hindi",
+      "Tamil"
+    ],
+    "currencies": [
+      "Indian rupee (₹ • INR)"
+    ],
+    "demonym": "Indian",
+    "callingCode": "+91",
+    "tld": ".in",
+    "timezones": [
+      "UTC+05:30 (Asia/Kolkata)"
+    ],
+    "borders": [
+      "BGD",
+      "BTN",
+      "MMR",
+      "CHN",
+      "NPL",
+      "PAK"
+    ],
+    "officialName": "Republic of India",
+    "nativeName": "Republic of India",
+    "unMember": true
+  },
+  "IOT": {
+    "capital": "Diego Garcia",
+    "capitalLat": -6.0,
+    "capitalLng": 71.5,
+    "area": 60.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "BIOT",
+    "callingCode": "+246",
+    "tld": ".io",
+    "timezones": [
+      "UTC+06:00 (Indian/Chagos)"
+    ],
+    "borders": [],
+    "officialName": "British Indian Ocean Territory",
+    "nativeName": "British Indian Ocean Territory",
+    "unMember": false
+  },
+  "IRL": {
+    "capital": "Dublin",
+    "capitalLat": 53.0,
+    "capitalLng": -8.0,
+    "area": 70273.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Irish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Irish",
+    "callingCode": "+353",
+    "tld": ".ie",
+    "timezones": [
+      "UTC±00 (Europe/Dublin)"
+    ],
+    "borders": [
+      "GBR"
+    ],
+    "officialName": "Republic of Ireland",
+    "nativeName": "Republic of Ireland",
+    "unMember": true
+  },
+  "IRN": {
+    "capital": "Tehran",
+    "capitalLat": 32.0,
+    "capitalLng": 53.0,
+    "area": 1648195.0,
+    "landlocked": false,
+    "languages": [
+      "Persian (Farsi)"
+    ],
+    "currencies": [
+      "Iranian rial (﷼ • IRR)"
+    ],
+    "demonym": "Iranian, Persian",
+    "callingCode": "+98",
+    "tld": ".ir",
+    "timezones": [
+      "UTC+03:30 (Asia/Tehran)"
+    ],
+    "borders": [
+      "AFG",
+      "ARM",
+      "AZE",
+      "IRQ",
+      "PAK",
+      "TUR",
+      "TKM"
+    ],
+    "officialName": "Islamic Republic of Iran",
+    "nativeName": "جمهوری اسلامی ایران",
+    "unMember": true
+  },
+  "IRQ": {
+    "capital": "Baghdad",
+    "capitalLat": 33.0,
+    "capitalLng": 44.0,
+    "area": 438317.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "Aramaic",
+      "Sorani"
+    ],
+    "currencies": [
+      "Iraqi dinar (ع.د • IQD)"
+    ],
+    "demonym": "Iraqi",
+    "callingCode": "+964",
+    "tld": ".iq",
+    "timezones": [
+      "UTC+03:00 (Asia/Baghdad)"
+    ],
+    "borders": [
+      "IRN",
+      "JOR",
+      "KWT",
+      "SAU",
+      "SYR",
+      "TUR"
+    ],
+    "officialName": "Republic of Iraq",
+    "nativeName": "جمهورية العراق",
+    "unMember": true
+  },
+  "ISL": {
+    "capital": "Reykjavik",
+    "capitalLat": 65.0,
+    "capitalLng": -18.0,
+    "area": 103000.0,
+    "landlocked": false,
+    "languages": [
+      "Icelandic"
+    ],
+    "currencies": [
+      "Icelandic króna (kr • ISK)"
+    ],
+    "demonym": "Icelandic",
+    "callingCode": "+354",
+    "tld": ".is",
+    "timezones": [
+      "UTC±00 (Atlantic/Reykjavik)"
+    ],
+    "borders": [],
+    "officialName": "Iceland",
+    "nativeName": "Ísland",
+    "unMember": true
+  },
+  "ISR": {
+    "capital": "Jerusalem",
+    "capitalLat": 31.5,
+    "capitalLng": 34.75,
+    "area": 20770.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "Hebrew"
+    ],
+    "currencies": [
+      "Israeli new shekel (₪ • ILS)"
+    ],
+    "demonym": "Israeli",
+    "callingCode": "+972",
+    "tld": ".il",
+    "timezones": [
+      "UTC+02:00 (Asia/Jerusalem)"
+    ],
+    "borders": [
+      "EGY",
+      "JOR",
+      "LBN",
+      "PSE",
+      "SYR"
+    ],
+    "officialName": "State of Israel",
+    "nativeName": "دولة إسرائيل",
+    "unMember": true
+  },
+  "ITA": {
+    "capital": "Rome",
+    "capitalLat": 42.83333333,
+    "capitalLng": 12.83333333,
+    "area": 301336.0,
+    "landlocked": false,
+    "languages": [
+      "Italian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Italian",
+    "callingCode": "+39",
+    "tld": ".it",
+    "timezones": [
+      "UTC+01:00 (Europe/Rome)"
+    ],
+    "borders": [
+      "AUT",
+      "FRA",
+      "SMR",
+      "SVN",
+      "CHE",
+      "VAT"
+    ],
+    "officialName": "Italian Republic",
+    "nativeName": "Repubblica italiana",
+    "unMember": true
+  },
+  "JAM": {
+    "capital": "Kingston",
+    "capitalLat": 18.25,
+    "capitalLng": -77.5,
+    "area": 10991.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Jamaican Patois"
+    ],
+    "currencies": [
+      "Jamaican dollar ($ • JMD)"
+    ],
+    "demonym": "Jamaican",
+    "callingCode": "+1",
+    "tld": ".jm",
+    "timezones": [
+      "UTC-05:00 (America/Jamaica)"
+    ],
+    "borders": [],
+    "officialName": "Jamaica",
+    "nativeName": "Jamaica",
+    "unMember": true
+  },
+  "JEY": {
+    "capital": "Saint Helier",
+    "capitalLat": 49.25,
+    "capitalLng": -2.16666666,
+    "area": 116.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French",
+      "Jèrriais"
+    ],
+    "currencies": [
+      "British pound (£ • GBP)",
+      "Jersey pound (£ • JEP)"
+    ],
+    "demonym": "Channel Island",
+    "callingCode": "+44",
+    "tld": ".je",
+    "timezones": [
+      "UTC±00 (Europe/Jersey)"
+    ],
+    "borders": [],
+    "officialName": "Bailiwick of Jersey",
+    "nativeName": "Bailiwick of Jersey",
+    "unMember": false
+  },
+  "JOR": {
+    "capital": "Amman",
+    "capitalLat": 31.0,
+    "capitalLng": 36.0,
+    "area": 89342.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Jordanian dinar (د.ا • JOD)"
+    ],
+    "demonym": "Jordanian",
+    "callingCode": "+962",
+    "tld": ".jo",
+    "timezones": [
+      "UTC+02:00 (Asia/Amman)"
+    ],
+    "borders": [
+      "IRQ",
+      "ISR",
+      "PSE",
+      "SAU",
+      "SYR"
+    ],
+    "officialName": "Hashemite Kingdom of Jordan",
+    "nativeName": "المملكة الأردنية الهاشمية",
+    "unMember": true
+  },
+  "JPN": {
+    "capital": "Tokyo",
+    "capitalLat": 36.0,
+    "capitalLng": 138.0,
+    "area": 377930.0,
+    "landlocked": false,
+    "languages": [
+      "Japanese"
+    ],
+    "currencies": [
+      "Japanese yen (¥ • JPY)"
+    ],
+    "demonym": "Japanese",
+    "callingCode": "+81",
+    "tld": ".jp",
+    "timezones": [
+      "UTC+09:00 (Asia/Tokyo)"
+    ],
+    "borders": [],
+    "officialName": "Japan",
+    "nativeName": "日本",
+    "unMember": true
+  },
+  "KAZ": {
+    "capital": "Astana",
+    "capitalLat": 48.0,
+    "capitalLng": 68.0,
+    "area": 2724900.0,
+    "landlocked": true,
+    "languages": [
+      "Kazakh",
+      "Russian"
+    ],
+    "currencies": [
+      "Kazakhstani tenge (₸ • KZT)"
+    ],
+    "demonym": "Kazakhstani, Kazakh",
+    "callingCode": "+7",
+    "tld": ".kz",
+    "timezones": [
+      "UTC+06:00 (Asia/Almaty)",
+      "UTC+05:00 (Asia/Aqtau)",
+      "UTC+05:00 (Asia/Aqtobe)",
+      "UTC+05:00 (Asia/Atyrau)",
+      "UTC+05:00 (Asia/Oral)",
+      "UTC+06:00 (Asia/Qostanay)",
+      "UTC+05:00 (Asia/Qyzylorda)"
+    ],
+    "borders": [
+      "CHN",
+      "KGZ",
+      "RUS",
+      "TKM",
+      "UZB"
+    ],
+    "officialName": "Republic of Kazakhstan",
+    "nativeName": "Қазақстан Республикасы",
+    "unMember": true
+  },
+  "KEN": {
+    "capital": "Nairobi",
+    "capitalLat": 1.0,
+    "capitalLng": 38.0,
+    "area": 580367.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Swahili"
+    ],
+    "currencies": [
+      "Kenyan shilling (Sh • KES)"
+    ],
+    "demonym": "Kenyan",
+    "callingCode": "+254",
+    "tld": ".ke",
+    "timezones": [
+      "UTC+03:00 (Africa/Nairobi)"
+    ],
+    "borders": [
+      "ETH",
+      "SOM",
+      "SSD",
+      "TZA",
+      "UGA"
+    ],
+    "officialName": "Republic of Kenya",
+    "nativeName": "Republic of Kenya",
+    "unMember": true
+  },
+  "KGZ": {
+    "capital": "Bishkek",
+    "capitalLat": 41.0,
+    "capitalLng": 75.0,
+    "area": 199951.0,
+    "landlocked": true,
+    "languages": [
+      "Kyrgyz",
+      "Russian"
+    ],
+    "currencies": [
+      "Kyrgyzstani som (с • KGS)"
+    ],
+    "demonym": "Kyrgyzstani, Kyrgyz, Kirgiz, Kirghiz",
+    "callingCode": "+996",
+    "tld": ".kg",
+    "timezones": [
+      "UTC+06:00 (Asia/Bishkek)"
+    ],
+    "borders": [
+      "CHN",
+      "KAZ",
+      "TJK",
+      "UZB"
+    ],
+    "officialName": "Kyrgyz Republic",
+    "nativeName": "Кыргыз Республикасы",
+    "unMember": true
+  },
+  "KHM": {
+    "capital": "Phnom Penh",
+    "capitalLat": 13.0,
+    "capitalLng": 105.0,
+    "area": 181035.0,
+    "landlocked": false,
+    "languages": [
+      "Khmer"
+    ],
+    "currencies": [
+      "Cambodian riel (៛ • KHR)",
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Cambodian",
+    "callingCode": "+855",
+    "tld": ".kh",
+    "timezones": [
+      "UTC+07:00 (Asia/Phnom_Penh)"
+    ],
+    "borders": [
+      "LAO",
+      "THA",
+      "VNM"
+    ],
+    "officialName": "Kingdom of Cambodia",
+    "nativeName": "ព្រះរាជាណាចក្រកម្ពុជា",
+    "unMember": true
+  },
+  "KIR": {
+    "capital": "South Tarawa",
+    "capitalLat": 1.41666666,
+    "capitalLng": 173.0,
+    "area": 811.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Gilbertese"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)",
+      "Kiribati dollar ($ • KID)"
+    ],
+    "demonym": "I-Kiribati",
+    "callingCode": "+686",
+    "tld": ".ki",
+    "timezones": [
+      "UTC+13:00 (Pacific/Enderbury)",
+      "UTC+14:00 (Pacific/Kiritimati)",
+      "UTC+12:00 (Pacific/Tarawa)"
+    ],
+    "borders": [],
+    "officialName": "Independent and Sovereign Republic of Kiribati",
+    "nativeName": "Independent and Sovereign Republic of Kiribati",
+    "unMember": true
+  },
+  "KNA": {
+    "capital": "Basseterre",
+    "capitalLat": 17.33333333,
+    "capitalLng": -62.75,
+    "area": 261.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Kittitian or Nevisian",
+    "callingCode": "+1",
+    "tld": ".kn",
+    "timezones": [
+      "UTC-04:00 (America/St_Kitts)"
+    ],
+    "borders": [],
+    "officialName": "Federation of Saint Christopher and Nevis",
+    "nativeName": "Federation of Saint Christopher and Nevis",
+    "unMember": true
+  },
+  "KOR": {
+    "capital": "Seoul",
+    "capitalLat": 37.0,
+    "capitalLng": 127.5,
+    "area": 100210.0,
+    "landlocked": false,
+    "languages": [
+      "Korean"
+    ],
+    "currencies": [
+      "South Korean won (₩ • KRW)"
+    ],
+    "demonym": "South Korean",
+    "callingCode": "+82",
+    "tld": ".kr",
+    "timezones": [
+      "UTC+09:00 (Asia/Seoul)"
+    ],
+    "borders": [
+      "PRK"
+    ],
+    "officialName": "Republic of Korea",
+    "nativeName": "대한민국",
+    "unMember": true
+  },
+  "UNK": {
+    "capital": "Pristina",
+    "capitalLat": 42.666667,
+    "capitalLng": 21.166667,
+    "area": 10908.0,
+    "landlocked": true,
+    "languages": [
+      "Albanian",
+      "Serbian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Kosovar",
+    "callingCode": "+383",
+    "tld": ".xk",
+    "timezones": [],
+    "borders": [
+      "ALB",
+      "MKD",
+      "MNE",
+      "SRB"
+    ],
+    "officialName": "Republic of Kosovo",
+    "nativeName": "Republika e Kosovës",
+    "unMember": false
+  },
+  "KWT": {
+    "capital": "Kuwait City",
+    "capitalLat": 29.5,
+    "capitalLng": 45.75,
+    "area": 17818.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Kuwaiti dinar (د.ك • KWD)"
+    ],
+    "demonym": "Kuwaiti",
+    "callingCode": "+965",
+    "tld": ".kw",
+    "timezones": [
+      "UTC+03:00 (Asia/Kuwait)"
+    ],
+    "borders": [
+      "IRQ",
+      "SAU"
+    ],
+    "officialName": "State of Kuwait",
+    "nativeName": "دولة الكويت",
+    "unMember": true
+  },
+  "LAO": {
+    "capital": "Vientiane",
+    "capitalLat": 18.0,
+    "capitalLng": 105.0,
+    "area": 236800.0,
+    "landlocked": true,
+    "languages": [
+      "Lao"
+    ],
+    "currencies": [
+      "Lao kip (₭ • LAK)"
+    ],
+    "demonym": "Lao, Laotian",
+    "callingCode": "+856",
+    "tld": ".la",
+    "timezones": [
+      "UTC+07:00 (Asia/Vientiane)"
+    ],
+    "borders": [
+      "MMR",
+      "KHM",
+      "CHN",
+      "THA",
+      "VNM"
+    ],
+    "officialName": "Lao People's Democratic Republic",
+    "nativeName": "ສາທາລະນະ ຊາທິປະໄຕ ຄົນລາວ ຂອງ",
+    "unMember": true
+  },
+  "LBN": {
+    "capital": "Beirut",
+    "capitalLat": 33.83333333,
+    "capitalLng": 35.83333333,
+    "area": 10452.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "French"
+    ],
+    "currencies": [
+      "Lebanese pound (ل.ل • LBP)"
+    ],
+    "demonym": "Lebanese",
+    "callingCode": "+961",
+    "tld": ".lb",
+    "timezones": [
+      "UTC+02:00 (Asia/Beirut)"
+    ],
+    "borders": [
+      "ISR",
+      "SYR"
+    ],
+    "officialName": "Lebanese Republic",
+    "nativeName": "الجمهورية اللبنانية",
+    "unMember": true
+  },
+  "LBR": {
+    "capital": "Monrovia",
+    "capitalLat": 6.5,
+    "capitalLng": -9.5,
+    "area": 111369.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Liberian dollar ($ • LRD)"
+    ],
+    "demonym": "Liberian",
+    "callingCode": "+231",
+    "tld": ".lr",
+    "timezones": [
+      "UTC±00 (Africa/Monrovia)"
+    ],
+    "borders": [
+      "GIN",
+      "CIV",
+      "SLE"
+    ],
+    "officialName": "Republic of Liberia",
+    "nativeName": "Republic of Liberia",
+    "unMember": true
+  },
+  "LBY": {
+    "capital": "Tripoli",
+    "capitalLat": 25.0,
+    "capitalLng": 17.0,
+    "area": 1759540.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Libyan dinar (ل.د • LYD)"
+    ],
+    "demonym": "Libyan",
+    "callingCode": "+218",
+    "tld": ".ly",
+    "timezones": [
+      "UTC+02:00 (Africa/Tripoli)"
+    ],
+    "borders": [
+      "DZA",
+      "TCD",
+      "EGY",
+      "NER",
+      "SDN",
+      "TUN"
+    ],
+    "officialName": "State of Libya",
+    "nativeName": "دولة ليبيا",
+    "unMember": true
+  },
+  "LCA": {
+    "capital": "Castries",
+    "capitalLat": 13.88333333,
+    "capitalLng": -60.96666666,
+    "area": 616.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Saint Lucian",
+    "callingCode": "+1",
+    "tld": ".lc",
+    "timezones": [
+      "UTC-04:00 (America/St_Lucia)"
+    ],
+    "borders": [],
+    "officialName": "Saint Lucia",
+    "nativeName": "Saint Lucia",
+    "unMember": true
+  },
+  "LIE": {
+    "capital": "Vaduz",
+    "capitalLat": 47.26666666,
+    "capitalLng": 9.53333333,
+    "area": 160.0,
+    "landlocked": true,
+    "languages": [
+      "German"
+    ],
+    "currencies": [
+      "Swiss franc (Fr • CHF)"
+    ],
+    "demonym": "Liechtenstein",
+    "callingCode": "+423",
+    "tld": ".li",
+    "timezones": [
+      "UTC+01:00 (Europe/Vaduz)"
+    ],
+    "borders": [
+      "AUT",
+      "CHE"
+    ],
+    "officialName": "Principality of Liechtenstein",
+    "nativeName": "Fürstentum Liechtenstein",
+    "unMember": true
+  },
+  "LKA": {
+    "capital": "Colombo",
+    "capitalLat": 7.0,
+    "capitalLng": 81.0,
+    "area": 65610.0,
+    "landlocked": false,
+    "languages": [
+      "Sinhala",
+      "Tamil"
+    ],
+    "currencies": [
+      "Sri Lankan rupee (Rs රු • LKR)"
+    ],
+    "demonym": "Sri Lankan",
+    "callingCode": "+94",
+    "tld": ".lk",
+    "timezones": [
+      "UTC+05:30 (Asia/Colombo)"
+    ],
+    "borders": [
+      "IND"
+    ],
+    "officialName": "Democratic Socialist Republic of Sri Lanka",
+    "nativeName": "ශ්‍රී ලංකා ප්‍රජාතාන්ත්‍රික සමාජවාදී ජනරජය",
+    "unMember": true
+  },
+  "LSO": {
+    "capital": "Maseru",
+    "capitalLat": -29.5,
+    "capitalLng": 28.5,
+    "area": 30355.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "Sotho"
+    ],
+    "currencies": [
+      "Lesotho loti (L • LSL)",
+      "South African rand (R • ZAR)"
+    ],
+    "demonym": "Basotho",
+    "callingCode": "+266",
+    "tld": ".ls",
+    "timezones": [
+      "UTC+02:00 (Africa/Maseru)"
+    ],
+    "borders": [
+      "ZAF"
+    ],
+    "officialName": "Kingdom of Lesotho",
+    "nativeName": "Kingdom of Lesotho",
+    "unMember": true
+  },
+  "LTU": {
+    "capital": "Vilnius",
+    "capitalLat": 56.0,
+    "capitalLng": 24.0,
+    "area": 65300.0,
+    "landlocked": false,
+    "languages": [
+      "Lithuanian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Lithuanian",
+    "callingCode": "+370",
+    "tld": ".lt",
+    "timezones": [
+      "UTC+02:00 (Europe/Vilnius)"
+    ],
+    "borders": [
+      "BLR",
+      "LVA",
+      "POL",
+      "RUS"
+    ],
+    "officialName": "Republic of Lithuania",
+    "nativeName": "Lietuvos Respublikos",
+    "unMember": true
+  },
+  "LUX": {
+    "capital": "Luxembourg",
+    "capitalLat": 49.75,
+    "capitalLng": 6.16666666,
+    "area": 2586.0,
+    "landlocked": true,
+    "languages": [
+      "German",
+      "French",
+      "Luxembourgish"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Luxembourg, Luxembourgish",
+    "callingCode": "+352",
+    "tld": ".lu",
+    "timezones": [
+      "UTC+01:00 (Europe/Luxembourg)"
+    ],
+    "borders": [
+      "BEL",
+      "FRA",
+      "DEU"
+    ],
+    "officialName": "Grand Duchy of Luxembourg",
+    "nativeName": "Großherzogtum Luxemburg",
+    "unMember": true
+  },
+  "LVA": {
+    "capital": "Riga",
+    "capitalLat": 57.0,
+    "capitalLng": 25.0,
+    "area": 64559.0,
+    "landlocked": false,
+    "languages": [
+      "Latvian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Latvian",
+    "callingCode": "+371",
+    "tld": ".lv",
+    "timezones": [
+      "UTC+02:00 (Europe/Riga)"
+    ],
+    "borders": [
+      "BLR",
+      "EST",
+      "LTU",
+      "RUS"
+    ],
+    "officialName": "Republic of Latvia",
+    "nativeName": "Latvijas Republikas",
+    "unMember": true
+  },
+  "MAC": {
+    "capital": "Macao",
+    "capitalLat": 22.16666666,
+    "capitalLng": 113.55,
+    "area": 30.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese",
+      "Chinese"
+    ],
+    "currencies": [
+      "Macanese pataca (P • MOP)"
+    ],
+    "demonym": "Macanese, Chinese",
+    "callingCode": "+853",
+    "tld": ".mo",
+    "timezones": [
+      "UTC+08:00 (Asia/Macau)"
+    ],
+    "borders": [
+      "CHN"
+    ],
+    "officialName": "Macao Special Administrative Region of the People's Republic of China",
+    "nativeName": "Região Administrativa Especial de Macau da República Popular da China",
+    "unMember": false
+  },
+  "MAF": {
+    "capital": "Marigot",
+    "capitalLat": 18.08333333,
+    "capitalLng": -63.95,
+    "area": 53.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Saint-Martinoise",
+    "callingCode": "+590",
+    "tld": ".mf",
+    "timezones": [
+      "UTC-04:00 (America/Marigot)"
+    ],
+    "borders": [
+      "SXM"
+    ],
+    "officialName": "Saint Martin",
+    "nativeName": "Saint-Martin",
+    "unMember": false
+  },
+  "MAR": {
+    "capital": "Rabat",
+    "capitalLat": 32.0,
+    "capitalLng": -5.0,
+    "area": 446550.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "Berber"
+    ],
+    "currencies": [
+      "Moroccan dirham (د.م. • MAD)"
+    ],
+    "demonym": "Moroccan",
+    "callingCode": "+212",
+    "tld": ".ma",
+    "timezones": [
+      "UTC+01:00 (Africa/Casablanca)",
+      "UTC+01:00 (Africa/El_Aaiun)"
+    ],
+    "borders": [
+      "DZA",
+      "ESH",
+      "ESP"
+    ],
+    "officialName": "Kingdom of Morocco",
+    "nativeName": "المملكة المغربية",
+    "unMember": true
+  },
+  "MCO": {
+    "capital": "Monaco",
+    "capitalLat": 43.73333333,
+    "capitalLng": 7.4,
+    "area": 2.02,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Monegasque, Monacan",
+    "callingCode": "+377",
+    "tld": ".mc",
+    "timezones": [
+      "UTC+01:00 (Europe/Monaco)"
+    ],
+    "borders": [
+      "FRA"
+    ],
+    "officialName": "Principality of Monaco",
+    "nativeName": "Principauté de Monaco",
+    "unMember": true
+  },
+  "MDA": {
+    "capital": "Chișinău",
+    "capitalLat": 47.0,
+    "capitalLng": 29.0,
+    "area": 33846.0,
+    "landlocked": true,
+    "languages": [
+      "Moldavian"
+    ],
+    "currencies": [
+      "Moldovan leu (L • MDL)"
+    ],
+    "demonym": "Moldovan",
+    "callingCode": "+373",
+    "tld": ".md",
+    "timezones": [
+      "UTC+02:00 (Europe/Chisinau)"
+    ],
+    "borders": [
+      "ROU",
+      "UKR"
+    ],
+    "officialName": "Republic of Moldova",
+    "nativeName": "Republica Moldova",
+    "unMember": true
+  },
+  "MDG": {
+    "capital": "Antananarivo",
+    "capitalLat": -20.0,
+    "capitalLng": 47.0,
+    "area": 587041.0,
+    "landlocked": false,
+    "languages": [
+      "French",
+      "Malagasy"
+    ],
+    "currencies": [
+      "Malagasy ariary (Ar • MGA)"
+    ],
+    "demonym": "Malagasy",
+    "callingCode": "+261",
+    "tld": ".mg",
+    "timezones": [
+      "UTC+03:00 (Indian/Antananarivo)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Madagascar",
+    "nativeName": "République de Madagascar",
+    "unMember": true
+  },
+  "MDV": {
+    "capital": "Malé",
+    "capitalLat": 3.25,
+    "capitalLng": 73.0,
+    "area": 300.0,
+    "landlocked": false,
+    "languages": [
+      "Maldivian"
+    ],
+    "currencies": [
+      "Maldivian rufiyaa (.ރ • MVR)"
+    ],
+    "demonym": "Maldivian",
+    "callingCode": "+960",
+    "tld": ".mv",
+    "timezones": [
+      "UTC+05:00 (Indian/Maldives)"
+    ],
+    "borders": [],
+    "officialName": "Republic of the Maldives",
+    "nativeName": "ދިވެހިރާއްޖޭގެ ޖުމްހޫރިއްޔާ",
+    "unMember": true
+  },
+  "MEX": {
+    "capital": "Mexico City",
+    "capitalLat": 23.0,
+    "capitalLng": -102.0,
+    "area": 1964375.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Mexican peso ($ • MXN)"
+    ],
+    "demonym": "Mexican",
+    "callingCode": "+52",
+    "tld": ".mx",
+    "timezones": [
+      "UTC-06:00 (America/Bahia_Banderas)",
+      "UTC-05:00 (America/Cancun)",
+      "UTC-07:00 (America/Chihuahua)",
+      "UTC-07:00 (America/Hermosillo)",
+      "UTC-06:00 (America/Matamoros)",
+      "UTC-07:00 (America/Mazatlan)",
+      "UTC-06:00 (America/Merida)",
+      "UTC-06:00 (America/Mexico_City)",
+      "UTC-06:00 (America/Monterrey)",
+      "UTC-07:00 (America/Ojinaga)",
+      "UTC-08:00 (America/Tijuana)",
+      "UTC-07:00 (America/Ciudad_Juarez)"
+    ],
+    "borders": [
+      "BLZ",
+      "GTM",
+      "USA"
+    ],
+    "officialName": "United Mexican States",
+    "nativeName": "Estados Unidos Mexicanos",
+    "unMember": true
+  },
+  "MHL": {
+    "capital": "Majuro",
+    "capitalLat": 9.0,
+    "capitalLng": 168.0,
+    "area": 181.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Marshallese"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Marshallese",
+    "callingCode": "+692",
+    "tld": ".mh",
+    "timezones": [
+      "UTC+12:00 (Pacific/Kwajalein)",
+      "UTC+12:00 (Pacific/Majuro)"
+    ],
+    "borders": [],
+    "officialName": "Republic of the Marshall Islands",
+    "nativeName": "Republic of the Marshall Islands",
+    "unMember": true
+  },
+  "MKD": {
+    "capital": "Skopje",
+    "capitalLat": 41.83333333,
+    "capitalLng": 22.0,
+    "area": 25713.0,
+    "landlocked": true,
+    "languages": [
+      "Macedonian"
+    ],
+    "currencies": [
+      "denar (den • MKD)"
+    ],
+    "demonym": "Macedonian",
+    "callingCode": "+389",
+    "tld": ".mk",
+    "timezones": [
+      "UTC+01:00 (Europe/Skopje)"
+    ],
+    "borders": [
+      "ALB",
+      "BGR",
+      "GRC",
+      "UNK",
+      "SRB"
+    ],
+    "officialName": "Republic of North Macedonia",
+    "nativeName": "Република Северна Македонија",
+    "unMember": true
+  },
+  "MLI": {
+    "capital": "Bamako",
+    "capitalLat": 17.0,
+    "capitalLng": -4.0,
+    "area": 1240192.0,
+    "landlocked": true,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Malian, Malinese",
+    "callingCode": "+223",
+    "tld": ".ml",
+    "timezones": [
+      "UTC±00 (Africa/Bamako)"
+    ],
+    "borders": [
+      "DZA",
+      "BFA",
+      "GIN",
+      "CIV",
+      "MRT",
+      "NER",
+      "SEN"
+    ],
+    "officialName": "Republic of Mali",
+    "nativeName": "République du Mali",
+    "unMember": true
+  },
+  "MLT": {
+    "capital": "Valletta",
+    "capitalLat": 35.83333333,
+    "capitalLng": 14.58333333,
+    "area": 316.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Maltese"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Maltese",
+    "callingCode": "+356",
+    "tld": ".mt",
+    "timezones": [
+      "UTC+01:00 (Europe/Malta)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Malta",
+    "nativeName": "Republic of Malta",
+    "unMember": true
+  },
+  "MMR": {
+    "capital": "Naypyidaw",
+    "capitalLat": 22.0,
+    "capitalLng": 98.0,
+    "area": 676578.0,
+    "landlocked": false,
+    "languages": [
+      "Burmese"
+    ],
+    "currencies": [
+      "Burmese kyat (Ks • MMK)"
+    ],
+    "demonym": "Burmese",
+    "callingCode": "+95",
+    "tld": ".mm",
+    "timezones": [
+      "UTC+06:30 (Asia/Yangon)"
+    ],
+    "borders": [
+      "BGD",
+      "CHN",
+      "IND",
+      "LAO",
+      "THA"
+    ],
+    "officialName": "Republic of the Union of Myanmar",
+    "nativeName": "ပြည်ထောင်စု သမ္မတ မြန်မာနိုင်ငံတော်",
+    "unMember": true
+  },
+  "MNE": {
+    "capital": "Podgorica",
+    "capitalLat": 42.5,
+    "capitalLng": 19.3,
+    "area": 13812.0,
+    "landlocked": false,
+    "languages": [
+      "Montenegrin"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Montenegrin",
+    "callingCode": "+382",
+    "tld": ".me",
+    "timezones": [
+      "UTC+01:00 (Europe/Podgorica)"
+    ],
+    "borders": [
+      "ALB",
+      "BIH",
+      "HRV",
+      "UNK",
+      "SRB"
+    ],
+    "officialName": "Montenegro",
+    "nativeName": "Црна Гора",
+    "unMember": true
+  },
+  "MNG": {
+    "capital": "Ulan Bator",
+    "capitalLat": 46.0,
+    "capitalLng": 105.0,
+    "area": 1564110.0,
+    "landlocked": true,
+    "languages": [
+      "Mongolian"
+    ],
+    "currencies": [
+      "Mongolian tögrög (₮ • MNT)"
+    ],
+    "demonym": "Mongolian",
+    "callingCode": "+976",
+    "tld": ".mn",
+    "timezones": [
+      "UTC+08:00 (Asia/Choibalsan)",
+      "UTC+07:00 (Asia/Hovd)",
+      "UTC+08:00 (Asia/Ulaanbaatar)"
+    ],
+    "borders": [
+      "CHN",
+      "RUS"
+    ],
+    "officialName": "Mongolia",
+    "nativeName": "Монгол улс",
+    "unMember": true
+  },
+  "MNP": {
+    "capital": "Saipan",
+    "capitalLat": 15.2,
+    "capitalLng": 145.75,
+    "area": 464.0,
+    "landlocked": false,
+    "languages": [
+      "Carolinian",
+      "Chamorro",
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Northern Marianan",
+    "callingCode": "+1",
+    "tld": ".mp",
+    "timezones": [
+      "UTC+10:00 (Pacific/Saipan)"
+    ],
+    "borders": [],
+    "officialName": "Commonwealth of the Northern Mariana Islands",
+    "nativeName": "Commonwealth of the Northern Mariana Islands",
+    "unMember": false
+  },
+  "MOZ": {
+    "capital": "Maputo",
+    "capitalLat": -18.25,
+    "capitalLng": 35.0,
+    "area": 801590.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "Mozambican metical (MT • MZN)"
+    ],
+    "demonym": "Mozambican",
+    "callingCode": "+258",
+    "tld": ".mz",
+    "timezones": [
+      "UTC+02:00 (Africa/Maputo)"
+    ],
+    "borders": [
+      "MWI",
+      "ZAF",
+      "SWZ",
+      "TZA",
+      "ZMB",
+      "ZWE"
+    ],
+    "officialName": "Republic of Mozambique",
+    "nativeName": "República de Moçambique",
+    "unMember": true
+  },
+  "MRT": {
+    "capital": "Nouakchott",
+    "capitalLat": 20.0,
+    "capitalLng": -12.0,
+    "area": 1030700.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Mauritanian ouguiya (UM • MRU)"
+    ],
+    "demonym": "Mauritanian",
+    "callingCode": "+222",
+    "tld": ".mr",
+    "timezones": [
+      "UTC±00 (Africa/Nouakchott)"
+    ],
+    "borders": [
+      "DZA",
+      "MLI",
+      "SEN",
+      "ESH"
+    ],
+    "officialName": "Islamic Republic of Mauritania",
+    "nativeName": "الجمهورية الإسلامية الموريتانية",
+    "unMember": true
+  },
+  "MSR": {
+    "capital": "Plymouth",
+    "capitalLat": 16.75,
+    "capitalLng": -62.2,
+    "area": 102.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Montserratian",
+    "callingCode": "+1",
+    "tld": ".ms",
+    "timezones": [
+      "UTC-04:00 (America/Montserrat)"
+    ],
+    "borders": [],
+    "officialName": "Montserrat",
+    "nativeName": "Montserrat",
+    "unMember": false
+  },
+  "MTQ": {
+    "capital": "Fort-de-France",
+    "capitalLat": 14.666667,
+    "capitalLng": -61.0,
+    "area": 1128.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Martiniquais, Martinican",
+    "callingCode": "+596",
+    "tld": ".mq",
+    "timezones": [
+      "UTC-04:00 (America/Martinique)"
+    ],
+    "borders": [],
+    "officialName": "Martinique",
+    "nativeName": "Martinique",
+    "unMember": false
+  },
+  "MUS": {
+    "capital": "Port Louis",
+    "capitalLat": -20.28333333,
+    "capitalLng": 57.55,
+    "area": 2040.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French",
+      "Mauritian Creole"
+    ],
+    "currencies": [
+      "Mauritian rupee (₨ • MUR)"
+    ],
+    "demonym": "Mauritian",
+    "callingCode": "+230",
+    "tld": ".mu",
+    "timezones": [
+      "UTC+04:00 (Indian/Mauritius)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Mauritius",
+    "nativeName": "Republic of Mauritius",
+    "unMember": true
+  },
+  "MWI": {
+    "capital": "Lilongwe",
+    "capitalLat": -13.5,
+    "capitalLng": 34.0,
+    "area": 118484.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "Chewa"
+    ],
+    "currencies": [
+      "Malawian kwacha (MK • MWK)"
+    ],
+    "demonym": "Malawian",
+    "callingCode": "+265",
+    "tld": ".mw",
+    "timezones": [
+      "UTC+02:00 (Africa/Blantyre)"
+    ],
+    "borders": [
+      "MOZ",
+      "TZA",
+      "ZMB"
+    ],
+    "officialName": "Republic of Malawi",
+    "nativeName": "Republic of Malawi",
+    "unMember": true
+  },
+  "MYS": {
+    "capital": "Kuala Lumpur",
+    "capitalLat": 2.5,
+    "capitalLng": 112.5,
+    "area": 330803.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Malay"
+    ],
+    "currencies": [
+      "Malaysian ringgit (RM • MYR)"
+    ],
+    "demonym": "Malaysian",
+    "callingCode": "+60",
+    "tld": ".my",
+    "timezones": [
+      "UTC+08:00 (Asia/Kuala_Lumpur)",
+      "UTC+08:00 (Asia/Kuching)"
+    ],
+    "borders": [
+      "BRN",
+      "IDN",
+      "THA"
+    ],
+    "officialName": "Malaysia",
+    "nativeName": "Malaysia",
+    "unMember": true
+  },
+  "MYT": {
+    "capital": "Mamoudzou",
+    "capitalLat": -12.83333333,
+    "capitalLng": 45.16666666,
+    "area": 374.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Mahoran",
+    "callingCode": "+262",
+    "tld": ".yt",
+    "timezones": [
+      "UTC+03:00 (Indian/Mayotte)"
+    ],
+    "borders": [],
+    "officialName": "Department of Mayotte",
+    "nativeName": "Département de Mayotte",
+    "unMember": false
+  },
+  "NAM": {
+    "capital": "Windhoek",
+    "capitalLat": -22.0,
+    "capitalLng": 17.0,
+    "area": 825615.0,
+    "landlocked": false,
+    "languages": [
+      "Afrikaans",
+      "German",
+      "English",
+      "Herero",
+      "Khoekhoe",
+      "Kwangali",
+      "Lozi",
+      "Ndonga",
+      "Tswana"
+    ],
+    "currencies": [
+      "Namibian dollar ($ • NAD)",
+      "South African rand (R • ZAR)"
+    ],
+    "demonym": "Namibian",
+    "callingCode": "+264",
+    "tld": ".na",
+    "timezones": [
+      "UTC+02:00 (Africa/Windhoek)"
+    ],
+    "borders": [
+      "AGO",
+      "BWA",
+      "ZAF",
+      "ZMB"
+    ],
+    "officialName": "Republic of Namibia",
+    "nativeName": "Republiek van Namibië",
+    "unMember": true
+  },
+  "NCL": {
+    "capital": "Nouméa",
+    "capitalLat": -21.5,
+    "capitalLng": 165.5,
+    "area": 18575.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "CFP franc (₣ • XPF)"
+    ],
+    "demonym": "New Caledonian",
+    "callingCode": "+687",
+    "tld": ".nc",
+    "timezones": [
+      "UTC+11:00 (Pacific/Noumea)"
+    ],
+    "borders": [],
+    "officialName": "New Caledonia",
+    "nativeName": "Nouvelle-Calédonie",
+    "unMember": false
+  },
+  "NER": {
+    "capital": "Niamey",
+    "capitalLat": 16.0,
+    "capitalLng": 8.0,
+    "area": 1267000.0,
+    "landlocked": true,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Nigerien",
+    "callingCode": "+227",
+    "tld": ".ne",
+    "timezones": [
+      "UTC+01:00 (Africa/Niamey)"
+    ],
+    "borders": [
+      "DZA",
+      "BEN",
+      "BFA",
+      "TCD",
+      "LBY",
+      "MLI",
+      "NGA"
+    ],
+    "officialName": "Republic of Niger",
+    "nativeName": "République du Niger",
+    "unMember": true
+  },
+  "NFK": {
+    "capital": "Kingston",
+    "capitalLat": -29.03333333,
+    "capitalLng": 167.95,
+    "area": 36.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Norfuk"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Norfolk Island",
+    "callingCode": "+672",
+    "tld": ".nf",
+    "timezones": [
+      "UTC+12:00 (Pacific/Norfolk)"
+    ],
+    "borders": [],
+    "officialName": "Territory of Norfolk Island",
+    "nativeName": "Territory of Norfolk Island",
+    "unMember": false
+  },
+  "NGA": {
+    "capital": "Abuja",
+    "capitalLat": 10.0,
+    "capitalLng": 8.0,
+    "area": 923768.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Nigerian naira (₦ • NGN)"
+    ],
+    "demonym": "Nigerian",
+    "callingCode": "+234",
+    "tld": ".ng",
+    "timezones": [
+      "UTC+01:00 (Africa/Lagos)"
+    ],
+    "borders": [
+      "BEN",
+      "CMR",
+      "TCD",
+      "NER"
+    ],
+    "officialName": "Federal Republic of Nigeria",
+    "nativeName": "Federal Republic of Nigeria",
+    "unMember": true
+  },
+  "NIC": {
+    "capital": "Managua",
+    "capitalLat": 13.0,
+    "capitalLng": -85.0,
+    "area": 130373.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Nicaraguan córdoba (C$ • NIO)"
+    ],
+    "demonym": "Nicaraguan",
+    "callingCode": "+505",
+    "tld": ".ni",
+    "timezones": [
+      "UTC-06:00 (America/Managua)"
+    ],
+    "borders": [
+      "CRI",
+      "HND"
+    ],
+    "officialName": "Republic of Nicaragua",
+    "nativeName": "República de Nicaragua",
+    "unMember": true
+  },
+  "NIU": {
+    "capital": "Alofi",
+    "capitalLat": -19.03333333,
+    "capitalLng": -169.86666666,
+    "area": 260.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Niuean"
+    ],
+    "currencies": [
+      "New Zealand dollar ($ • NZD)"
+    ],
+    "demonym": "Niuean",
+    "callingCode": "+683",
+    "tld": ".nu",
+    "timezones": [
+      "UTC-11:00 (Pacific/Niue)"
+    ],
+    "borders": [],
+    "officialName": "Niue",
+    "nativeName": "Niue",
+    "unMember": false
+  },
+  "NLD": {
+    "capital": "Amsterdam",
+    "capitalLat": 52.5,
+    "capitalLng": 5.75,
+    "area": 41850.0,
+    "landlocked": false,
+    "languages": [
+      "Dutch"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Dutch, Netherlandic",
+    "callingCode": "+31",
+    "tld": ".nl",
+    "timezones": [
+      "UTC+01:00 (Europe/Amsterdam)"
+    ],
+    "borders": [
+      "BEL",
+      "DEU"
+    ],
+    "officialName": "Kingdom of the Netherlands",
+    "nativeName": "Koninkrijk der Nederlanden",
+    "unMember": true
+  },
+  "NOR": {
+    "capital": "Oslo",
+    "capitalLat": 62.0,
+    "capitalLng": 10.0,
+    "area": 323802.0,
+    "landlocked": false,
+    "languages": [
+      "Norwegian Nynorsk",
+      "Norwegian Bokmål",
+      "Sami"
+    ],
+    "currencies": [
+      "Norwegian krone (kr • NOK)"
+    ],
+    "demonym": "Norwegian",
+    "callingCode": "+47",
+    "tld": ".no",
+    "timezones": [
+      "UTC+01:00 (Europe/Oslo)",
+      "UTC+01:00 (Arctic/Longyearbyen)"
+    ],
+    "borders": [
+      "FIN",
+      "SWE",
+      "RUS"
+    ],
+    "officialName": "Kingdom of Norway",
+    "nativeName": "Kongeriket Noreg",
+    "unMember": true
+  },
+  "NPL": {
+    "capital": "Kathmandu",
+    "capitalLat": 28.0,
+    "capitalLng": 84.0,
+    "area": 147181.0,
+    "landlocked": true,
+    "languages": [
+      "Nepali"
+    ],
+    "currencies": [
+      "Nepalese rupee (₨ • NPR)"
+    ],
+    "demonym": "Nepali, Nepalese",
+    "callingCode": "+977",
+    "tld": ".np",
+    "timezones": [
+      "UTC+05:45 (Asia/Kathmandu)"
+    ],
+    "borders": [
+      "CHN",
+      "IND"
+    ],
+    "officialName": "Federal Democratic Republic of Nepal",
+    "nativeName": "नेपाल संघीय लोकतान्त्रिक गणतन्त्र",
+    "unMember": true
+  },
+  "NRU": {
+    "capital": "Yaren",
+    "capitalLat": -0.53333333,
+    "capitalLng": 166.91666666,
+    "area": 21.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Nauru"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)"
+    ],
+    "demonym": "Nauruan",
+    "callingCode": "+674",
+    "tld": ".nr",
+    "timezones": [
+      "UTC+12:00 (Pacific/Nauru)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Nauru",
+    "nativeName": "Republic of Nauru",
+    "unMember": true
+  },
+  "NZL": {
+    "capital": "Wellington",
+    "capitalLat": -41.0,
+    "capitalLng": 174.0,
+    "area": 270467.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Māori",
+      "New Zealand Sign Language"
+    ],
+    "currencies": [
+      "New Zealand dollar ($ • NZD)"
+    ],
+    "demonym": "New Zealand, NZ",
+    "callingCode": "+64",
+    "tld": ".nz",
+    "timezones": [
+      "UTC+13:00 (Pacific/Auckland)",
+      "UTC+13:45 (Pacific/Chatham)"
+    ],
+    "borders": [],
+    "officialName": "New Zealand",
+    "nativeName": "New Zealand",
+    "unMember": true
+  },
+  "OMN": {
+    "capital": "Muscat",
+    "capitalLat": 21.0,
+    "capitalLng": 57.0,
+    "area": 309500.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Omani rial (ر.ع. • OMR)"
+    ],
+    "demonym": "Omani",
+    "callingCode": "+968",
+    "tld": ".om",
+    "timezones": [
+      "UTC+04:00 (Asia/Muscat)"
+    ],
+    "borders": [
+      "SAU",
+      "ARE",
+      "YEM"
+    ],
+    "officialName": "Sultanate of Oman",
+    "nativeName": "سلطنة عمان",
+    "unMember": true
+  },
+  "PAK": {
+    "capital": "Islamabad",
+    "capitalLat": 30.0,
+    "capitalLng": 70.0,
+    "area": 881912.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Urdu"
+    ],
+    "currencies": [
+      "Pakistani rupee (₨ • PKR)"
+    ],
+    "demonym": "Pakistani",
+    "callingCode": "+92",
+    "tld": ".pk",
+    "timezones": [
+      "UTC+05:00 (Asia/Karachi)"
+    ],
+    "borders": [
+      "AFG",
+      "CHN",
+      "IND",
+      "IRN"
+    ],
+    "officialName": "Islamic Republic of Pakistan",
+    "nativeName": "Islamic Republic of Pakistan",
+    "unMember": true
+  },
+  "PAN": {
+    "capital": "Panama City",
+    "capitalLat": 9.0,
+    "capitalLng": -80.0,
+    "area": 75417.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Panamanian balboa (B/. • PAB)",
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Panamanian",
+    "callingCode": "+507",
+    "tld": ".pa",
+    "timezones": [
+      "UTC-05:00 (America/Panama)"
+    ],
+    "borders": [
+      "COL",
+      "CRI"
+    ],
+    "officialName": "Republic of Panama",
+    "nativeName": "República de Panamá",
+    "unMember": true
+  },
+  "PCN": {
+    "capital": "Adamstown",
+    "capitalLat": -25.06666666,
+    "capitalLng": -130.1,
+    "area": 47.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "New Zealand dollar ($ • NZD)"
+    ],
+    "demonym": "Pitcairn Island",
+    "callingCode": "+870",
+    "tld": ".pn",
+    "timezones": [
+      "UTC-08:00 (Pacific/Pitcairn)"
+    ],
+    "borders": [],
+    "officialName": "Pitcairn Group of Islands",
+    "nativeName": "Pitcairn Group of Islands",
+    "unMember": false
+  },
+  "PER": {
+    "capital": "Lima",
+    "capitalLat": -10.0,
+    "capitalLng": -76.0,
+    "area": 1285216.0,
+    "landlocked": false,
+    "languages": [
+      "Aymara",
+      "Quechua",
+      "Spanish"
+    ],
+    "currencies": [
+      "Peruvian sol (S/. • PEN)"
+    ],
+    "demonym": "Peruvian",
+    "callingCode": "+51",
+    "tld": ".pe",
+    "timezones": [
+      "UTC-05:00 (America/Lima)"
+    ],
+    "borders": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "COL",
+      "ECU"
+    ],
+    "officialName": "Republic of Peru",
+    "nativeName": "Piruw Suyu",
+    "unMember": true
+  },
+  "PHL": {
+    "capital": "Manila",
+    "capitalLat": 13.0,
+    "capitalLng": 122.0,
+    "area": 342353.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Filipino"
+    ],
+    "currencies": [
+      "Philippine peso (₱ • PHP)"
+    ],
+    "demonym": "Philippine, Filipino",
+    "callingCode": "+63",
+    "tld": ".ph",
+    "timezones": [
+      "UTC+08:00 (Asia/Manila)"
+    ],
+    "borders": [],
+    "officialName": "Republic of the Philippines",
+    "nativeName": "Republic of the Philippines",
+    "unMember": true
+  },
+  "PLW": {
+    "capital": "Ngerulmud",
+    "capitalLat": 7.5,
+    "capitalLng": 134.5,
+    "area": 459.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Palauan"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Palauan",
+    "callingCode": "+680",
+    "tld": ".pw",
+    "timezones": [
+      "UTC+09:00 (Pacific/Palau)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Palau",
+    "nativeName": "Republic of Palau",
+    "unMember": true
+  },
+  "PNG": {
+    "capital": "Port Moresby",
+    "capitalLat": -6.0,
+    "capitalLng": 147.0,
+    "area": 462840.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Hiri Motu",
+      "Tok Pisin"
+    ],
+    "currencies": [
+      "Papua New Guinean kina (K • PGK)"
+    ],
+    "demonym": "Papua New Guinean, Papuan",
+    "callingCode": "+675",
+    "tld": ".pg",
+    "timezones": [
+      "UTC+11:00 (Pacific/Bougainville)",
+      "UTC+10:00 (Pacific/Port_Moresby)"
+    ],
+    "borders": [
+      "IDN"
+    ],
+    "officialName": "Independent State of Papua New Guinea",
+    "nativeName": "Independent State of Papua New Guinea",
+    "unMember": true
+  },
+  "POL": {
+    "capital": "Warsaw",
+    "capitalLat": 52.0,
+    "capitalLng": 20.0,
+    "area": 312679.0,
+    "landlocked": false,
+    "languages": [
+      "Polish"
+    ],
+    "currencies": [
+      "Polish złoty (zł • PLN)"
+    ],
+    "demonym": "Polish",
+    "callingCode": "+48",
+    "tld": ".pl",
+    "timezones": [
+      "UTC+01:00 (Europe/Warsaw)"
+    ],
+    "borders": [
+      "BLR",
+      "CZE",
+      "DEU",
+      "LTU",
+      "RUS",
+      "SVK",
+      "UKR"
+    ],
+    "officialName": "Republic of Poland",
+    "nativeName": "Rzeczpospolita Polska",
+    "unMember": true
+  },
+  "PRI": {
+    "capital": "San Juan",
+    "capitalLat": 18.25,
+    "capitalLng": -66.5,
+    "area": 8870.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Puerto Rican",
+    "callingCode": "+1",
+    "tld": ".pr",
+    "timezones": [
+      "UTC-04:00 (America/Puerto_Rico)"
+    ],
+    "borders": [],
+    "officialName": "Commonwealth of Puerto Rico",
+    "nativeName": "Commonwealth of Puerto Rico",
+    "unMember": false
+  },
+  "PRK": {
+    "capital": "Pyongyang",
+    "capitalLat": 40.0,
+    "capitalLng": 127.0,
+    "area": 120538.0,
+    "landlocked": false,
+    "languages": [
+      "Korean"
+    ],
+    "currencies": [
+      "North Korean won (₩ • KPW)"
+    ],
+    "demonym": "North Korean",
+    "callingCode": "+850",
+    "tld": ".kp",
+    "timezones": [
+      "UTC+09:00 (Asia/Pyongyang)"
+    ],
+    "borders": [
+      "CHN",
+      "KOR",
+      "RUS"
+    ],
+    "officialName": "Democratic People's Republic of Korea",
+    "nativeName": "조선민주주의인민공화국",
+    "unMember": true
+  },
+  "PRT": {
+    "capital": "Lisbon",
+    "capitalLat": 39.5,
+    "capitalLng": -8.0,
+    "area": 92090.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Portuguese",
+    "callingCode": "+351",
+    "tld": ".pt",
+    "timezones": [
+      "UTC-01:00 (Atlantic/Azores)",
+      "UTC±00 (Atlantic/Madeira)",
+      "UTC±00 (Europe/Lisbon)"
+    ],
+    "borders": [
+      "ESP"
+    ],
+    "officialName": "Portuguese Republic",
+    "nativeName": "República português",
+    "unMember": true
+  },
+  "PRY": {
+    "capital": "Asunción",
+    "capitalLat": -23.0,
+    "capitalLng": -58.0,
+    "area": 406752.0,
+    "landlocked": true,
+    "languages": [
+      "Guaraní",
+      "Spanish"
+    ],
+    "currencies": [
+      "Paraguayan guaraní (₲ • PYG)"
+    ],
+    "demonym": "Paraguayan",
+    "callingCode": "+595",
+    "tld": ".py",
+    "timezones": [
+      "UTC-03:00 (America/Asuncion)"
+    ],
+    "borders": [
+      "ARG",
+      "BOL",
+      "BRA"
+    ],
+    "officialName": "Republic of Paraguay",
+    "nativeName": "Tetã Paraguái",
+    "unMember": true
+  },
+  "PSE": {
+    "capital": "Ramallah",
+    "capitalLat": 31.9,
+    "capitalLng": 35.2,
+    "area": 6220.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Egyptian pound (E£ • EGP)",
+      "Israeli new shekel (₪ • ILS)",
+      "Jordanian dinar (JD • JOD)"
+    ],
+    "demonym": "Palestinian",
+    "callingCode": "+970",
+    "tld": ".ps",
+    "timezones": [
+      "UTC+02:00 (Asia/Gaza)",
+      "UTC+02:00 (Asia/Hebron)"
+    ],
+    "borders": [
+      "ISR",
+      "EGY",
+      "JOR"
+    ],
+    "officialName": "State of Palestine",
+    "nativeName": "دولة فلسطين",
+    "unMember": false
+  },
+  "PYF": {
+    "capital": "Papeetē",
+    "capitalLat": -15.0,
+    "capitalLng": -140.0,
+    "area": 4167.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "CFP franc (₣ • XPF)"
+    ],
+    "demonym": "French Polynesia",
+    "callingCode": "+689",
+    "tld": ".pf",
+    "timezones": [
+      "UTC-09:00 (Pacific/Gambier)",
+      "UTC-09:30 (Pacific/Marquesas)",
+      "UTC-10:00 (Pacific/Tahiti)"
+    ],
+    "borders": [],
+    "officialName": "French Polynesia",
+    "nativeName": "Polynésie française",
+    "unMember": false
+  },
+  "QAT": {
+    "capital": "Doha",
+    "capitalLat": 25.5,
+    "capitalLng": 51.25,
+    "area": 11586.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Qatari riyal (ر.ق • QAR)"
+    ],
+    "demonym": "Qatari",
+    "callingCode": "+974",
+    "tld": ".qa",
+    "timezones": [
+      "UTC+03:00 (Asia/Qatar)"
+    ],
+    "borders": [
+      "SAU"
+    ],
+    "officialName": "State of Qatar",
+    "nativeName": "دولة قطر",
+    "unMember": true
+  },
+  "REU": {
+    "capital": "Saint-Denis",
+    "capitalLat": -21.15,
+    "capitalLng": 55.5,
+    "area": 2511.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Reunionese, Reunionnais",
+    "callingCode": "+262",
+    "tld": ".re",
+    "timezones": [
+      "UTC+04:00 (Indian/Reunion)"
+    ],
+    "borders": [],
+    "officialName": "Réunion Island",
+    "nativeName": "Ile de la Réunion",
+    "unMember": false
+  },
+  "ROU": {
+    "capital": "Bucharest",
+    "capitalLat": 46.0,
+    "capitalLng": 25.0,
+    "area": 238391.0,
+    "landlocked": false,
+    "languages": [
+      "Romanian"
+    ],
+    "currencies": [
+      "Romanian leu (lei • RON)"
+    ],
+    "demonym": "Romanian",
+    "callingCode": "+40",
+    "tld": ".ro",
+    "timezones": [
+      "UTC+02:00 (Europe/Bucharest)"
+    ],
+    "borders": [
+      "BGR",
+      "HUN",
+      "MDA",
+      "SRB",
+      "UKR"
+    ],
+    "officialName": "Romania",
+    "nativeName": "România",
+    "unMember": true
+  },
+  "RUS": {
+    "capital": "Moscow",
+    "capitalLat": 60.0,
+    "capitalLng": 100.0,
+    "area": 17098242.0,
+    "landlocked": false,
+    "languages": [
+      "Russian"
+    ],
+    "currencies": [
+      "Russian ruble (₽ • RUB)"
+    ],
+    "demonym": "Russian",
+    "callingCode": "+7",
+    "tld": ".ru",
+    "timezones": [
+      "UTC+12:00 (Asia/Anadyr)",
+      "UTC+07:00 (Asia/Barnaul)",
+      "UTC+09:00 (Asia/Chita)",
+      "UTC+08:00 (Asia/Irkutsk)",
+      "UTC+12:00 (Asia/Kamchatka)",
+      "UTC+09:00 (Asia/Khandyga)",
+      "UTC+07:00 (Asia/Krasnoyarsk)",
+      "UTC+11:00 (Asia/Magadan)",
+      "UTC+07:00 (Asia/Novokuznetsk)",
+      "UTC+07:00 (Asia/Novosibirsk)",
+      "UTC+06:00 (Asia/Omsk)",
+      "UTC+11:00 (Asia/Sakhalin)",
+      "UTC+11:00 (Asia/Srednekolymsk)",
+      "UTC+07:00 (Asia/Tomsk)",
+      "UTC+10:00 (Asia/Ust-Nera)",
+      "UTC+10:00 (Asia/Vladivostok)",
+      "UTC+09:00 (Asia/Yakutsk)",
+      "UTC+05:00 (Asia/Yekaterinburg)",
+      "UTC+04:00 (Europe/Astrakhan)",
+      "UTC+02:00 (Europe/Kaliningrad)",
+      "UTC+03:00 (Europe/Kirov)",
+      "UTC+03:00 (Europe/Moscow)",
+      "UTC+04:00 (Europe/Samara)",
+      "UTC+04:00 (Europe/Saratov)",
+      "UTC+04:00 (Europe/Ulyanovsk)",
+      "UTC+04:00 (Europe/Volgograd)"
+    ],
+    "borders": [
+      "AZE",
+      "BLR",
+      "CHN",
+      "EST",
+      "FIN",
+      "GEO",
+      "KAZ",
+      "PRK",
+      "LVA",
+      "LTU",
+      "MNG",
+      "NOR",
+      "POL",
+      "UKR"
+    ],
+    "officialName": "Russian Federation",
+    "nativeName": "Российская Федерация",
+    "unMember": true
+  },
+  "RWA": {
+    "capital": "Kigali",
+    "capitalLat": -2.0,
+    "capitalLng": 30.0,
+    "area": 26338.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "French",
+      "Kinyarwanda"
+    ],
+    "currencies": [
+      "Rwandan franc (Fr • RWF)"
+    ],
+    "demonym": "Rwandan",
+    "callingCode": "+250",
+    "tld": ".rw",
+    "timezones": [
+      "UTC+02:00 (Africa/Kigali)"
+    ],
+    "borders": [
+      "BDI",
+      "COD",
+      "TZA",
+      "UGA"
+    ],
+    "officialName": "Republic of Rwanda",
+    "nativeName": "Republic of Rwanda",
+    "unMember": true
+  },
+  "SAU": {
+    "capital": "Riyadh",
+    "capitalLat": 25.0,
+    "capitalLng": 45.0,
+    "area": 2149690.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Saudi riyal (ر.س • SAR)"
+    ],
+    "demonym": "Saudi, Saudi Arabian",
+    "callingCode": "+966",
+    "tld": ".sa",
+    "timezones": [
+      "UTC+03:00 (Asia/Riyadh)"
+    ],
+    "borders": [
+      "IRQ",
+      "JOR",
+      "KWT",
+      "OMN",
+      "QAT",
+      "ARE",
+      "YEM"
+    ],
+    "officialName": "Kingdom of Saudi Arabia",
+    "nativeName": "المملكة العربية السعودية",
+    "unMember": true
+  },
+  "SDN": {
+    "capital": "Khartoum",
+    "capitalLat": 15.0,
+    "capitalLng": 30.0,
+    "area": 1886068.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "currencies": [
+      "Sudanese pound (PT • SDG)"
+    ],
+    "demonym": "Sudanese",
+    "callingCode": "+249",
+    "tld": ".sd",
+    "timezones": [
+      "UTC+02:00 (Africa/Khartoum)"
+    ],
+    "borders": [
+      "CAF",
+      "TCD",
+      "EGY",
+      "ERI",
+      "ETH",
+      "LBY",
+      "SSD"
+    ],
+    "officialName": "Republic of the Sudan",
+    "nativeName": "جمهورية السودان",
+    "unMember": true
+  },
+  "SEN": {
+    "capital": "Dakar",
+    "capitalLat": 14.0,
+    "capitalLng": -14.0,
+    "area": 196722.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Senegalese",
+    "callingCode": "+221",
+    "tld": ".sn",
+    "timezones": [
+      "UTC±00 (Africa/Dakar)"
+    ],
+    "borders": [
+      "GMB",
+      "GIN",
+      "GNB",
+      "MLI",
+      "MRT"
+    ],
+    "officialName": "Republic of Senegal",
+    "nativeName": "République du Sénégal",
+    "unMember": true
+  },
+  "SGP": {
+    "capital": "Singapore",
+    "capitalLat": 1.36666666,
+    "capitalLng": 103.8,
+    "area": 710.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Malay",
+      "Tamil",
+      "Chinese"
+    ],
+    "currencies": [
+      "Singapore dollar ($ • SGD)"
+    ],
+    "demonym": "Singaporean",
+    "callingCode": "+65",
+    "tld": ".sg",
+    "timezones": [
+      "UTC+08:00 (Asia/Singapore)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Singapore",
+    "nativeName": "Republic of Singapore",
+    "unMember": true
+  },
+  "SGS": {
+    "capital": "King Edward Point",
+    "capitalLat": -54.5,
+    "capitalLng": -37.0,
+    "area": 3903.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Saint Helena pound (£ • SHP)"
+    ],
+    "demonym": "South Georgia or South Sandwich Islands",
+    "callingCode": "+500",
+    "tld": ".gs",
+    "timezones": [
+      "UTC-02:00 (Atlantic/South_Georgia)"
+    ],
+    "borders": [],
+    "officialName": "South Georgia and the South Sandwich Islands",
+    "nativeName": "South Georgia and the South Sandwich Islands",
+    "unMember": false
+  },
+  "SJM": {
+    "capital": "Longyearbyen",
+    "capitalLat": 78.0,
+    "capitalLng": 20.0,
+    "area": -1.0,
+    "landlocked": false,
+    "languages": [
+      "Norwegian"
+    ],
+    "currencies": [
+      "krone (kr • NOK)"
+    ],
+    "demonym": "Svalbard",
+    "callingCode": "+47",
+    "tld": ".sj",
+    "timezones": [
+      "UTC+01:00 (Arctic/Longyearbyen)"
+    ],
+    "borders": [],
+    "officialName": "Svalbard og Jan Mayen",
+    "nativeName": "Svalbard og Jan Mayen",
+    "unMember": false
+  },
+  "SLB": {
+    "capital": "Honiara",
+    "capitalLat": -8.0,
+    "capitalLng": 159.0,
+    "area": 28896.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Solomon Islands dollar ($ • SBD)"
+    ],
+    "demonym": "Solomon Island",
+    "callingCode": "+677",
+    "tld": ".sb",
+    "timezones": [
+      "UTC+11:00 (Pacific/Guadalcanal)"
+    ],
+    "borders": [],
+    "officialName": "Solomon Islands",
+    "nativeName": "Solomon Islands",
+    "unMember": true
+  },
+  "SLE": {
+    "capital": "Freetown",
+    "capitalLat": 8.5,
+    "capitalLng": -11.5,
+    "area": 71740.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Sierra Leonean leone (Le • SLE)"
+    ],
+    "demonym": "Sierra Leonean",
+    "callingCode": "+232",
+    "tld": ".sl",
+    "timezones": [
+      "UTC±00 (Africa/Freetown)"
+    ],
+    "borders": [
+      "GIN",
+      "LBR"
+    ],
+    "officialName": "Republic of Sierra Leone",
+    "nativeName": "Republic of Sierra Leone",
+    "unMember": true
+  },
+  "SLV": {
+    "capital": "San Salvador",
+    "capitalLat": 13.83333333,
+    "capitalLng": -88.91666666,
+    "area": 21041.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Salvadoran",
+    "callingCode": "+503",
+    "tld": ".sv",
+    "timezones": [
+      "UTC-06:00 (America/El_Salvador)"
+    ],
+    "borders": [
+      "GTM",
+      "HND"
+    ],
+    "officialName": "Republic of El Salvador",
+    "nativeName": "República de El Salvador",
+    "unMember": true
+  },
+  "SMR": {
+    "capital": "City of San Marino",
+    "capitalLat": 43.76666666,
+    "capitalLng": 12.41666666,
+    "area": 61.0,
+    "landlocked": true,
+    "languages": [
+      "Italian"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Sammarinese",
+    "callingCode": "+378",
+    "tld": ".sm",
+    "timezones": [
+      "UTC+01:00 (Europe/San_Marino)"
+    ],
+    "borders": [
+      "ITA"
+    ],
+    "officialName": "Most Serene Republic of San Marino",
+    "nativeName": "Serenissima Repubblica di San Marino",
+    "unMember": true
+  },
+  "SOM": {
+    "capital": "Mogadishu",
+    "capitalLat": 10.0,
+    "capitalLng": 49.0,
+    "area": 637657.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic",
+      "Somali"
+    ],
+    "currencies": [
+      "Somali shilling (Sh • SOS)"
+    ],
+    "demonym": "Somali, Somalian",
+    "callingCode": "+252",
+    "tld": ".so",
+    "timezones": [
+      "UTC+03:00 (Africa/Mogadishu)"
+    ],
+    "borders": [
+      "DJI",
+      "ETH",
+      "KEN"
+    ],
+    "officialName": "Federal Republic of Somalia",
+    "nativeName": "جمهورية الصومال الفيدرالية",
+    "unMember": true
+  },
+  "SPM": {
+    "capital": "Saint-Pierre",
+    "capitalLat": 46.83333333,
+    "capitalLng": -56.33333333,
+    "area": 242.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Saint-Pierrais or Miquelonnais",
+    "callingCode": "+508",
+    "tld": ".pm",
+    "timezones": [
+      "UTC-03:00 (America/Miquelon)"
+    ],
+    "borders": [],
+    "officialName": "Saint Pierre and Miquelon",
+    "nativeName": "Collectivité territoriale de Saint-Pierre-et-Miquelon",
+    "unMember": false
+  },
+  "SRB": {
+    "capital": "Belgrade",
+    "capitalLat": 44.0,
+    "capitalLng": 21.0,
+    "area": 88361.0,
+    "landlocked": true,
+    "languages": [
+      "Serbian"
+    ],
+    "currencies": [
+      "Serbian dinar (дин. • RSD)"
+    ],
+    "demonym": "Serbian",
+    "callingCode": "+381",
+    "tld": ".rs",
+    "timezones": [
+      "UTC+01:00 (Europe/Belgrade)"
+    ],
+    "borders": [
+      "BIH",
+      "BGR",
+      "HRV",
+      "HUN",
+      "UNK",
+      "MKD",
+      "MNE",
+      "ROU"
+    ],
+    "officialName": "Republic of Serbia",
+    "nativeName": "Република Србија",
+    "unMember": true
+  },
+  "SSD": {
+    "capital": "Juba",
+    "capitalLat": 7.0,
+    "capitalLng": 30.0,
+    "area": 619745.0,
+    "landlocked": true,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "South Sudanese pound (£ • SSP)"
+    ],
+    "demonym": "South Sudanese",
+    "callingCode": "+211",
+    "tld": ".ss",
+    "timezones": [
+      "UTC+03:00 (Africa/Juba)"
+    ],
+    "borders": [
+      "CAF",
+      "COD",
+      "ETH",
+      "KEN",
+      "SDN",
+      "UGA"
+    ],
+    "officialName": "Republic of South Sudan",
+    "nativeName": "Republic of South Sudan",
+    "unMember": true
+  },
+  "STP": {
+    "capital": "São Tomé",
+    "capitalLat": 1.0,
+    "capitalLng": 7.0,
+    "area": 964.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese"
+    ],
+    "currencies": [
+      "São Tomé and Príncipe dobra (Db • STN)"
+    ],
+    "demonym": "Sao Tomean",
+    "callingCode": "+239",
+    "tld": ".st",
+    "timezones": [
+      "UTC±00 (Africa/Sao_Tome)"
+    ],
+    "borders": [],
+    "officialName": "Democratic Republic of São Tomé and Príncipe",
+    "nativeName": "República Democrática do São Tomé e Príncipe",
+    "unMember": true
+  },
+  "SUR": {
+    "capital": "Paramaribo",
+    "capitalLat": 4.0,
+    "capitalLng": -56.0,
+    "area": 163820.0,
+    "landlocked": false,
+    "languages": [
+      "Dutch"
+    ],
+    "currencies": [
+      "Surinamese dollar ($ • SRD)"
+    ],
+    "demonym": "Surinamese",
+    "callingCode": "+597",
+    "tld": ".sr",
+    "timezones": [
+      "UTC-03:00 (America/Paramaribo)"
+    ],
+    "borders": [
+      "BRA",
+      "GUF",
+      "GUY"
+    ],
+    "officialName": "Republic of Suriname",
+    "nativeName": "Republiek Suriname",
+    "unMember": true
+  },
+  "SVK": {
+    "capital": "Bratislava",
+    "capitalLat": 48.66666666,
+    "capitalLng": 19.5,
+    "area": 49037.0,
+    "landlocked": true,
+    "languages": [
+      "Slovak"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Slovak",
+    "callingCode": "+421",
+    "tld": ".sk",
+    "timezones": [
+      "UTC+01:00 (Europe/Bratislava)"
+    ],
+    "borders": [
+      "AUT",
+      "CZE",
+      "HUN",
+      "POL",
+      "UKR"
+    ],
+    "officialName": "Slovak Republic",
+    "nativeName": "Slovenská republika",
+    "unMember": true
+  },
+  "SVN": {
+    "capital": "Ljubljana",
+    "capitalLat": 46.11666666,
+    "capitalLng": 14.81666666,
+    "area": 20273.0,
+    "landlocked": false,
+    "languages": [
+      "Slovene"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Slovenian, Slovene",
+    "callingCode": "+386",
+    "tld": ".si",
+    "timezones": [
+      "UTC+01:00 (Europe/Ljubljana)"
+    ],
+    "borders": [
+      "AUT",
+      "HRV",
+      "ITA",
+      "HUN"
+    ],
+    "officialName": "Republic of Slovenia",
+    "nativeName": "Republika Slovenija",
+    "unMember": true
+  },
+  "SWE": {
+    "capital": "Stockholm",
+    "capitalLat": 62.0,
+    "capitalLng": 15.0,
+    "area": 450295.0,
+    "landlocked": false,
+    "languages": [
+      "Swedish"
+    ],
+    "currencies": [
+      "Swedish krona (kr • SEK)"
+    ],
+    "demonym": "Swedish",
+    "callingCode": "+46",
+    "tld": ".se",
+    "timezones": [
+      "UTC+01:00 (Europe/Stockholm)"
+    ],
+    "borders": [
+      "FIN",
+      "NOR"
+    ],
+    "officialName": "Kingdom of Sweden",
+    "nativeName": "Konungariket Sverige",
+    "unMember": true
+  },
+  "SWZ": {
+    "capital": "Lobamba",
+    "capitalLat": -26.5,
+    "capitalLng": 31.5,
+    "area": 17364.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "Swazi"
+    ],
+    "currencies": [
+      "Swazi lilangeni (L • SZL)",
+      "South African rand (R • ZAR)"
+    ],
+    "demonym": "Swazi",
+    "callingCode": "+268",
+    "tld": ".sz",
+    "timezones": [
+      "UTC+02:00 (Africa/Mbabane)"
+    ],
+    "borders": [
+      "MOZ",
+      "ZAF"
+    ],
+    "officialName": "Kingdom of Eswatini",
+    "nativeName": "Kingdom of Eswatini",
+    "unMember": true
+  },
+  "SXM": {
+    "capital": "Philipsburg",
+    "capitalLat": 18.033333,
+    "capitalLng": -63.05,
+    "area": 34.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "French",
+      "Dutch"
+    ],
+    "currencies": [
+      "Netherlands Antillean guilder (ƒ • ANG)"
+    ],
+    "demonym": "Sint Maarten",
+    "callingCode": "+1721",
+    "tld": ".sx",
+    "timezones": [
+      "UTC-04:00 (America/Anguilla)"
+    ],
+    "borders": [
+      "MAF"
+    ],
+    "officialName": "Sint Maarten",
+    "nativeName": "Sint Maarten",
+    "unMember": false
+  },
+  "SYC": {
+    "capital": "Victoria",
+    "capitalLat": -4.6574977,
+    "capitalLng": 55.4540146,
+    "area": 452.0,
+    "landlocked": false,
+    "languages": [
+      "Seychellois Creole",
+      "English",
+      "French"
+    ],
+    "currencies": [
+      "Seychellois rupee (₨ • SCR)"
+    ],
+    "demonym": "Seychellois",
+    "callingCode": "+248",
+    "tld": ".sc",
+    "timezones": [
+      "UTC+04:00 (Indian/Mahe)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Seychelles",
+    "nativeName": "Repiblik Sesel",
+    "unMember": true
+  },
+  "SYR": {
+    "capital": "Damascus",
+    "capitalLat": 35.0,
+    "capitalLng": 38.0,
+    "area": 185180.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Syrian pound (£ • SYP)"
+    ],
+    "demonym": "Syrian",
+    "callingCode": "+963",
+    "tld": ".sy",
+    "timezones": [
+      "UTC+02:00 (Asia/Damascus)"
+    ],
+    "borders": [
+      "IRQ",
+      "ISR",
+      "JOR",
+      "LBN",
+      "TUR"
+    ],
+    "officialName": "Syrian Arab Republic",
+    "nativeName": "الجمهورية العربية السورية",
+    "unMember": true
+  },
+  "TCA": {
+    "capital": "Cockburn Town",
+    "capitalLat": 21.75,
+    "capitalLng": -71.58333333,
+    "area": 948.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Turks and Caicos Island",
+    "callingCode": "+1",
+    "tld": ".tc",
+    "timezones": [
+      "UTC-05:00 (America/Grand_Turk)"
+    ],
+    "borders": [],
+    "officialName": "Turks and Caicos Islands",
+    "nativeName": "Turks and Caicos Islands",
+    "unMember": false
+  },
+  "TCD": {
+    "capital": "N'Djamena",
+    "capitalLat": 15.0,
+    "capitalLng": 19.0,
+    "area": 1284000.0,
+    "landlocked": true,
+    "languages": [
+      "Arabic",
+      "French"
+    ],
+    "currencies": [
+      "Central African CFA franc (Fr • XAF)"
+    ],
+    "demonym": "Chadian",
+    "callingCode": "+235",
+    "tld": ".td",
+    "timezones": [
+      "UTC+01:00 (Africa/Ndjamena)"
+    ],
+    "borders": [
+      "CMR",
+      "CAF",
+      "LBY",
+      "NER",
+      "NGA",
+      "SDN"
+    ],
+    "officialName": "Republic of Chad",
+    "nativeName": "جمهورية تشاد",
+    "unMember": true
+  },
+  "TGO": {
+    "capital": "Lomé",
+    "capitalLat": 8.0,
+    "capitalLng": 1.16666666,
+    "area": 56785.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "West African CFA franc (Fr • XOF)"
+    ],
+    "demonym": "Togolese",
+    "callingCode": "+228",
+    "tld": ".tg",
+    "timezones": [
+      "UTC±00 (Africa/Lome)"
+    ],
+    "borders": [
+      "BEN",
+      "BFA",
+      "GHA"
+    ],
+    "officialName": "Togolese Republic",
+    "nativeName": "République togolaise",
+    "unMember": true
+  },
+  "THA": {
+    "capital": "Bangkok",
+    "capitalLat": 15.0,
+    "capitalLng": 100.0,
+    "area": 513120.0,
+    "landlocked": false,
+    "languages": [
+      "Thai"
+    ],
+    "currencies": [
+      "Thai baht (฿ • THB)"
+    ],
+    "demonym": "Thai",
+    "callingCode": "+66",
+    "tld": ".th",
+    "timezones": [
+      "UTC+07:00 (Asia/Bangkok)"
+    ],
+    "borders": [
+      "MMR",
+      "KHM",
+      "LAO",
+      "MYS"
+    ],
+    "officialName": "Kingdom of Thailand",
+    "nativeName": "ราชอาณาจักรไทย",
+    "unMember": true
+  },
+  "TJK": {
+    "capital": "Dushanbe",
+    "capitalLat": 39.0,
+    "capitalLng": 71.0,
+    "area": 143100.0,
+    "landlocked": true,
+    "languages": [
+      "Russian",
+      "Tajik"
+    ],
+    "currencies": [
+      "Tajikistani somoni (ЅМ • TJS)"
+    ],
+    "demonym": "Tajikistani",
+    "callingCode": "+992",
+    "tld": ".tj",
+    "timezones": [
+      "UTC+05:00 (Asia/Dushanbe)"
+    ],
+    "borders": [
+      "AFG",
+      "CHN",
+      "KGZ",
+      "UZB"
+    ],
+    "officialName": "Republic of Tajikistan",
+    "nativeName": "Республика Таджикистан",
+    "unMember": true
+  },
+  "TKL": {
+    "capital": "Fakaofo",
+    "capitalLat": -9.0,
+    "capitalLng": -172.0,
+    "area": 12.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Samoan",
+      "Tokelauan"
+    ],
+    "currencies": [
+      "New Zealand dollar ($ • NZD)"
+    ],
+    "demonym": "Tokelauan",
+    "callingCode": "+690",
+    "tld": ".tk",
+    "timezones": [
+      "UTC+13:00 (Pacific/Fakaofo)"
+    ],
+    "borders": [],
+    "officialName": "Tokelau",
+    "nativeName": "Tokelau",
+    "unMember": false
+  },
+  "TKM": {
+    "capital": "Ashgabat",
+    "capitalLat": 40.0,
+    "capitalLng": 60.0,
+    "area": 488100.0,
+    "landlocked": true,
+    "languages": [
+      "Russian",
+      "Turkmen"
+    ],
+    "currencies": [
+      "Turkmenistan manat (m • TMT)"
+    ],
+    "demonym": "Turkmen",
+    "callingCode": "+993",
+    "tld": ".tm",
+    "timezones": [
+      "UTC+05:00 (Asia/Ashgabat)"
+    ],
+    "borders": [
+      "AFG",
+      "IRN",
+      "KAZ",
+      "UZB"
+    ],
+    "officialName": "Turkmenistan",
+    "nativeName": "Туркменистан",
+    "unMember": true
+  },
+  "TLS": {
+    "capital": "Dili",
+    "capitalLat": -8.83333333,
+    "capitalLng": 125.91666666,
+    "area": 14874.0,
+    "landlocked": false,
+    "languages": [
+      "Portuguese",
+      "Tetum"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "Timorese",
+    "callingCode": "+670",
+    "tld": ".tl",
+    "timezones": [
+      "UTC+09:00 (Asia/Dili)"
+    ],
+    "borders": [
+      "IDN"
+    ],
+    "officialName": "Democratic Republic of Timor-Leste",
+    "nativeName": "República Democrática de Timor-Leste",
+    "unMember": true
+  },
+  "TON": {
+    "capital": "Nuku'alofa",
+    "capitalLat": -20.0,
+    "capitalLng": -175.0,
+    "area": 747.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Tongan"
+    ],
+    "currencies": [
+      "Tongan paʻanga (T$ • TOP)"
+    ],
+    "demonym": "Tongan",
+    "callingCode": "+676",
+    "tld": ".to",
+    "timezones": [
+      "UTC+13:00 (Pacific/Tongatapu)"
+    ],
+    "borders": [],
+    "officialName": "Kingdom of Tonga",
+    "nativeName": "Kingdom of Tonga",
+    "unMember": true
+  },
+  "TTO": {
+    "capital": "Port of Spain",
+    "capitalLat": 11.0,
+    "capitalLng": -61.0,
+    "area": 5130.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Trinidad and Tobago dollar ($ • TTD)"
+    ],
+    "demonym": "Trinidadian or Tobagonian",
+    "callingCode": "+1",
+    "tld": ".tt",
+    "timezones": [
+      "UTC-04:00 (America/Port_of_Spain)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Trinidad and Tobago",
+    "nativeName": "Republic of Trinidad and Tobago",
+    "unMember": true
+  },
+  "TUN": {
+    "capital": "Tunis",
+    "capitalLat": 34.0,
+    "capitalLng": 9.0,
+    "area": 163610.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Tunisian dinar (د.ت • TND)"
+    ],
+    "demonym": "Tunisian",
+    "callingCode": "+216",
+    "tld": ".tn",
+    "timezones": [
+      "UTC+01:00 (Africa/Tunis)"
+    ],
+    "borders": [
+      "DZA",
+      "LBY"
+    ],
+    "officialName": "Tunisian Republic",
+    "nativeName": "الجمهورية التونسية",
+    "unMember": true
+  },
+  "TUR": {
+    "capital": "Ankara",
+    "capitalLat": 39.0,
+    "capitalLng": 35.0,
+    "area": 783562.0,
+    "landlocked": false,
+    "languages": [
+      "Turkish"
+    ],
+    "currencies": [
+      "Turkish lira (₺ • TRY)"
+    ],
+    "demonym": "Turkish",
+    "callingCode": "+90",
+    "tld": ".tr",
+    "timezones": [
+      "UTC+03:00 (Europe/Istanbul)"
+    ],
+    "borders": [
+      "ARM",
+      "AZE",
+      "BGR",
+      "GEO",
+      "GRC",
+      "IRN",
+      "IRQ",
+      "SYR"
+    ],
+    "officialName": "Republic of Türkiye",
+    "nativeName": "Türkiye Cumhuriyeti",
+    "unMember": true
+  },
+  "TUV": {
+    "capital": "Funafuti",
+    "capitalLat": -8.0,
+    "capitalLng": 178.0,
+    "area": 26.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Tuvaluan"
+    ],
+    "currencies": [
+      "Australian dollar ($ • AUD)",
+      "Tuvaluan dollar ($ • TVD)"
+    ],
+    "demonym": "Tuvaluan",
+    "callingCode": "+688",
+    "tld": ".tv",
+    "timezones": [
+      "UTC+12:00 (Pacific/Funafuti)"
+    ],
+    "borders": [],
+    "officialName": "Tuvalu",
+    "nativeName": "Tuvalu",
+    "unMember": true
+  },
+  "TWN": {
+    "capital": "Taipei",
+    "capitalLat": 23.5,
+    "capitalLng": 121.0,
+    "area": 36193.0,
+    "landlocked": false,
+    "languages": [
+      "Chinese"
+    ],
+    "currencies": [
+      "New Taiwan dollar ($ • TWD)"
+    ],
+    "demonym": "Chinese, Taiwanese",
+    "callingCode": "+886",
+    "tld": ".tw",
+    "timezones": [
+      "UTC+08:00 (Asia/Taipei)"
+    ],
+    "borders": [],
+    "officialName": "Republic of China (Taiwan)",
+    "nativeName": "中華民國",
+    "unMember": false
+  },
+  "TZA": {
+    "capital": "Dodoma",
+    "capitalLat": -6.0,
+    "capitalLng": 35.0,
+    "area": 945087.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Swahili"
+    ],
+    "currencies": [
+      "Tanzanian shilling (Sh • TZS)"
+    ],
+    "demonym": "Tanzanian",
+    "callingCode": "+255",
+    "tld": ".tz",
+    "timezones": [
+      "UTC+03:00 (Africa/Dar_es_Salaam)"
+    ],
+    "borders": [
+      "BDI",
+      "COD",
+      "KEN",
+      "MWI",
+      "MOZ",
+      "RWA",
+      "UGA",
+      "ZMB"
+    ],
+    "officialName": "United Republic of Tanzania",
+    "nativeName": "United Republic of Tanzania",
+    "unMember": true
+  },
+  "UGA": {
+    "capital": "Kampala",
+    "capitalLat": 1.0,
+    "capitalLng": 32.0,
+    "area": 241550.0,
+    "landlocked": true,
+    "languages": [
+      "English",
+      "Swahili"
+    ],
+    "currencies": [
+      "Ugandan shilling (Sh • UGX)"
+    ],
+    "demonym": "Ugandan",
+    "callingCode": "+256",
+    "tld": ".ug",
+    "timezones": [
+      "UTC+03:00 (Africa/Kampala)"
+    ],
+    "borders": [
+      "COD",
+      "KEN",
+      "RWA",
+      "SSD",
+      "TZA"
+    ],
+    "officialName": "Republic of Uganda",
+    "nativeName": "Republic of Uganda",
+    "unMember": true
+  },
+  "UKR": {
+    "capital": "Kyiv",
+    "capitalLat": 49.0,
+    "capitalLng": 32.0,
+    "area": 603500.0,
+    "landlocked": false,
+    "languages": [
+      "Ukrainian"
+    ],
+    "currencies": [
+      "Ukrainian hryvnia (₴ • UAH)"
+    ],
+    "demonym": "Ukrainian",
+    "callingCode": "+380",
+    "tld": ".ua",
+    "timezones": [
+      "UTC+02:00 (Europe/Kyiv)",
+      "UTC+03:00 (Europe/Simferopol)",
+      "UTC+02:00 (Europe/Uzhgorod)",
+      "UTC+02:00 (Europe/Zaporozhye)"
+    ],
+    "borders": [
+      "BLR",
+      "HUN",
+      "MDA",
+      "POL",
+      "ROU",
+      "RUS",
+      "SVK"
+    ],
+    "officialName": "Ukraine",
+    "nativeName": "Україна",
+    "unMember": true
+  },
+  "UMI": {
+    "capital": "N/A",
+    "capitalLat": 0.0,
+    "capitalLng": 0.0,
+    "area": 34.2,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "American",
+    "callingCode": "+1",
+    "tld": ".us",
+    "timezones": [
+      "UTC-11:00 (Pacific/Midway)",
+      "UTC+12:00 (Pacific/Wake)"
+    ],
+    "borders": [],
+    "officialName": "United States Minor Outlying Islands",
+    "nativeName": "United States Minor Outlying Islands",
+    "unMember": false
+  },
+  "URY": {
+    "capital": "Montevideo",
+    "capitalLat": -33.0,
+    "capitalLng": -56.0,
+    "area": 181034.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Uruguayan peso ($ • UYU)"
+    ],
+    "demonym": "Uruguayan",
+    "callingCode": "+598",
+    "tld": ".uy",
+    "timezones": [
+      "UTC-03:00 (America/Montevideo)"
+    ],
+    "borders": [
+      "ARG",
+      "BRA"
+    ],
+    "officialName": "Oriental Republic of Uruguay",
+    "nativeName": "República Oriental del Uruguay",
+    "unMember": true
+  },
+  "USA": {
+    "capital": "Washington D.C.",
+    "capitalLat": 38.0,
+    "capitalLng": -97.0,
+    "area": 9372610.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "American",
+    "callingCode": "+1",
+    "tld": ".us",
+    "timezones": [
+      "UTC-10:00 (America/Adak)",
+      "UTC-09:00 (America/Anchorage)",
+      "UTC-07:00 (America/Boise)",
+      "UTC-06:00 (America/Chicago)",
+      "UTC-07:00 (America/Denver)",
+      "UTC-05:00 (America/Detroit)",
+      "UTC-05:00 (America/Indiana/Indianapolis)",
+      "UTC-06:00 (America/Indiana/Knox)",
+      "UTC-05:00 (America/Indiana/Marengo)",
+      "UTC-05:00 (America/Indiana/Petersburg)",
+      "UTC-06:00 (America/Indiana/Tell_City)",
+      "UTC-05:00 (America/Indiana/Vevay)",
+      "UTC-05:00 (America/Indiana/Vincennes)",
+      "UTC-05:00 (America/Indiana/Winamac)",
+      "UTC-09:00 (America/Juneau)",
+      "UTC-05:00 (America/Kentucky/Louisville)",
+      "UTC-05:00 (America/Kentucky/Monticello)",
+      "UTC-08:00 (America/Los_Angeles)",
+      "UTC-06:00 (America/Menominee)",
+      "UTC-09:00 (America/Metlakatla)",
+      "UTC-05:00 (America/New_York)",
+      "UTC-09:00 (America/Nome)",
+      "UTC-06:00 (America/North_Dakota/Beulah)",
+      "UTC-06:00 (America/North_Dakota/Center)",
+      "UTC-06:00 (America/North_Dakota/New_Salem)",
+      "UTC-07:00 (America/Phoenix)",
+      "UTC-09:00 (America/Sitka)",
+      "UTC-09:00 (America/Yakutat)",
+      "UTC-10:00 (Pacific/Honolulu)"
+    ],
+    "borders": [
+      "CAN",
+      "MEX"
+    ],
+    "officialName": "United States of America",
+    "nativeName": "United States of America",
+    "unMember": true
+  },
+  "UZB": {
+    "capital": "Tashkent",
+    "capitalLat": 41.0,
+    "capitalLng": 64.0,
+    "area": 447400.0,
+    "landlocked": true,
+    "languages": [
+      "Russian",
+      "Uzbek"
+    ],
+    "currencies": [
+      "Uzbekistani soʻm (so'm • UZS)"
+    ],
+    "demonym": "Uzbekistani, Uzbek",
+    "callingCode": "+998",
+    "tld": ".uz",
+    "timezones": [
+      "UTC+05:00 (Asia/Samarkand)",
+      "UTC+05:00 (Asia/Tashkent)"
+    ],
+    "borders": [
+      "AFG",
+      "KAZ",
+      "KGZ",
+      "TJK",
+      "TKM"
+    ],
+    "officialName": "Republic of Uzbekistan",
+    "nativeName": "Республика Узбекистан",
+    "unMember": true
+  },
+  "VAT": {
+    "capital": "Vatican City",
+    "capitalLat": 41.9,
+    "capitalLng": 12.45,
+    "area": 0.44,
+    "landlocked": true,
+    "languages": [
+      "Italian",
+      "Latin"
+    ],
+    "currencies": [
+      "Euro (€ • EUR)"
+    ],
+    "demonym": "Vatican",
+    "callingCode": "+379",
+    "tld": ".va",
+    "timezones": [
+      "UTC+01:00 (Europe/Vatican)"
+    ],
+    "borders": [
+      "ITA"
+    ],
+    "officialName": "Vatican City State",
+    "nativeName": "Stato della Città del Vaticano",
+    "unMember": true
+  },
+  "VCT": {
+    "capital": "Kingstown",
+    "capitalLat": 13.25,
+    "capitalLng": -61.2,
+    "area": 389.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Eastern Caribbean dollar ($ • XCD)"
+    ],
+    "demonym": "Saint Vincentian, Vincentian",
+    "callingCode": "+1",
+    "tld": ".vc",
+    "timezones": [
+      "UTC-04:00 (America/St_Vincent)"
+    ],
+    "borders": [],
+    "officialName": "Saint Vincent and the Grenadines",
+    "nativeName": "Saint Vincent and the Grenadines",
+    "unMember": true
+  },
+  "VEN": {
+    "capital": "Caracas",
+    "capitalLat": 8.0,
+    "capitalLng": -66.0,
+    "area": 916445.0,
+    "landlocked": false,
+    "languages": [
+      "Spanish"
+    ],
+    "currencies": [
+      "Venezuelan bolívar soberano (Bs.S. • VES)"
+    ],
+    "demonym": "Venezuelan",
+    "callingCode": "+58",
+    "tld": ".ve",
+    "timezones": [
+      "UTC-04:00 (America/Caracas)"
+    ],
+    "borders": [
+      "BRA",
+      "COL",
+      "GUY"
+    ],
+    "officialName": "Bolivarian Republic of Venezuela",
+    "nativeName": "República Bolivariana de Venezuela",
+    "unMember": true
+  },
+  "VGB": {
+    "capital": "Road Town",
+    "capitalLat": 18.431383,
+    "capitalLng": -64.62305,
+    "area": 151.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "British Virgin Island",
+    "callingCode": "+1",
+    "tld": ".vg",
+    "timezones": [
+      "UTC-04:00 (America/Tortola)"
+    ],
+    "borders": [],
+    "officialName": "Virgin Islands",
+    "nativeName": "Virgin Islands",
+    "unMember": false
+  },
+  "VIR": {
+    "capital": "Charlotte Amalie",
+    "capitalLat": 18.34,
+    "capitalLng": -64.93,
+    "area": 347.0,
+    "landlocked": false,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "United States dollar ($ • USD)"
+    ],
+    "demonym": "U.S. Virgin Island",
+    "callingCode": "+1",
+    "tld": ".vi",
+    "timezones": [
+      "UTC-04:00 (America/St_Thomas)"
+    ],
+    "borders": [],
+    "officialName": "Virgin Islands of the United States",
+    "nativeName": "Virgin Islands of the United States",
+    "unMember": false
+  },
+  "VNM": {
+    "capital": "Hanoi",
+    "capitalLat": 16.16666666,
+    "capitalLng": 107.83333333,
+    "area": 331212.0,
+    "landlocked": false,
+    "languages": [
+      "Vietnamese"
+    ],
+    "currencies": [
+      "Vietnamese đồng (₫ • VND)"
+    ],
+    "demonym": "Vietnamese",
+    "callingCode": "+84",
+    "tld": ".vn",
+    "timezones": [
+      "UTC+07:00 (Asia/Ho_Chi_Minh)"
+    ],
+    "borders": [
+      "KHM",
+      "CHN",
+      "LAO"
+    ],
+    "officialName": "Socialist Republic of Vietnam",
+    "nativeName": "Cộng hòa xã hội chủ nghĩa Việt Nam",
+    "unMember": true
+  },
+  "VUT": {
+    "capital": "Port Vila",
+    "capitalLat": -16.0,
+    "capitalLng": 167.0,
+    "area": 12189.0,
+    "landlocked": false,
+    "languages": [
+      "Bislama",
+      "English",
+      "French"
+    ],
+    "currencies": [
+      "Vanuatu vatu (Vt • VUV)"
+    ],
+    "demonym": "Ni-Vanuatu, Vanuatuan",
+    "callingCode": "+678",
+    "tld": ".vu",
+    "timezones": [
+      "UTC+11:00 (Pacific/Efate)"
+    ],
+    "borders": [],
+    "officialName": "Republic of Vanuatu",
+    "nativeName": "Ripablik blong Vanuatu",
+    "unMember": true
+  },
+  "WLF": {
+    "capital": "Mata-Utu",
+    "capitalLat": -13.3,
+    "capitalLng": -176.2,
+    "area": 142.0,
+    "landlocked": false,
+    "languages": [
+      "French"
+    ],
+    "currencies": [
+      "CFP franc (₣ • XPF)"
+    ],
+    "demonym": "Wallis and Futuna, Wallisian or Futunan",
+    "callingCode": "+681",
+    "tld": ".wf",
+    "timezones": [
+      "UTC+12:00 (Pacific/Wallis)"
+    ],
+    "borders": [],
+    "officialName": "Territory of the Wallis and Futuna Islands",
+    "nativeName": "Territoire des îles Wallis et Futuna",
+    "unMember": false
+  },
+  "WSM": {
+    "capital": "Apia",
+    "capitalLat": -13.58333333,
+    "capitalLng": -172.33333333,
+    "area": 2842.0,
+    "landlocked": false,
+    "languages": [
+      "English",
+      "Samoan"
+    ],
+    "currencies": [
+      "Samoan tālā (T • WST)"
+    ],
+    "demonym": "Samoan",
+    "callingCode": "+685",
+    "tld": ".ws",
+    "timezones": [
+      "UTC+14:00 (Pacific/Apia)"
+    ],
+    "borders": [],
+    "officialName": "Independent State of Samoa",
+    "nativeName": "Independent State of Samoa",
+    "unMember": true
+  },
+  "YEM": {
+    "capital": "Sana'a",
+    "capitalLat": 15.0,
+    "capitalLng": 48.0,
+    "area": 527968.0,
+    "landlocked": false,
+    "languages": [
+      "Arabic"
+    ],
+    "currencies": [
+      "Yemeni rial (﷼ • YER)"
+    ],
+    "demonym": "Yemeni",
+    "callingCode": "+967",
+    "tld": ".ye",
+    "timezones": [
+      "UTC+03:00 (Asia/Aden)"
+    ],
+    "borders": [
+      "OMN",
+      "SAU"
+    ],
+    "officialName": "Republic of Yemen",
+    "nativeName": "الجمهورية اليمنية",
+    "unMember": true
+  },
+  "ZAF": {
+    "capital": "Pretoria",
+    "capitalLat": -29.0,
+    "capitalLng": 24.0,
+    "area": 1221037.0,
+    "landlocked": false,
+    "languages": [
+      "Afrikaans",
+      "English",
+      "Southern Ndebele",
+      "Northern Sotho",
+      "Southern Sotho",
+      "Swazi",
+      "Tswana",
+      "Tsonga",
+      "Venda",
+      "Xhosa",
+      "Zulu"
+    ],
+    "currencies": [
+      "South African rand (R • ZAR)"
+    ],
+    "demonym": "South African",
+    "callingCode": "+27",
+    "tld": ".za",
+    "timezones": [
+      "UTC+02:00 (Africa/Johannesburg)"
+    ],
+    "borders": [
+      "BWA",
+      "LSO",
+      "MOZ",
+      "NAM",
+      "SWZ",
+      "ZWE"
+    ],
+    "officialName": "Republic of South Africa",
+    "nativeName": "Republiek van Suid-Afrika",
+    "unMember": true
+  },
+  "ZMB": {
+    "capital": "Lusaka",
+    "capitalLat": -15.0,
+    "capitalLng": 30.0,
+    "area": 752612.0,
+    "landlocked": true,
+    "languages": [
+      "English"
+    ],
+    "currencies": [
+      "Zambian kwacha (ZK • ZMW)"
+    ],
+    "demonym": "Zambian",
+    "callingCode": "+260",
+    "tld": ".zm",
+    "timezones": [
+      "UTC+02:00 (Africa/Lusaka)"
+    ],
+    "borders": [
+      "AGO",
+      "BWA",
+      "COD",
+      "MWI",
+      "MOZ",
+      "NAM",
+      "TZA",
+      "ZWE"
+    ],
+    "officialName": "Republic of Zambia",
+    "nativeName": "Republic of Zambia",
+    "unMember": true
+  },
+  "ZWE": {
+    "capital": "Harare",
+    "capitalLat": -20.0,
+    "capitalLng": 30.0,
+    "area": 390757.0,
+    "landlocked": true,
+    "languages": [
+      "Chibarwe",
+      "English",
+      "Kalanga",
+      "Khoisan",
+      "Ndau",
+      "Northern Ndebele",
+      "Chewa",
+      "Shona",
+      "Sotho",
+      "Tonga",
+      "Tswana",
+      "Tsonga",
+      "Venda",
+      "Xhosa",
+      "Zimbabwean Sign Language"
+    ],
+    "currencies": [
+      "Botswana pula (P • BWP)",
+      "Chinese yuan (¥ • CNY)",
+      "Euro (€ • EUR)",
+      "British pound (£ • GBP)",
+      "Indian rupee (₹ • INR)",
+      "Japanese yen (¥ • JPY)",
+      "United States dollar ($ • USD)",
+      "South African rand (Rs • ZAR)",
+      "Zimbabwean bonds ($ • ZWB)"
+    ],
+    "demonym": "Zimbabwean",
+    "callingCode": "+263",
+    "tld": ".zw",
+    "timezones": [
+      "UTC+02:00 (Africa/Harare)"
+    ],
+    "borders": [
+      "BWA",
+      "MOZ",
+      "ZAF",
+      "ZMB"
+    ],
+    "officialName": "Republic of Zimbabwe",
+    "nativeName": "Republic of Zimbabwe",
+    "unMember": true
+  }
+}
