@@ -3,6 +3,8 @@ package com.dirzaaulia.countries
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.*
@@ -30,6 +32,9 @@ fun App() {
         var countries by remember { mutableStateOf<List<Country>>(emptyList()) }
         var selectedCountryId by remember { mutableStateOf<String?>(null) }
         val globeState = rememberGlobeState()
+        val moonState = rememberGlobeState()
+        val moonInfo = remember { AstronomyMath.calculateMoonInfo() }
+        val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
         val scope = rememberCoroutineScope()
 
         var liveDetails by remember { mutableStateOf<LiveCountryDetails?>(null) }
@@ -37,7 +42,6 @@ fun App() {
 
         // Layer Toggles
         var showBorders by remember { mutableStateOf(true) }
-        var showMoon by remember { mutableStateOf(true) }
         var showSatellites by remember { mutableStateOf(true) }
         var showHazards by remember { mutableStateOf(true) }
         var isFlightMode by remember { mutableStateOf(false) }
@@ -47,7 +51,6 @@ fun App() {
         var issTelemetry by remember { mutableStateOf<ISSTelemetry?>(null) }
         var globalHazards by remember { mutableStateOf<List<NasaNaturalEvent>>(emptyList()) }
         var selectedHazard by remember { mutableStateOf<NasaNaturalEvent?>(null) }
-        var showMoonDetail by remember { mutableStateOf(false) }
 
         // Flight Simulator State
         var flightOrigin by remember { mutableStateOf<Country?>(null) }
@@ -132,58 +135,68 @@ fun App() {
                 .fillMaxSize()
                 .background(Color(0xFF03060C))
         ) {
-            // Interactive 3D Earth Globe with All Strategic Horizon Layers
-            GlobeView(
-                countries = countries,
-                selectedCountryId = selectedCountryId,
-                onCountrySelected = { clickedId ->
-                    if (isQuizMode && quizTargetCountry != null) {
-                        val tappedCountry = countries.find { it.id == clickedId }
-                        if (clickedId == quizTargetCountry?.id) {
-                            quizScore += 100 + (quizStreak * 25)
-                            quizStreak += 1
-                            quizFeedback = "🎉 Correct! That is ${quizTargetCountry?.name}!"
-                            quizIsCorrect = true
-                            selectedCountryId = clickedId
-                        } else if (tappedCountry != null) {
-                            quizStreak = 0
-                            quizFeedback = "❌ That is ${tappedCountry.name}! Keep looking for ${quizTargetCountry?.name}."
-                            quizIsCorrect = false
-                            selectedCountryId = clickedId
-                        }
-                    } else {
-                        selectedCountryId = clickedId
-                        selectedHazard = null
-                        showMoonDetail = false
+            // Horizontal Pager: Page 0 = Planet Earth Globe, Page 1 = Moon Explorer
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = true
+            ) { page ->
+                if (page == 0) {
+                    GlobeView(
+                        countries = countries,
+                        selectedCountryId = selectedCountryId,
+                        onCountrySelected = { clickedId ->
+                            if (isQuizMode && quizTargetCountry != null) {
+                                val tappedCountry = countries.find { it.id == clickedId }
+                                if (clickedId == quizTargetCountry?.id) {
+                                    quizScore += 100 + (quizStreak * 25)
+                                    quizStreak += 1
+                                    quizFeedback = "🎉 Correct! That is ${quizTargetCountry?.name}!"
+                                    quizIsCorrect = true
+                                    selectedCountryId = clickedId
+                                } else if (tappedCountry != null) {
+                                    quizStreak = 0
+                                    quizFeedback = "❌ That is ${tappedCountry.name}! Keep looking for ${quizTargetCountry?.name}."
+                                    quizIsCorrect = false
+                                    selectedCountryId = clickedId
+                                }
+                            } else {
+                                selectedCountryId = clickedId
+                                selectedHazard = null
+                            }
+                        },
+                        state = globeState,
+                        showBorders = showBorders,
+                        showSatellites = showSatellites,
+                        showHazards = showHazards,
+                        issTelemetry = issTelemetry,
+                        hazards = globalHazards,
+                        flightRoute = if (isFlightMode) flightRoute else null,
+                        onHazardSelected = { hazard ->
+                            selectedHazard = hazard
+                            selectedCountryId = null
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    MoonView(
+                        moonInfo = moonInfo,
+                        state = moonState,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+
+            // Mission Control Top HUD with Celestial Switcher & Compact Layers
+            MissionControlTopBar(
+                currentPage = pagerState.currentPage,
+                onSelectPage = { targetPage ->
+                    scope.launch {
+                        pagerState.animateScrollToPage(targetPage)
                     }
                 },
-                state = globeState,
-                showBorders = showBorders,
-                showMoon = showMoon,
-                showSatellites = showSatellites,
-                showHazards = showHazards,
-                issTelemetry = issTelemetry,
-                hazards = globalHazards,
-                flightRoute = if (isFlightMode) flightRoute else null,
-                onHazardSelected = { hazard ->
-                    selectedHazard = hazard
-                    selectedCountryId = null
-                    showMoonDetail = false
-                },
-                onMoonSelected = {
-                    showMoonDetail = true
-                    selectedHazard = null
-                    selectedCountryId = null
-                },
-                modifier = Modifier.fillMaxSize()
-            )
-
-            // Mission Control Top HUD with Multi-Layer Toggles
-            MissionControlTopBar(
                 showBorders = showBorders,
                 onToggleBorders = { showBorders = !showBorders },
-                showMoon = showMoon,
-                onToggleMoon = { showMoon = !showMoon },
                 showSatellites = showSatellites,
                 onToggleSatellites = { showSatellites = !showSatellites },
                 showHazards = showHazards,
@@ -210,14 +223,15 @@ fun App() {
                 }
             )
 
-            // Bottom Overlay: Country Dossier, Quiz Card, Flight Card, Moon or Hazards
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-            ) {
+            // Bottom Overlay: Country Dossier, Quiz Card, Flight Card, or Hazards (only when on Earth page)
+            if (pagerState.currentPage == 0) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(16.dp)
+                ) {
                 when {
                     // A. Geography Challenge Quiz Mode
                     isQuizMode && quizTargetCountry != null -> {
@@ -254,14 +268,6 @@ fun App() {
                         HazardDetailSheet(
                             hazard = selectedHazard!!,
                             onClose = { selectedHazard = null }
-                        )
-                    }
-
-                    // D. Moon Astronomical Information Sheet
-                    showMoonDetail -> {
-                        MoonDetailSheet(
-                            moonInfo = AstronomyMath.calculateMoonInfo(),
-                            onClose = { showMoonDetail = false }
                         )
                     }
 
@@ -332,3 +338,6 @@ fun App() {
         }
     }
 }
+}
+
+

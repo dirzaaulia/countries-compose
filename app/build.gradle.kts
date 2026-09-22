@@ -65,7 +65,7 @@ android {
         targetSdk = 36
         val propVersionCode = providers.gradleProperty("VERSION_CODE").orNull?.toIntOrNull()
             ?: System.getenv("VERSION_CODE")?.toIntOrNull()
-        versionCode = propVersionCode ?: 6
+        versionCode = propVersionCode ?: 7
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
