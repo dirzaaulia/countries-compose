@@ -32,6 +32,7 @@ fun MissionControlTopBar(
     onToggleFlightMode: () -> Unit,
     isQuizMode: Boolean,
     onToggleQuizMode: () -> Unit,
+    utcTime: String = "LIVE UTC",
     modifier: Modifier = Modifier
 ) {
     var showLayersMenu by remember { mutableStateOf(false) }
@@ -66,7 +67,7 @@ fun MissionControlTopBar(
                             .background(Color(0xFF10B981), CircleShape)
                     )
                     Text(
-                        text = if (currentPage == 0) "LIVE UTC" else "384.4K KM",
+                        text = if (currentPage == 0) utcTime else "384.4K KM",
                         color = Color(0xFFE0F2FE),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,

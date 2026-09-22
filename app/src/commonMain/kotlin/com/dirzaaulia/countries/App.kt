@@ -33,9 +33,31 @@ fun App() {
         var selectedCountryId by remember { mutableStateOf<String?>(null) }
         val globeState = rememberGlobeState()
         val moonState = rememberGlobeState()
-        val moonInfo = remember { AstronomyMath.calculateMoonInfo() }
         val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
         val scope = rememberCoroutineScope()
+
+        // Real-Time Continuous Astronomical Ticker (updates every 30 seconds)
+        var currentTimeMillis by remember { mutableStateOf(currentEpochMillis()) }
+        LaunchedEffect(Unit) {
+            while (isActive) {
+                delay(30_000L)
+                currentTimeMillis = currentEpochMillis()
+            }
+        }
+
+        val sunPos = remember(currentTimeMillis / 30_000L) {
+            AstronomyMath.calculateSunPosition(currentTimeMillis)
+        }
+        val moonInfo = remember(currentTimeMillis / 30_000L) {
+            AstronomyMath.calculateMoonInfo(currentTimeMillis)
+        }
+
+        val utcTimeStr = remember(currentTimeMillis / 60_000L) {
+            val utcMillis = ((currentTimeMillis % 86400000L) + 86400000L) % 86400000L
+            val hours = (utcMillis / 3600000L).toInt()
+            val minutes = ((utcMillis % 3600000L) / 60000L).toInt()
+            "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} UTC"
+        }
 
         var liveDetails by remember { mutableStateOf<LiveCountryDetails?>(null) }
         var isFetchingLive by remember { mutableStateOf(false) }
@@ -176,6 +198,7 @@ fun App() {
                             selectedHazard = hazard
                             selectedCountryId = null
                         },
+                        sunPos = sunPos,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -220,7 +243,8 @@ fun App() {
                         selectedCountryId = null
                         generateNextQuizQuestion()
                     }
-                }
+                },
+                utcTime = utcTimeStr
             )
 
             // Bottom Overlay: Country Dossier, Quiz Card, Flight Card, or Hazards (only when on Earth page)

@@ -55,6 +55,7 @@ fun GlobeView(
     hazards: List<NasaNaturalEvent> = emptyList(),
     flightRoute: List<LatLng>? = null,
     onHazardSelected: ((NasaNaturalEvent) -> Unit)? = null,
+    sunPos: SunPosition = AstronomyMath.calculateSunPosition(),
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
@@ -82,7 +83,6 @@ fun GlobeView(
     val sensitivity = 0.18f
 
     // Real-time astronomical data
-    val sunPos = remember { AstronomyMath.calculateSunPosition() }
     val sunVector = sunPos.vector
 
     Box(modifier = modifier.fillMaxSize()) {
