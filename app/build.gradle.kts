@@ -65,7 +65,7 @@ android {
         targetSdk = 36
         val propVersionCode = providers.gradleProperty("VERSION_CODE").orNull?.toIntOrNull()
             ?: System.getenv("VERSION_CODE")?.toIntOrNull()
-        versionCode = propVersionCode ?: 1
+        versionCode = propVersionCode ?: 6
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -124,4 +124,4 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-}
+}

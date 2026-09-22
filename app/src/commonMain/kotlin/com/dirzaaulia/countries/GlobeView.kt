@@ -172,9 +172,11 @@ fun GlobeView(
                                 val moonDist = currentRadius * 1.55
                                 val moonAngle = moonInfo.phaseAngle.toRadians
                                 val moonX = canvasCenter.x + moonDist * cos(moonAngle)
-                                val moonY = canvasCenter.y - moonDist * 0.45 * sin(moonAngle)
+                                val moonY = canvasCenter.y - moonDist * 0.42 * sin(moonAngle)
+                                val moonRadius = maxOf(28.0, (currentRadius * 0.20).toDouble())
+                                val tapRadius = moonRadius + 18.0
                                 val dMoon = (offset.x - moonX).pow(2) + (offset.y - moonY).pow(2)
-                                if (dMoon <= 32.0 * 32.0) {
+                                if (dMoon <= tapRadius * tapRadius) {
                                     onMoonSelected?.invoke()
                                     return@detectTapGestures
                                 }
@@ -258,36 +260,85 @@ fun GlobeView(
 
                 // Only render Moon if outside the Earth sphere
                 val dEarth = sqrt((moonX - canvasCenter.x).pow(2) + (moonY - canvasCenter.y).pow(2))
-                if (dEarth > currentRadius + 6f) {
-                    val moonRadius = 14f
+                if (dEarth > currentRadius + 8f) {
+                    val moonRadius = maxOf(28f, currentRadius * 0.20f)
                     val moonCenter = Offset(moonX, moonY)
 
-                    // 1. Dark lunar night hemisphere
-                    drawCircle(
-                        color = Color(0xFF1E293B),
-                        radius = moonRadius,
-                        center = moonCenter
-                    )
-
-                    // 2. Sunlit phase crescent/gibbous
-                    val illum = moonInfo.illuminatedFraction.toFloat()
-                    val sunlitColor = Color(0xFFF1F5F9)
+                    // 1. Soft atmospheric lunar glow aura
                     drawCircle(
                         brush = Brush.radialGradient(
-                            colors = listOf(sunlitColor, Color(0xFFCBD5E1), Color(0x00CBD5E1)),
-                            center = Offset(moonCenter.x - moonRadius * 0.3f, moonCenter.y - moonRadius * 0.3f),
-                            radius = moonRadius * 1.2f
+                            colors = listOf(Color(0x25E2E8F0), Color(0x0AE2E8F0), Color.Transparent),
+                            center = moonCenter,
+                            radius = moonRadius * 1.40f
                         ),
-                        radius = moonRadius * illum.coerceIn(0.15f, 1.0f),
+                        radius = moonRadius * 1.40f,
                         center = moonCenter
                     )
 
-                    // 3. Delicate rim outline
+                    // 2. Dark lunar night hemisphere (regolith slate)
                     drawCircle(
-                        color = Color(0x66FFFFFF),
+                        color = Color(0xFF0F172A),
+                        radius = moonRadius,
+                        center = moonCenter
+                    )
+
+                    // 3. Basaltic lunar mare patches on the unlit surface
+                    drawCircle(
+                        color = Color(0xFF1E293B),
+                        radius = moonRadius * 0.32f,
+                        center = Offset(moonCenter.x - moonRadius * 0.22f, moonCenter.y - moonRadius * 0.18f)
+                    )
+                    drawCircle(
+                        color = Color(0xFF1E293B),
+                        radius = moonRadius * 0.24f,
+                        center = Offset(moonCenter.x + moonRadius * 0.18f, moonCenter.y - moonRadius * 0.12f)
+                    )
+                    drawCircle(
+                        color = Color(0xFF1E293B),
+                        radius = moonRadius * 0.28f,
+                        center = Offset(moonCenter.x - moonRadius * 0.08f, moonCenter.y + moonRadius * 0.28f)
+                    )
+
+                    // 4. Sunlit phase crescent / gibbous
+                    val illum = moonInfo.illuminatedFraction.toFloat()
+                    val isWaxing = moonInfo.phaseAngle in 0.0..180.0
+                    val phaseOffsetDir = if (isWaxing) 1f else -1f
+                    val sunlitColor = Color(0xFFF8FAFC)
+                    val craterColor = Color(0xFFCBD5E1)
+
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(sunlitColor, craterColor, Color(0x00CBD5E1)),
+                            center = Offset(moonCenter.x + phaseOffsetDir * moonRadius * 0.30f, moonCenter.y - moonRadius * 0.20f),
+                            radius = moonRadius * 1.25f
+                        ),
+                        radius = moonRadius * illum.coerceIn(0.12f, 1.0f),
+                        center = Offset(moonCenter.x + phaseOffsetDir * moonRadius * (1f - illum) * 0.40f, moonCenter.y)
+                    )
+
+                    // 5. Craters on the sunlit surface (Tycho / Copernicus highlights)
+                    if (illum > 0.25f) {
+                        val craterCenterX = moonCenter.x + phaseOffsetDir * moonRadius * 0.25f
+                        val craterCenterY = moonCenter.y + moonRadius * 0.20f
+                        drawCircle(
+                            color = Color(0x44FFFFFF),
+                            radius = moonRadius * 0.14f,
+                            center = Offset(craterCenterX, craterCenterY)
+                        )
+                        drawCircle(
+                            color = Color(0x33475569),
+                            radius = moonRadius * 0.11f,
+                            center = Offset(craterCenterX, craterCenterY),
+                            style = Stroke(width = 1f)
+                        )
+                    }
+
+                    // 6. Subtle outer rim outline
+                    drawCircle(
+                        color = Color(0x5594A3B8),
                         radius = moonRadius,
                         center = moonCenter,
-                        style = Stroke(width = 1f)
+                        style = Stroke(width = 1.2f)
                     )
                 }
             }
@@ -333,18 +384,18 @@ fun GlobeView(
                                     val sA = normA.x * sunVector.x + normA.y * sunVector.y + normA.z * sunVector.z
                                     val sB = normB.x * sunVector.x + normB.y * sunVector.y + normB.z * sunVector.z
 
-                                    if (sA >= 0.06 && sB >= 0.06) {
+                                    if (sA >= 0.04 && sB >= 0.04) {
                                         // Daylight segment (Black)
                                         daylightBordersPath.moveTo(sxA, syA)
                                         daylightBordersPath.lineTo(sxB, syB)
-                                    } else if (sA <= -0.06 && sB <= -0.06) {
+                                    } else if (sA <= -0.04 && sB <= -0.04) {
                                         // Night segment (White)
                                         nightBordersPath.moveTo(sxA, syA)
                                         nightBordersPath.lineTo(sxB, syB)
                                     } else {
                                         // Twilight transition segment (Connected gradient blend)
-                                        val tA = ((sA + 0.06) / 0.12).coerceIn(0.0, 1.0).toFloat()
-                                        val tB = ((sB + 0.06) / 0.12).coerceIn(0.0, 1.0).toFloat()
+                                        val tA = ((sA + 0.04) / 0.08).coerceIn(0.0, 1.0).toFloat()
+                                        val tB = ((sB + 0.04) / 0.08).coerceIn(0.0, 1.0).toFloat()
 
                                         val coreA = androidx.compose.ui.graphics.lerp(colorNightCore, colorDayCore, tA)
                                         val coreB = androidx.compose.ui.graphics.lerp(colorNightCore, colorDayCore, tB)
