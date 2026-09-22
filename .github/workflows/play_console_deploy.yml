@@ -80,7 +80,6 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: ${{ github.event.inputs.track || 'internal' }}
           status: ${{ github.event.inputs.status || 'completed' }}
-          changesNotSentForReview: true
 
       - name: Cleanup Keystore
         if: always()
