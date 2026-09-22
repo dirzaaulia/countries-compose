@@ -3,8 +3,8 @@ name: Deploy to Play Console
 on:
   workflow_dispatch:
     inputs:
-      lane:
-        description: 'Fastlane Lane to run'
+      track:
+        description: 'Google Play Track'
         required: true
         default: 'internal'
         type: choice
@@ -13,9 +13,20 @@ on:
           - alpha
           - beta
           - production
+      status:
+        description: 'Release Status'
+        required: true
+        default: 'completed'
+        type: choice
+        options:
+          - completed
+          - draft
+          - inProgress
+          - halted
 
 jobs:
   deploy:
+    name: Build & Deploy Release Bundle
     runs-on: ubuntu-latest
 
     steps:
@@ -28,14 +39,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-
-      - name: Install Fastlane
-        run: |
-          gem install fastlane -N
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Make gradlew executable
         run: chmod +x gradlew
@@ -48,22 +53,16 @@ jobs:
             echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
           fi
 
-      - name: Generate Debug Keystore Fallback
-        run: |
-          if [ ! -f keystore.jks ]; then
-            mkdir -p ~/.android ~/.config/.android
-            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
-            cp ~/.android/debug.keystore ~/.config/.android/debug.keystore || true
-          fi
-
-      - name: Run Fastlane Lane
-        run: fastlane android ${{ github.event.inputs.lane }}
+      - name: Build Release Bundle (AAB)
         env:
-          PLAY_CONSOLE_JSON_KEY: ${{ secrets.PLAY_CONSOLE_JSON_KEY }}
           KEYSTORE_FILE: ${{ github.workspace }}/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          VERSION_CODE=$(($(date +%s) - 1700000000))
+          echo "Building with VERSION_CODE=$VERSION_CODE"
+          ./gradlew :app:bundleRelease -PVERSION_CODE=$VERSION_CODE --stacktrace
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
@@ -72,6 +71,15 @@ jobs:
           name: app-release
           path: app/build/outputs/bundle/release/app-release.aab
           retention-days: 14
+
+      - name: Publish to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_CONSOLE_JSON_KEY || secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.dirzaaulia.countries
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: ${{ github.event.inputs.track || 'internal' }}
+          status: ${{ github.event.inputs.status || 'completed' }}
 
       - name: Cleanup Keystore
         if: always()
