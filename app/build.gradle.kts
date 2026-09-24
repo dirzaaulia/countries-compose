@@ -66,7 +66,10 @@ android {
         val propVersionCode = providers.gradleProperty("VERSION_CODE").orNull?.toIntOrNull()
             ?: System.getenv("VERSION_CODE")?.toIntOrNull()
         versionCode = propVersionCode ?: 7
-        versionName = "1.0"
+
+        val propVersionName = providers.gradleProperty("VERSION_NAME").orNull
+            ?: System.getenv("VERSION_NAME")
+        versionName = propVersionName ?: "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

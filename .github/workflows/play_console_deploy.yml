@@ -1,4 +1,5 @@
 name: Deploy to Play Console
+run-name: Deploy to Play Console [${{ inputs.track || 'internal' }} - ${{ inputs.status || 'completed' }}]
 
 on:
   workflow_dispatch:
@@ -60,9 +61,16 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          TRACK="${{ github.event.inputs.track || 'internal' }}"
           VERSION_CODE=$(($(date +%s) - 1700000000))
-          echo "Building with VERSION_CODE=$VERSION_CODE"
-          ./gradlew :app:bundleRelease -PVERSION_CODE=$VERSION_CODE --stacktrace
+          BASE_VERSION="1.0.0"
+          if [ "$TRACK" = "production" ]; then
+            VERSION_NAME="${BASE_VERSION} (${VERSION_CODE})"
+          else
+            VERSION_NAME="${BASE_VERSION}-${TRACK} (${VERSION_CODE})"
+          fi
+          echo "Building with VERSION_CODE=$VERSION_CODE and VERSION_NAME=$VERSION_NAME"
+          ./gradlew :app:bundleRelease -PVERSION_CODE=$VERSION_CODE -PVERSION_NAME="$VERSION_NAME" --stacktrace
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
