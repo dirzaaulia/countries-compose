@@ -2,10 +2,10 @@ package com.dirzaaulia.countries.ui.hud
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,22 +14,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.MoonInfo
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import com.dirzaaulia.countries.util.formatNumber
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoonDetailSheet(
     moonInfo: MoonInfo,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        shape = RoundedCornerShape(22.dp),
-        color = Color(0xF00B1220),
-        border = BorderStroke(1.dp, Color(0x66E2E8F0)),
-        shadowElevation = 16.dp,
-        modifier = modifier.fillMaxWidth()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+
+    ModalBottomSheet(
+        onDismissRequest = onClose,
+        sheetState = sheetState,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        containerColor = Color(0xF209111E),
+        contentColor = Color.White,
+        scrimColor = Color.Transparent,
+        dragHandle = {
+            BottomSheetDefaults.DragHandle(
+                color = Color(0xFFE2E8F0).copy(alpha = 0.6f),
+                width = 36.dp,
+                height = 4.dp
+            )
+        },
+        modifier = modifier
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 28.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -42,19 +61,17 @@ fun MoonDetailSheet(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
-                IconButton(onClick = onClose, modifier = Modifier.size(24.dp)) {
-                    Text("✕", color = Color(0xFF94A3B8), fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                }
+                MinimalistCloseButton(onClick = onClose)
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 Text(moonInfo.phaseEmoji, fontSize = 36.sp)
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Earth's Moon (Luna)",
                         color = Color.White,
@@ -70,11 +87,11 @@ fun MoonDetailSheet(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -82,15 +99,15 @@ fun MoonDetailSheet(
                     border = BorderStroke(1.dp, Color(0x22FFFFFF)),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.padding(12.dp)) {
                         Text("ORBITAL DISTANCE", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
                         Text(
                             text = "${formatNumber(moonInfo.distanceKm)} km",
                             color = Color.White,
-                            fontSize = 13.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text("~1.28 light-seconds", color = Color(0xFF64748B), fontSize = 9.sp)
+                        Text("~1.28 light-seconds", color = Color(0xFF64748B), fontSize = 10.sp)
                     }
                 }
 
@@ -100,15 +117,15 @@ fun MoonDetailSheet(
                     border = BorderStroke(1.dp, Color(0x22FFFFFF)),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.padding(12.dp)) {
                         Text("ORBITAL PERIOD", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
                         Text(
                             text = "27.3 Days",
                             color = Color.White,
-                            fontSize = 13.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text("Tidally locked to Earth", color = Color(0xFF64748B), fontSize = 9.sp)
+                        Text("Tidally locked to Earth", color = Color(0xFF64748B), fontSize = 10.sp)
                     }
                 }
             }

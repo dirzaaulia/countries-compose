@@ -46,10 +46,15 @@ object GlobeShaders {
                 // -------------------------------------------------------------
                 float NdotL = dot(N, L);
                 float sunFactor = smoothstep(-0.02, 0.04, NdotL);
-                float diffuse = max(0.0, NdotL);
+                float diffuse = clamp(NdotL, 0.0, 1.0);
                 
-                // Direct sunlight + soft earthshine/starlight on night side of craters
-                vec3 litMoon = dayColor.rgb * (diffuse * 1.1 * sunFactor + 0.08 * (1.0 - sunFactor));
+                // Photometric lunar regolith curve: Moon has an albedo of ~0.12 (dark volcanic rock/dust).
+                // Calibrated diffuse response (0.78 max) prevents white clipping / blowout on highlands when zooming in.
+                float lunarLight = mix(0.04, 0.78, diffuse);
+                vec3 litMoon = dayColor.rgb * (lunarLight * sunFactor + 0.035 * (1.0 - sunFactor));
+                
+                // Subtle contrast enhancement to retain deep crater shadows and geological topography
+                litMoon = pow(litMoon, vec3(1.10));
                 gl_FragColor = vec4(litMoon, 1.0);
             } else {
                 // -------------------------------------------------------------

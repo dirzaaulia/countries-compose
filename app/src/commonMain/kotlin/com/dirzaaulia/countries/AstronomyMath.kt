@@ -185,4 +185,15 @@ object AstronomyMath {
 
         return arc
     }
+
+    /**
+     * Determines whether a given coordinate on Earth is currently illuminated by daylight.
+     * Includes civil twilight margin (dot > -0.06).
+     */
+    fun isDaylight(point: LatLng, sunVector: Point3D): Boolean {
+        val norm = latLngToCartesian(point.lat, point.lng, 1.0)
+        val dot = norm.x * sunVector.x + norm.y * sunVector.y + norm.z * sunVector.z
+        return dot > -0.06
+    }
 }
+

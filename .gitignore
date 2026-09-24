@@ -21,3 +21,5 @@ keystore.jks
 .agents/
 .artifacts/
 .idea/
+.kilo/
+kotlin-js-store/

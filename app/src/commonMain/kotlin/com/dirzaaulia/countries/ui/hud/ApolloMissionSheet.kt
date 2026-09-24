@@ -1,7 +1,6 @@
 package com.dirzaaulia.countries.ui.hud
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,15 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dirzaaulia.countries.ISSTelemetry
+import com.dirzaaulia.countries.ApolloSite
 import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ISSTelemetryCard(
-    telemetry: ISSTelemetry,
+fun ApolloMissionSheet(
+    site: ApolloSite,
     onClose: () -> Unit,
-    onCenterView: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -31,12 +29,12 @@ fun ISSTelemetryCard(
         onDismissRequest = onClose,
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = Color(0xF20B1220),
+        containerColor = Color(0xF209111E),
         contentColor = Color.White,
         scrimColor = Color.Transparent,
         dragHandle = {
             BottomSheetDefaults.DragHandle(
-                color = Color(0xFF38BDF8).copy(alpha = 0.6f),
+                color = Color(0xFFFFD54F).copy(alpha = 0.7f),
                 width = 36.dp,
                 height = 4.dp
             )
@@ -50,7 +48,7 @@ fun ISSTelemetryCard(
                 .padding(bottom = 28.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Header bar
+            // Header: Category label & Close button
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -61,20 +59,20 @@ fun ISSTelemetryCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "ISS LIVE ORBITAL TELEMETRY",
-                        color = Color(0xFF38BDF8),
+                        text = "NASA APOLLO LUNAR EXPEDITION",
+                        color = Color(0xFFFFD54F),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Surface(
                         shape = RoundedCornerShape(6.dp),
-                        color = Color(0x3310B981),
-                        border = BorderStroke(1.dp, Color(0x6610B981))
+                        color = Color(0x33FFD54F),
+                        border = BorderStroke(1.dp, Color(0x66FFD54F))
                     ) {
                         Text(
-                            text = "LIVE LEO",
-                            color = Color(0xFF34D399),
+                            text = "HISTORIC LANDING",
+                            color = Color(0xFFFFE082),
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -86,35 +84,35 @@ fun ISSTelemetryCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Main Info
+            // Site Title & Mission Badge
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Text("🛰️", fontSize = 36.sp)
+                Text("🚀", fontSize = 36.sp)
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "International Space Station",
-                        color = Color.White,
-                        fontSize = 18.sp,
+                        text = site.name,
+                        color = Color(0xFFFFD54F),
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Low Earth Orbit (LEO) • 92.9 min orbital period",
-                        color = Color(0xFF94A3B8),
-                        fontSize = 12.sp
+                        text = site.mission,
+                        color = Color(0xFFE2E8F0),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Metric Tiles Grid
+            // Metadata Grid: Date & Astronauts
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Velocity
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color(0x221E293B),
@@ -122,15 +120,16 @@ fun ISSTelemetryCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("VELOCITY", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                        val velKmh = ((telemetry.velocityKmh * 10).toLong() / 10.0).toString()
-                        val velKms = ((telemetry.velocityKmh / 3600.0 * 10).toLong() / 10.0).toString()
-                        Text("$velKmh km/h", color = Color(0xFF38BDF8), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                        Text("$velKms km/s • Mach 22.5", color = Color(0xFF94A3B8), fontSize = 10.sp)
+                        Text("LANDING DATE", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = site.date,
+                            color = Color.White,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
 
-                // Altitude
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color(0x221E293B),
@@ -138,17 +137,20 @@ fun ISSTelemetryCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("ALTITUDE", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                        val altKm = ((telemetry.altitudeKm * 10).toLong() / 10.0).toString()
-                        Text("$altKm km", color = Color(0xFF34D399), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                        Text("418 km mean perigee", color = Color(0xFF94A3B8), fontSize = 10.sp)
+                        Text("COMMANDER / CREW", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = site.astronaut,
+                            color = Color(0xFF38BDF8),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Coordinates & Solar Illumination
+            // Lunar Coordinates
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color(0x221E293B),
@@ -160,37 +162,32 @@ fun ISSTelemetryCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
-                        Text("GROUND TRACK POSITION", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                        val latStr = "${((telemetry.latitude * 10).toLong() / 10.0)}°" + if (telemetry.latitude >= 0) "N" else "S"
-                        val lngStr = "${((telemetry.longitude * 10).toLong() / 10.0)}°" + if (telemetry.longitude >= 0) "E" else "W"
-                        Text("$latStr, $lngStr", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                    }
-
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text("SOLAR ILLUMINATION", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                        val isDaylight = telemetry.visibility.equals("daylight", ignoreCase = true)
-                        val visText = if (isDaylight) "Sunlight (Arrays Active)" else "Earth Shadow (Eclipse)"
-                        val visColor = if (isDaylight) Color(0xFFFBBF24) else Color(0xFF818CF8)
-                        Text(visText, color = visColor, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                    }
+                    Text("LUNAR COORDINATES", color = Color(0xFF64748B), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    val latStr = "${((site.lat * 10).toLong() / 10.0)}°" + if (site.lat >= 0) "N" else "S"
+                    val lngStr = "${((site.lng * 10).toLong() / 10.0)}°" + if (site.lng >= 0) "E" else "W"
+                    Text("$latStr, $lngStr", color = Color(0xFFFFD54F), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // Action Center Camera Button
-            Button(
-                onClick = onCenterView,
+            // Historical Significance Narrative
+            Surface(
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF0284C7),
-                    contentColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 12.dp)
+                color = Color(0x1538BDF8),
+                border = BorderStroke(1.dp, Color(0x3338BDF8)),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Track & Center Camera on ISS", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text("HISTORICAL SIGNIFICANCE", color = Color(0xFF38BDF8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = site.significance,
+                        color = Color(0xFFE2E8F0),
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp
+                    )
+                }
             }
         }
     }

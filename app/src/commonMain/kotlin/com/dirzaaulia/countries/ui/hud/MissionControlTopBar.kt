@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -15,10 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MissionControlTopBar(
     currentPage: Int,
@@ -36,6 +40,7 @@ fun MissionControlTopBar(
     moonDistanceKm: Double = 384400.0,
     localTime: String = "",
     utcTime: String = "LIVE UTC",
+    onOpenLegend: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showLayersMenu by remember { mutableStateOf(false) }
@@ -138,44 +143,64 @@ fun MissionControlTopBar(
                 }
             }
 
-            // C. Right: Floating Quick Layers Trigger Button
+            // C. Right: Floating Quick Layers & Legend Buttons
             if (currentPage == 0) {
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = if (showLayersMenu) Color(0xFF0284C7) else Color(0xDD0B1220),
-                    border = BorderStroke(
-                        1.dp,
-                        if (showLayersMenu) Color(0xFF38BDF8) else Color(0x3338BDF8)
-                    ),
-                    modifier = Modifier.clickable { showLayersMenu = !showLayersMenu }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    // Sleek Circular Legend Action Button
+                    Surface(
+                        shape = CircleShape,
+                        color = Color(0xDD0B1220),
+                        border = BorderStroke(1.dp, Color(0x3338BDF8)),
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { onOpenLegend() }
                     ) {
-                        Text("⛯", fontSize = 12.sp, color = Color.White)
-                        Text(
-                            text = "Layers",
-                            color = Color.White,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        if (activeLayersCount > 0) {
-                            Box(
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .background(Color(0xFF38BDF8), CircleShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "$activeLayersCount",
-                                    color = Color(0xFF0B1220),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                    lineHeight = 10.sp
-                                )
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("ℹ️", fontSize = 12.sp)
+                        }
+                    }
+
+                    // Compact Layers Capsule with Active Badge
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = if (showLayersMenu) Color(0xFF0284C7) else Color(0xDD0B1220),
+                        border = BorderStroke(
+                            1.dp,
+                            if (showLayersMenu) Color(0xFF38BDF8) else Color(0x3338BDF8)
+                        ),
+                        modifier = Modifier.clickable { showLayersMenu = !showLayersMenu }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Text("⛯", fontSize = 12.sp, color = Color.White)
+                            Text(
+                                text = "Layers",
+                                color = Color.White,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            if (activeLayersCount > 0) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .background(Color(0xFF38BDF8), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "$activeLayersCount",
+                                        color = Color(0xFF0B1220),
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        textAlign = TextAlign.Center,
+                                        lineHeight = 9.sp
+                                    )
+                                }
                             }
                         }
                     }
@@ -204,44 +229,41 @@ fun MissionControlTopBar(
             }
         }
 
-        // 2. Expandable Glassmorphic Layers Dropdown
-        AnimatedVisibility(
-            visible = showLayersMenu && currentPage == 0,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
-        ) {
-            Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = Color(0xF20B1324),
-                border = BorderStroke(1.dp, Color(0x4438BDF8)),
-                shadowElevation = 14.dp,
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth()
+        // 2. Thumb-Friendly Native Layers Modal Bottom Sheet
+        if (showLayersMenu && currentPage == 0) {
+            ModalBottomSheet(
+                onDismissRequest = { showLayersMenu = false },
+                containerColor = Color(0xF20B1324),
+                contentColor = Color.White,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp)
+                        .padding(bottom = 24.dp)
+                        .navigationBarsPadding(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "STRATEGIC HORIZON LAYERS",
-                            color = Color(0xFF94A3B8),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Text(
-                            text = "Close ✕",
-                            color = Color(0xFF38BDF8),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.clickable { showLayersMenu = false }
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text("⛯", fontSize = 16.sp, color = Color(0xFF38BDF8))
+                            Text(
+                                text = "STRATEGIC HORIZON LAYERS",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
+                        }
+                        MinimalistCloseButton(onClick = { showLayersMenu = false })
                     }
 
                     // Grid of Layer Toggle Items

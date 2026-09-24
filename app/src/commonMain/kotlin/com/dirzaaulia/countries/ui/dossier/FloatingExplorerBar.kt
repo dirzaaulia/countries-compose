@@ -62,7 +62,7 @@ fun FloatingExplorerBar(
                 ),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
             ) {
-                Text("Explore Random 🎲", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                Text("Explore Random", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
             }
         }
     }

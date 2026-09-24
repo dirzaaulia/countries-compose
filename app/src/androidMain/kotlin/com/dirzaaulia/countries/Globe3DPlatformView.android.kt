@@ -27,8 +27,8 @@ actual fun Globe3DPlatformView(
     LaunchedEffect(isPageActive) {
         val sv = surfaceView ?: return@LaunchedEffect
         if (isPageActive) {
-            sv.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
             sv.onResume()
+            sv.requestRender()
         } else {
             sv.onPause()
         }
@@ -42,6 +42,7 @@ actual fun Globe3DPlatformView(
             val cloudBytes = Res.readBytes("files/earth_clouds.jpg")
             r.setIsMoon(false)
             r.setTextures(dayBytes, nightBytes, cloudBytes)
+            surfaceView?.requestRender()
         }
     }
 
@@ -52,16 +53,23 @@ actual fun Globe3DPlatformView(
                 setEGLConfigChooser(8, 8, 8, 8, 16, 0)
                 holder.setFormat(PixelFormat.TRANSLUCENT)
                 setZOrderMediaOverlay(true)
+                // Preserve EGL context across pause/resume and window transitions (fixes blackout after sheet dismiss)
+                preserveEGLContextOnPause = true
                 val earthRenderer = EarthGLRenderer(ctx).apply { setIsMoon(false) }
                 setRenderer(earthRenderer)
-                renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+                renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
                 renderer = earthRenderer
                 surfaceView = this
             }
         },
+        update = { sv ->
+            // Force a redraw every time the composable is re-evaluated (e.g. after sheet dismiss)
+            sv.requestRender()
+        },
         modifier = modifier
     )
 }
+
 
 @Composable
 actual fun Moon3DPlatformView(
@@ -80,14 +88,15 @@ actual fun Moon3DPlatformView(
 
     LaunchedEffect(phaseAngle, renderer) {
         renderer?.setMoonPhaseAngle(phaseAngle)
+        surfaceView?.requestRender()
     }
 
     // Pause/resume the GL thread when this page is not visible
     LaunchedEffect(isPageActive) {
         val sv = surfaceView ?: return@LaunchedEffect
         if (isPageActive) {
-            sv.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
             sv.onResume()
+            sv.requestRender()
         } else {
             sv.onPause()
         }
@@ -99,6 +108,7 @@ actual fun Moon3DPlatformView(
             val moonBytes = Res.readBytes("files/moon.jpg")
             r.setIsMoon(true)
             r.setTextures(moonBytes)
+            surfaceView?.requestRender()
         }
     }
 
@@ -114,7 +124,7 @@ actual fun Moon3DPlatformView(
                     setMoonPhaseAngle(phaseAngle)
                 }
                 setRenderer(moonRenderer)
-                renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+                renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
                 renderer = moonRenderer
                 surfaceView = this
             }

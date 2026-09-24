@@ -1,6 +1,7 @@
 package com.dirzaaulia.countries
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import kotlinx.coroutines.coroutineScope
@@ -67,13 +68,13 @@ class GlobeState(
             val finalTargetLng = currentY + diffY
 
             launch {
-                _zoom.animateTo(targetZoom.coerceIn(0.6f, 4.5f), animationSpec = tween(1500))
+                _zoom.animateTo(targetZoom.coerceIn(0.6f, 4.5f), animationSpec = tween(650, easing = FastOutSlowInEasing))
             }
             launch {
-                _rotationX.animateTo(targetLat.coerceIn(-90f, 90f), animationSpec = tween(1200))
+                _rotationX.animateTo(targetLat.coerceIn(-90f, 90f), animationSpec = tween(650, easing = FastOutSlowInEasing))
             }
             launch {
-                _rotationY.animateTo(finalTargetLng, animationSpec = tween(1200))
+                _rotationY.animateTo(finalTargetLng, animationSpec = tween(650, easing = FastOutSlowInEasing))
             }
         }
     }

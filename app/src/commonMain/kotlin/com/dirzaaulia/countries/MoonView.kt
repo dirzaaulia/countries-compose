@@ -57,6 +57,9 @@ import androidx.compose.material3.SliderDefaults
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
+import com.dirzaaulia.countries.ui.hud.ApolloMissionSheet
+import com.dirzaaulia.countries.ui.hud.MoonDetailSheet
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -215,6 +218,7 @@ fun MoonView(
 ) {
     val scope = rememberCoroutineScope()
     var selectedApolloSite by remember { mutableStateOf<ApolloSite?>(null) }
+    var showMoonDetailSheet by remember { mutableStateOf(false) }
 
     // Hourly refresh so the Moon terminator stays accurate throughout the day
     var now by remember { mutableStateOf(currentEpochMillis()) }
@@ -274,8 +278,8 @@ fun MoonView(
                         val d2 = dx * dx + dy * dy
 
                         if (d2 <= currentRadius * currentRadius) {
-                            val radX = (-state.rotationX.toDouble()).toRadians
-                            val radY = (-state.rotationY.toDouble()).toRadians
+                            val radX = state.rotationX.toDouble().toRadians
+                            val radY = state.rotationY.toDouble().toRadians
                             val cosX = cos(radX); val sinX = sin(radX)
                             val cosY = cos(radY); val sinY = sin(radY)
 
@@ -349,8 +353,8 @@ fun MoonView(
                 }
             }
 
-            val radX = (-state.rotationX.toDouble()).toRadians
-            val radY = (-state.rotationY.toDouble()).toRadians
+            val radX = state.rotationX.toDouble().toRadians
+            val radY = state.rotationY.toDouble().toRadians
             val cosX = cos(radX); val sinX = sin(radX)
             val cosY = cos(radY); val sinY = sin(radY)
 
@@ -386,91 +390,20 @@ fun MoonView(
             }
         }
 
-        // 3. Floating Apollo Mission Inspector Card
-        AnimatedVisibility(
-            visible = selectedApolloSite != null,
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-                .navigationBarsPadding()
-        ) {
-            selectedApolloSite?.let { site ->
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = Color(0xEE0B1220),
-                    border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.5f)),
-                    shadowElevation = 16.dp,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
-                            ) {
-                                Text("🚀", fontSize = 24.sp)
-                                Column {
-                                    Text(
-                                        text = site.name,
-                                        color = Color(0xFFFFD54F),
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = site.mission,
-                                        color = Color(0xFF94A3B8),
-                                        fontSize = 12.sp
-                                    )
-                                }
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0x33FFFFFF))
-                                    .clickable { selectedApolloSite = null },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("✕", color = Color.White, fontSize = 14.sp)
-                            }
-                        }
+        // 3. Apollo Mission Inspector Sheet (Unified Modal Bottom Sheet)
+        if (selectedApolloSite != null) {
+            ApolloMissionSheet(
+                site = selectedApolloSite!!,
+                onClose = { selectedApolloSite = null }
+            )
+        }
 
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = site.significance,
-                            color = Color(0xFFE2E8F0),
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "📅 ${site.date}",
-                                color = Color(0xFF94A3B8),
-                                fontSize = 11.sp
-                            )
-                            Text(
-                                text = "👨‍🚀 ${site.astronaut}",
-                                color = Color(0xFF38BDF8),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                }
-            }
+        // Moon Astronomy Detail Sheet
+        if (showMoonDetailSheet) {
+            MoonDetailSheet(
+                moonInfo = displayedMoonInfo,
+                onClose = { showMoonDetailSheet = false }
+            )
         }
 
         // 4. Yearly Lunar Phase Scrubber HUD (1 Jan to 31 Dec)
@@ -497,19 +430,31 @@ fun MoonView(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.clickable { showMoonDetailSheet = true }
                         ) {
                             Text(
                                 text = displayedMoonInfo.phaseEmoji,
                                 fontSize = 28.sp
                             )
                             Column {
-                                Text(
-                                    text = "${displayedMoonInfo.phaseName} • ${(displayedMoonInfo.illuminatedFraction * 100).toInt()}%",
-                                    color = Color.White,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Text(
+                                        text = "${displayedMoonInfo.phaseName} • ${(displayedMoonInfo.illuminatedFraction * 100).toInt()}%",
+                                        color = Color.White,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "ⓘ",
+                                        color = Color(0xFF38BDF8),
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                                 Text(
                                     text = formatDayAndMonth(currentYear, selectedDayOfYear),
                                     color = Color(0xFFFFD54F),

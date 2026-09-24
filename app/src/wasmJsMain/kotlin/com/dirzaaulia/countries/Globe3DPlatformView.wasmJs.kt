@@ -3,16 +3,19 @@ package com.dirzaaulia.countries
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 /**
  * Web/WASM implementation of Globe3DPlatformView.
- * Renders a high-fidelity space sphere with atmospheric glow,
- * spherical depth gradients, and day/night terminator shading on Web.
+ * Renders full photorealistic 3D Earth using WebGL 1.0/2.0 shaders and 2K textures,
+ * with atmospheric limb glow and real-time solar terminator shading.
  */
 @Composable
 actual fun Globe3DPlatformView(
@@ -20,18 +23,45 @@ actual fun Globe3DPlatformView(
     isPageActive: Boolean,
     modifier: Modifier
 ) {
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        PlanetWebGLRenderer.ensureInitialized(scope)
+    }
+
+    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, isPageActive) {
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(isMoon = false)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+        }
+    }
+
     Canvas(modifier = modifier.fillMaxSize()) {
         val canvasCenter = center
         val baseRadius = minOf(size.width, size.height) * 0.38f
         val currentRadius = baseRadius * state.zoom
 
-        // 1. Deep cosmic outer atmosphere glow (Rayleigh scattering halo)
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(isMoon = false)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
+        }
+
+        // 1. Clear destination pixels inside sphere disc so WebGL 3D globe shines through
+        drawCircle(
+            color = Color.Transparent,
+            radius = currentRadius,
+            center = canvasCenter,
+            blendMode = BlendMode.Clear
+        )
+
+        // 2. Deep cosmic outer atmosphere glow (Rayleigh scattering halo)
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
-                    Color(0xFF3892FF).copy(alpha = 0.40f),
-                    Color(0xFF1E60CC).copy(alpha = 0.22f),
-                    Color(0xFF0F3277).copy(alpha = 0.08f),
+                    Color(0xFF3892FF).copy(alpha = 0.30f),
+                    Color(0xFF1E60CC).copy(alpha = 0.16f),
+                    Color(0xFF0F3277).copy(alpha = 0.05f),
                     Color.Transparent
                 ),
                 center = canvasCenter,
@@ -41,43 +71,9 @@ actual fun Globe3DPlatformView(
             center = canvasCenter
         )
 
-        // 2. Realistic 3D ocean sphere with spherical depth shading
+        // 3. Subtle razor-thin atmospheric limb edge
         drawCircle(
-            brush = Brush.radialGradient(
-                colors = listOf(
-                    Color(0xFF2267AB), // Upper illuminated shallow waters
-                    Color(0xFF113D6E), // Deep ocean blue
-                    Color(0xFF081C33)  // Dark limb depth
-                ),
-                center = Offset(
-                    canvasCenter.x - currentRadius * 0.25f,
-                    canvasCenter.y - currentRadius * 0.25f
-                ),
-                radius = currentRadius * 1.25f
-            ),
-            radius = currentRadius,
-            center = canvasCenter
-        )
-
-        // 3. Soft day / night terminator shadow gradient across the sphere
-        drawCircle(
-            brush = Brush.linearGradient(
-                colors = listOf(
-                    Color.Transparent,
-                    Color(0xFF020712).copy(alpha = 0.06f),
-                    Color(0xFF020712).copy(alpha = 0.32f),
-                    Color(0xFF020712).copy(alpha = 0.65f)
-                ),
-                start = Offset(canvasCenter.x - currentRadius, canvasCenter.y - currentRadius),
-                end = Offset(canvasCenter.x + currentRadius, canvasCenter.y + currentRadius)
-            ),
-            radius = currentRadius,
-            center = canvasCenter
-        )
-
-        // 4. Subtle razor-thin atmospheric limb edge
-        drawCircle(
-            color = Color(0xFF64B5F6).copy(alpha = 0.35f),
+            color = Color(0xFF64B5F6).copy(alpha = 0.40f),
             radius = currentRadius,
             center = canvasCenter,
             style = Stroke(width = 1.5f)
@@ -85,6 +81,11 @@ actual fun Globe3DPlatformView(
     }
 }
 
+/**
+ * Web/WASM implementation of Moon3DPlatformView.
+ * Renders full photorealistic 3D Moon using WebGL 1.0/2.0 shaders and NASA LRO 2K texture,
+ * with real-time astronomical phase terminator shading.
+ */
 @Composable
 actual fun Moon3DPlatformView(
     state: GlobeState,
@@ -92,47 +93,60 @@ actual fun Moon3DPlatformView(
     isPageActive: Boolean,
     modifier: Modifier
 ) {
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        PlanetWebGLRenderer.ensureInitialized(scope)
+    }
+
+    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, phaseAngle, isPageActive) {
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(isMoon = true, phaseAngle = phaseAngle)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+        }
+    }
+
     Canvas(modifier = modifier.fillMaxSize()) {
         val canvasCenter = center
         val baseRadius = minOf(size.width, size.height) * 0.38f
         val currentRadius = baseRadius * state.zoom
 
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(isMoon = true, phaseAngle = phaseAngle)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
+        }
+
+        // 1. Clear destination pixels inside sphere disc so WebGL 3D moon shines through
+        drawCircle(
+            color = Color.Transparent,
+            radius = currentRadius,
+            center = canvasCenter,
+            blendMode = BlendMode.Clear
+        )
+
+        // 2. Soft lunar outer starlight halo
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
-                    Color(0x40F1F5F9),
-                    Color(0x18CBD5E1),
-                    Color(0x0594A3B8),
+                    Color(0x30F1F5F9),
+                    Color(0x12CBD5E1),
+                    Color(0x0494A3B8),
                     Color.Transparent
                 ),
                 center = canvasCenter,
-                radius = currentRadius * 1.35f
+                radius = currentRadius * 1.25f
             ),
-            radius = currentRadius * 1.35f,
+            radius = currentRadius * 1.25f,
             center = canvasCenter
         )
 
+        // 3. Subtle lunar limb contour
         drawCircle(
-            brush = Brush.radialGradient(
-                colors = listOf(
-                    Color(0xFFE2E8F0),
-                    Color(0xFFCBD5E1),
-                    Color(0xFF94A3B8),
-                    Color(0xFF64748B),
-                    Color(0xFF334155)
-                ),
-                center = Offset(canvasCenter.x - currentRadius * 0.2f, canvasCenter.y - currentRadius * 0.2f),
-                radius = currentRadius * 1.2f
-            ),
-            radius = currentRadius,
-            center = canvasCenter
-        )
-
-        drawCircle(
-            color = Color(0x66E2E8F0),
+            color = Color(0x55E2E8F0),
             radius = currentRadius,
             center = canvasCenter,
-            style = Stroke(width = 1.5f)
+            style = Stroke(width = 1.2f)
         )
     }
 }

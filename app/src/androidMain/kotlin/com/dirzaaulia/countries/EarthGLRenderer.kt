@@ -149,7 +149,7 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         val halfW = width / 2.0f
         val halfH = height / 2.0f
-        Matrix.orthoM(projectionMatrix, 0, -halfW, halfW, -halfH, halfH, -10000f, 10000f)
+        Matrix.orthoM(projectionMatrix, 0, -halfW, halfW, -halfH, halfH, -50000f, 50000f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -171,8 +171,8 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val baseRadius = minOf(viewportWidth, viewportHeight).toFloat() * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        Matrix.rotateM(modelMatrix, 0, currentRotationY, 0f, 1f, 0f)
         Matrix.rotateM(modelMatrix, 0, currentRotationX, 1f, 0f, 0f)
+        Matrix.rotateM(modelMatrix, 0, currentRotationY, 0f, 1f, 0f)
         Matrix.scaleM(modelMatrix, 0, currentRadius, currentRadius, currentRadius)
 
         Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0)
@@ -196,14 +196,14 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
             // At phase 90 (First Quarter), Sun is at +X (right)
             // At phase 270 (Last Quarter), Sun is at -X (left)
             var p = Point3D(sin(phaseRad), 0.0, -cos(phaseRad))
-            p = rotateX(p, cosX, sinX)
             p = rotateY(p, cosY, sinY)
+            p = rotateX(p, cosX, sinX)
             p
         } else {
             val sunPos = AstronomyMath.calculateSunPosition()
             var p = sunPos.vector
-            p = rotateX(p, cosX, sinX)
             p = rotateY(p, cosY, sinY)
+            p = rotateX(p, cosX, sinX)
             p
         }
 

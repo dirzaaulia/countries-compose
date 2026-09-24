@@ -14,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.dirzaaulia.countries.ui.dossier.CountryDossierSheet
 import com.dirzaaulia.countries.ui.dossier.FloatingExplorerBar
+import com.dirzaaulia.countries.ui.dossier.MeteorologyStationSheet
+import com.dirzaaulia.countries.ui.dossier.NasaCrisisMonitorSheet
+import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
 import com.dirzaaulia.countries.ui.hud.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -72,6 +75,10 @@ fun App() {
         var showHazards by remember { mutableStateOf(true) }
         var isFlightMode by remember { mutableStateOf(false) }
         var isQuizMode by remember { mutableStateOf(false) }
+        var showLegendSheet by remember { mutableStateOf(false) }
+        var showMeteorologySheet by remember { mutableStateOf(false) }
+        var showWorldBankSheet by remember { mutableStateOf(false) }
+        var showNasaCrisisSheet by remember { mutableStateOf(false) }
 
         // Real-time telemetry & hazard state
         var issTelemetry by remember { mutableStateOf<ISSTelemetry?>(null) }
@@ -118,22 +125,35 @@ fun App() {
             }
         }
 
+        var showCountryDossier by remember { mutableStateOf(false) }
+        var isSupersonicFlight by remember { mutableStateOf(false) }
+
         val selectedCountry = remember(selectedCountryId, countries) {
             countries.find { it.id == selectedCountryId }
         }
 
+        // Orchestrated Country Selection: Smooth 3D Globe camera flight to center the country FIRST,
+        // then open dossier immediately with skeleton loaders while live data streams in the background.
         LaunchedEffect(selectedCountryId) {
             val country = selectedCountry
             if (country != null && !isQuizMode) {
+                showCountryDossier = false
+                liveDetails = null
+                isFetchingLive = true
+                // Start network fetch in background — sheet opens before it finishes
+                launch {
+                    liveDetails = repository.fetchLiveDetails(country)
+                    isFetchingLive = false
+                }
+                // Fly globe to center country, then instantly open dossier
                 globeState.flyTo(
                     targetLat = country.center.lat.toFloat(),
                     targetLng = -country.center.lng.toFloat(),
                     targetZoom = country.zoomLevel
                 )
-                isFetchingLive = true
-                liveDetails = repository.fetchLiveDetails(country)
-                isFetchingLive = false
+                showCountryDossier = true
             } else {
+                showCountryDossier = false
                 liveDetails = null
                 isFetchingLive = false
             }
@@ -190,12 +210,12 @@ fun App() {
                                 if (clickedId == quizTargetCountry?.id) {
                                     quizScore += 100 + (quizStreak * 25)
                                     quizStreak += 1
-                                    quizFeedback = "🎉 Correct! That is ${quizTargetCountry?.name}!"
+                                    quizFeedback = "Correct! That is ${quizTargetCountry?.name}!"
                                     quizIsCorrect = true
                                     selectedCountryId = clickedId
                                 } else if (tappedCountry != null) {
                                     quizStreak = 0
-                                    quizFeedback = "❌ That is ${tappedCountry.name}! Keep looking for ${quizTargetCountry?.name}."
+                                    quizFeedback = "Wrong! That is ${tappedCountry.name}. Keep looking for ${quizTargetCountry?.name}."
                                     quizIsCorrect = false
                                     selectedCountryId = clickedId
                                 }
@@ -203,26 +223,22 @@ fun App() {
                                 selectedCountryId = clickedId
                                 selectedHazard = null
                                 selectedIss = null
-                                val tapped = countries.find { it.id == clickedId }
-                                if (tapped != null) {
-                                    scope.launch {
-                                        globeState.flyTo(
-                                            targetLat = tapped.center.lat.toFloat(),
-                                            targetLng = -tapped.center.lng.toFloat(),
-                                            targetZoom = tapped.zoomLevel
-                                        )
-                                    }
-                                }
                             }
                         },
                         state = globeState,
                         isPageActive = page == 0,
+                        isSheetOpen = (selectedCountry != null && showCountryDossier) ||
+                            showLegendSheet || showMeteorologySheet || showWorldBankSheet || showNasaCrisisSheet ||
+                            (selectedHazard != null) || (selectedIss != null),
+                        isSupersonic = isSupersonicFlight,
                         showBorders = showBorders,
                         showSatellites = showSatellites,
                         showHazards = showHazards,
                         issTelemetry = issTelemetry,
                         hazards = globalHazards,
                         flightRoute = if (isFlightMode) flightRoute else null,
+                        quizTargetCountryId = if (isQuizMode) quizTargetCountry?.id else null,
+                        quizIsCorrect = quizIsCorrect,
                         onHazardSelected = { hazard ->
                             selectedHazard = hazard
                             selectedCountryId = null
@@ -282,141 +298,205 @@ fun App() {
                 },
                 moonDistanceKm = moonInfo.distanceKm,
                 localTime = localTimeStr,
-                utcTime = utcTimeStr
+                utcTime = utcTimeStr,
+                onOpenLegend = { showLegendSheet = true }
             )
 
             // Bottom Overlay: Country Dossier, Quiz Card, Flight Card, or Hazards (only when on Earth page)
             if (pagerState.currentPage == 0) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .padding(16.dp)
-                ) {
-                when {
-                    // A. Geography Challenge Quiz Mode
-                    isQuizMode && quizTargetCountry != null -> {
-                        QuizHudCard(
-                            targetCountry = quizTargetCountry!!,
-                            score = quizScore,
-                            streak = quizStreak,
-                            feedback = quizFeedback,
-                            isCorrect = quizIsCorrect,
-                            onNextQuestion = { generateNextQuizQuestion() },
-                            onEndQuiz = {
-                                isQuizMode = false
-                                selectedCountryId = null
+                // Official Material 3 Modal Bottom Sheet for Country Profile Dossier
+                if (selectedCountry != null && showCountryDossier && !isQuizMode && !isFlightMode && selectedHazard == null && selectedIss == null) {
+                    CountryDossierSheet(
+                        country = selectedCountry,
+                        liveDetails = liveDetails,
+                        isFetchingLive = isFetchingLive,
+                        allCountries = countries,
+                        onClose = {
+                            showCountryDossier = false
+                            selectedCountryId = null
+                        },
+                        onCenterView = {
+                            scope.launch {
+                                globeState.flyTo(
+                                    targetLat = selectedCountry.center.lat.toFloat(),
+                                    targetLng = -selectedCountry.center.lng.toFloat(),
+                                    targetZoom = selectedCountry.zoomLevel
+                                )
                             }
-                        )
-                    }
-
-                    // B. Geodesic Flight Route Simulator Card
-                    isFlightMode && flightOrigin != null && flightDestination != null -> {
-                        FlightRouteHudCard(
-                            origin = flightOrigin!!,
-                            destination = flightDestination!!,
-                            distanceKm = flightDistanceKm,
-                            onRandomRoute = { generateRandomFlightRoute() },
-                            onClose = {
-                                isFlightMode = false
-                                flightRoute = null
+                        },
+                        onNextCountry = {
+                            val otherCountries = countries.filter { it.id != selectedCountry.id }
+                            if (otherCountries.isNotEmpty()) {
+                                showCountryDossier = false
+                                selectedCountryId = otherCountries.random().id
                             }
-                        )
-                    }
+                        },
+                        onSelectCountry = { neighbor ->
+                            showCountryDossier = false
+                            selectedCountryId = neighbor.id
+                        },
+                        onOpenMeteorology = { showMeteorologySheet = true },
+                        onOpenWorldBank = { showWorldBankSheet = true },
+                        onOpenNasaCrisis = { showNasaCrisisSheet = true },
+                        sunPos = sunPos
+                    )
+                }
 
-                    // C. NASA Natural Hazard Detail Sheet
-                    selectedHazard != null -> {
-                        HazardDetailSheet(
-                            hazard = selectedHazard!!,
-                            onClose = { selectedHazard = null }
-                        )
-                    }
+                // NASA Natural Hazard Detail Sheet (Unified Modal Bottom Sheet)
+                if (selectedHazard != null) {
+                    HazardDetailSheet(
+                        hazard = selectedHazard!!,
+                        onClose = { selectedHazard = null },
+                        onCenterView = {
+                            scope.launch {
+                                globeState.flyTo(
+                                    targetLat = selectedHazard!!.lat.toFloat(),
+                                    targetLng = -selectedHazard!!.lng.toFloat(),
+                                    targetZoom = 1.8f
+                                )
+                            }
+                        }
+                    )
+                }
 
-                    // D. Live ISS Orbital Telemetry Card
-                    selectedIss != null -> {
-                        ISSTelemetryCard(
-                            telemetry = selectedIss!!,
-                            onClose = { selectedIss = null },
-                            onCenterView = {
-                                scope.launch {
-                                    globeState.flyTo(
-                                        targetLat = selectedIss!!.latitude.toFloat(),
-                                        targetLng = -selectedIss!!.longitude.toFloat(),
-                                        targetZoom = 1.6f
-                                    )
+                // Live ISS Orbital Telemetry Sheet (Unified Modal Bottom Sheet)
+                if (selectedIss != null) {
+                    ISSTelemetryCard(
+                        telemetry = selectedIss!!,
+                        onClose = { selectedIss = null },
+                        onCenterView = {
+                            scope.launch {
+                                globeState.flyTo(
+                                    targetLat = selectedIss!!.latitude.toFloat(),
+                                    targetLng = -selectedIss!!.longitude.toFloat(),
+                                    targetZoom = 1.6f
+                                )
+                            }
+                        }
+                    )
+                }
+
+                // Geodesic Flight Route Simulator Sheet (Unified Modal Bottom Sheet)
+                if (isFlightMode && flightOrigin != null && flightDestination != null) {
+                    FlightRouteHudCard(
+                        origin = flightOrigin!!,
+                        destination = flightDestination!!,
+                        distanceKm = flightDistanceKm,
+                        onRandomRoute = { generateRandomFlightRoute() },
+                        onClose = {
+                            isFlightMode = false
+                            flightRoute = null
+                        },
+                        allCountries = countries,
+                        isSupersonic = isSupersonicFlight,
+                        onToggleSupersonic = { isSupersonicFlight = !isSupersonicFlight },
+                        onSelectOrigin = { newOrigin ->
+                            flightOrigin = newOrigin
+                            if (flightDestination != null) {
+                                flightRoute = AstronomyMath.calculateGreatCircleArc(newOrigin.center, flightDestination!!.center, 50)
+                                flightDistanceKm = AstronomyMath.calculateGreatCircleDistance(newOrigin.center, flightDestination!!.center)
+                            }
+                        },
+                        onSelectDestination = { newDest ->
+                            flightDestination = newDest
+                            if (flightOrigin != null) {
+                                flightRoute = AstronomyMath.calculateGreatCircleArc(flightOrigin!!.center, newDest.center, 50)
+                                flightDistanceKm = AstronomyMath.calculateGreatCircleDistance(flightOrigin!!.center, newDest.center)
+                            }
+                        }
+                    )
+                }
+
+                // Bottom HUD: Interactive Quiz Mode or Floating Explorer Bar
+                if (selectedCountry == null && selectedHazard == null && selectedIss == null && !isFlightMode) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .navigationBarsPadding()
+                            .padding(16.dp)
+                    ) {
+                        if (isQuizMode && quizTargetCountry != null) {
+                            QuizHudCard(
+                                targetCountry = quizTargetCountry!!,
+                                score = quizScore,
+                                streak = quizStreak,
+                                feedback = quizFeedback,
+                                isCorrect = quizIsCorrect,
+                                onNextQuestion = { generateNextQuizQuestion() },
+                                onEndQuiz = {
+                                    isQuizMode = false
+                                    selectedCountryId = null
                                 }
-                            }
-                        )
-                    }
-
-                    // E. Country Profile Dossier
-                    selectedCountry != null -> {
-                        CountryDossierSheet(
-                            country = selectedCountry,
-                            liveDetails = liveDetails,
-                            isFetchingLive = isFetchingLive,
-                            allCountries = countries,
-                            onClose = { selectedCountryId = null },
-                            onCenterView = {
-                                scope.launch {
-                                    globeState.flyTo(
-                                        targetLat = selectedCountry.center.lat.toFloat(),
-                                        targetLng = -selectedCountry.center.lng.toFloat(),
-                                        targetZoom = selectedCountry.zoomLevel
-                                    )
-                                }
-                            },
-                            onNextCountry = {
-                                val otherCountries = countries.filter { it.id != selectedCountry.id }
-                                if (otherCountries.isNotEmpty()) {
-                                    val nextCountry = otherCountries.random()
-                                    selectedCountryId = nextCountry.id
-                                    scope.launch {
-                                        globeState.flyTo(
-                                            targetLat = nextCountry.center.lat.toFloat(),
-                                            targetLng = -nextCountry.center.lng.toFloat(),
-                                            targetZoom = nextCountry.zoomLevel
-                                        )
+                            )
+                        } else {
+                            FloatingExplorerBar(
+                                onExploreRandom = {
+                                    if (countries.isNotEmpty()) {
+                                        val randomCountry = countries.random()
+                                        selectedCountryId = randomCountry.id
+                                        scope.launch {
+                                            globeState.flyTo(
+                                                targetLat = randomCountry.center.lat.toFloat(),
+                                                targetLng = -randomCountry.center.lng.toFloat(),
+                                                targetZoom = randomCountry.zoomLevel
+                                            )
+                                        }
                                     }
                                 }
-                            },
-                            onSelectCountry = { neighbor ->
-                                selectedCountryId = neighbor.id
-                                scope.launch {
-                                    globeState.flyTo(
-                                        targetLat = neighbor.center.lat.toFloat(),
-                                        targetLng = -neighbor.center.lng.toFloat(),
-                                        targetZoom = neighbor.zoomLevel
-                                    )
-                                }
-                            }
-                        )
-                    }
-
-                    // F. Default Floating Explorer Bar
-                    else -> {
-                        FloatingExplorerBar(
-                            onExploreRandom = {
-                                if (countries.isNotEmpty()) {
-                                    val randomCountry = countries.random()
-                                    selectedCountryId = randomCountry.id
-                                    scope.launch {
-                                        globeState.flyTo(
-                                            targetLat = randomCountry.center.lat.toFloat(),
-                                            targetLng = -randomCountry.center.lng.toFloat(),
-                                            targetZoom = randomCountry.zoomLevel
-                                        )
-                                    }
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
+
+            // HUD Map Legend & Symbology Modal Sheet
+            if (showLegendSheet) {
+                MissionLegendSheet(
+                    onClose = { showLegendSheet = false }
+                )
+            }
+
+            // Meteorology Station Sheet
+            if (showMeteorologySheet && selectedCountry != null) {
+                MeteorologyStationSheet(
+                    country = selectedCountry,
+                    liveDetails = liveDetails,
+                    onClose = { showMeteorologySheet = false }
+                )
+            }
+
+            // World Bank Macroeconomic Dashboard Sheet
+            if (showWorldBankSheet && selectedCountry != null) {
+                WorldBankDashboardSheet(
+                    country = selectedCountry,
+                    liveDetails = liveDetails,
+                    onClose = { showWorldBankSheet = false }
+                )
+            }
+
+            // NASA EONET Planetary Crisis Monitor Sheet
+            if (showNasaCrisisSheet) {
+                NasaCrisisMonitorSheet(
+                    hazards = globalHazards,
+                    currentCountry = selectedCountry,
+                    onClose = { showNasaCrisisSheet = false },
+                    onFlyToEpicenter = { hazard ->
+                        selectedHazard = hazard
+                        selectedCountryId = null
+                        selectedIss = null
+                        scope.launch {
+                            globeState.flyTo(
+                                targetLat = hazard.lat.toFloat(),
+                                targetLng = -hazard.lng.toFloat(),
+                                targetZoom = 2.2f
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
-}
 }
 
 

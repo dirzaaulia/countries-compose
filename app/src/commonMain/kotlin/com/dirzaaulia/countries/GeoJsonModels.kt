@@ -25,6 +25,17 @@ data class Geometry(
 
 data class LatLng(val lat: Double, val lng: Double)
 
+data class BoundingBox(
+    val minLat: Double,
+    val maxLat: Double,
+    val minLng: Double,
+    val maxLng: Double
+) {
+    fun contains(latLng: LatLng): Boolean {
+        return latLng.lat in minLat..maxLat && latLng.lng in minLng..maxLng
+    }
+}
+
 data class Country(
     val id: String,
     val name: String,
@@ -53,7 +64,8 @@ data class Country(
     val incomeGroup: String = "",
     val polygons: List<List<LatLng>> = emptyList(),
     val center: LatLng = LatLng(0.0, 0.0),
-    val zoomLevel: Float = 1.0f
+    val zoomLevel: Float = 1.0f,
+    val boundingBox: BoundingBox = BoundingBox(-90.0, 90.0, -180.0, 180.0)
 ) {
     val flagEmoji: String
         get() {
@@ -72,6 +84,24 @@ data class Country(
         }
 }
 
+data class DailyForecastItem(
+    val date: String,
+    val dayName: String,
+    val tempMax: Double,
+    val tempMin: Double,
+    val weatherCode: Int,
+    val weatherIcon: String,
+    val precipitationProb: Int
+)
+
+data class HourlyForecastItem(
+    val time: String,
+    val hour: Int,
+    val tempC: Double,
+    val precipitationProb: Int,
+    val weatherCode: Int
+)
+
 data class LiveCountryDetails(
     val isLiveWorldBankLoaded: Boolean = false,
     val isLiveWeatherLoaded: Boolean = false,
@@ -84,6 +114,8 @@ data class LiveCountryDetails(
     val unemploymentRate: Double? = null,
     val renewableEnergyShare: Double? = null,
     val co2Emissions: Double? = null,
+    val gdpHistory: List<Pair<String, Double>> = emptyList(),
+    val inflationHistory: List<Pair<String, Double>> = emptyList(),
     // Open-Meteo Weather (for capital or center)
     val weatherTempC: Double? = null,
     val weatherHumidity: Int? = null,
@@ -94,6 +126,10 @@ data class LiveCountryDetails(
     val uvIndex: Double? = null,
     val sunrise: String? = null,
     val sunset: String? = null,
+    val surfacePressureHpa: Double? = null,
+    val windDirectionDeg: Double? = null,
+    val dailyForecast: List<DailyForecastItem> = emptyList(),
+    val hourlyForecast: List<HourlyForecastItem> = emptyList(),
     // NASA Natural Events (EONET)
     val nasaEvents: List<NasaNaturalEvent> = emptyList()
 )

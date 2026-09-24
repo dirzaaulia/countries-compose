@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.Country
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 
 @Composable
 fun QuizHudCard(
@@ -67,12 +68,18 @@ fun QuizHudCard(
                     }
                 }
 
-                Text(
-                    text = "Score: $score",
-                    color = Color.White,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Score: $score",
+                        color = Color.White,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    MinimalistCloseButton(onClick = onEndQuiz)
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -136,7 +143,7 @@ fun QuizHudCard(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0284C7)),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Skip / Next 🎲", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Skip / Next", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

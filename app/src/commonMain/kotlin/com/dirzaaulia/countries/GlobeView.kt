@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
@@ -50,12 +51,16 @@ fun GlobeView(
     onCountrySelected: (String?) -> Unit,
     state: GlobeState,
     isPageActive: Boolean = true,
+    isSheetOpen: Boolean = false,
+    isSupersonic: Boolean = false,
     showBorders: Boolean = true,
     showSatellites: Boolean = true,
     showHazards: Boolean = true,
     issTelemetry: ISSTelemetry? = null,
     hazards: List<NasaNaturalEvent> = emptyList(),
     flightRoute: List<LatLng>? = null,
+    quizTargetCountryId: String? = null,
+    quizIsCorrect: Boolean? = null,
     onHazardSelected: ((NasaNaturalEvent) -> Unit)? = null,
     onIssSelected: ((ISSTelemetry) -> Unit)? = null,
     sunPos: SunPosition = AstronomyMath.calculateSunPosition(),
@@ -63,33 +68,65 @@ fun GlobeView(
 ) {
     val scope = rememberCoroutineScope()
 
-    val infiniteTransition = rememberInfiniteTransition(label = "strobe")
-    val strobeAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.25f,
-        targetValue = 0.75f,
-        animationSpec = infiniteRepeatable(tween(1800, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "alpha"
-    )
-    val starTwinkle by infiniteTransition.animateFloat(
-        initialValue = 0.4f,
-        targetValue = 1.0f,
-        animationSpec = infiniteRepeatable(tween(2500, easing = LinearEasing), RepeatMode.Reverse),
-        label = "starTwinkle"
-    )
-    val beaconPulse by infiniteTransition.animateFloat(
-        initialValue = 4f,
-        targetValue = 14f,
-        animationSpec = infiniteRepeatable(tween(1400, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "beaconPulse"
-    )
-    val planeProgress by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(4500, easing = LinearEasing)),
-        label = "flightPlane"
-    )
+    val infiniteTransition = rememberInfiniteTransition(label = "globeTransitions")
+    val strobeAlpha by if (!isSheetOpen) {
+        infiniteTransition.animateFloat(
+            initialValue = 0.25f,
+            targetValue = 0.75f,
+            animationSpec = infiniteRepeatable(tween(1800, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+            label = "alpha"
+        )
+    } else {
+        remember { mutableStateOf(0.5f) }
+    }
+    val starTwinkle by if (!isSheetOpen) {
+        infiniteTransition.animateFloat(
+            initialValue = 0.4f,
+            targetValue = 1.0f,
+            animationSpec = infiniteRepeatable(tween(2500, easing = LinearEasing), RepeatMode.Reverse),
+            label = "starTwinkle"
+        )
+    } else {
+        remember { mutableStateOf(0.7f) }
+    }
+    val beaconPulse by if (!isSheetOpen && (quizTargetCountryId != null || flightRoute != null)) {
+        infiniteTransition.animateFloat(
+            initialValue = 4f,
+            targetValue = 14f,
+            animationSpec = infiniteRepeatable(tween(1400, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+            label = "beaconPulse"
+        )
+    } else {
+        remember { mutableStateOf(8f) }
+    }
+    val flightDuration = if (isSupersonic) 5500 else 14000
+    // key(isSupersonic) ensures the infiniteTransition is re-created immediately when speed mode changes,
+    // preventing the old 14s (or 5.5s) cycle from continuing after the user taps the toggle.
+    val planeProgress by if (!isSheetOpen && flightRoute != null) {
+        key(isSupersonic) {
+            rememberInfiniteTransition(label = "flightPlane${if (isSupersonic) "SST" else "Sub"}").animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(tween(flightDuration, easing = LinearEasing)),
+                label = "flightPlane"
+            )
+        }
+    } else {
+        remember { mutableStateOf(0f) }
+    }
     var issScreenPos by remember { mutableStateOf<Offset?>(null) }
 
+    val currentCountries by rememberUpdatedState(countries)
+    val currentHazards by rememberUpdatedState(hazards)
+    val currentIssTelemetry by rememberUpdatedState(issTelemetry)
+    val currentShowSatellites by rememberUpdatedState(showSatellites)
+    val currentShowHazards by rememberUpdatedState(showHazards)
+    val currentOnCountrySelected by rememberUpdatedState(onCountrySelected)
+    val currentOnHazardSelected by rememberUpdatedState(onHazardSelected)
+    val currentOnIssSelected by rememberUpdatedState(onIssSelected)
+
+    val daylightBordersPath = remember { Path() }
+    val nightBordersPath = remember { Path() }
     val sensitivity = 0.18f
 
     // Real-time astronomical data
@@ -107,6 +144,21 @@ fun GlobeView(
                     ),
                     center = center,
                     radius = size.maxDimension * 0.9f
+                )
+            )
+
+            // Milky Way Galactic Dust Lane (diagonal celestial dust band)
+            drawRect(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Color(0x15312E81),
+                        Color(0x281E1B4B),
+                        Color(0x180284C7),
+                        Color.Transparent
+                    ),
+                    start = Offset(0f, size.height * 0.15f),
+                    end = Offset(size.width, size.height * 0.85f)
                 )
             )
 
@@ -132,7 +184,7 @@ fun GlobeView(
         // 2. 3D Platform Globe (OpenGL ES on Android, WebGL/Canvas on WASM)
         Globe3DPlatformView(
             state = state,
-            isPageActive = isPageActive,
+            isPageActive = isPageActive && !isSheetOpen,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -140,23 +192,28 @@ fun GlobeView(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            val event = awaitPointerEvent()
-                            if (event.type == PointerEventType.Scroll) {
-                                val delta = event.changes.firstOrNull()?.scrollDelta?.y ?: 0f
-                                if (delta != 0f) {
-                                    val factor = if (delta < 0) 1.15f else 0.87f
-                                    scope.launch {
-                                        state.snapZoom(state.zoom * factor)
+                .then(
+                    if (!isSheetOpen) {
+                        Modifier
+                            .pointerInput(Unit) {
+                                awaitPointerEventScope {
+                                    while (true) {
+                                        val event = awaitPointerEvent()
+                                        if (event.type == PointerEventType.Scroll) {
+                                            val delta = event.changes.firstOrNull()?.scrollDelta?.y ?: 0f
+                                            if (delta != 0f) {
+                                                val factor = if (delta < 0) 1.15f else 0.87f
+                                                scope.launch {
+                                                    state.snapZoom(state.zoom * factor)
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }
-                }
-                .pointerInput(Unit) {
+                    } else Modifier
+                )
+                .pointerInput(countries.isNotEmpty()) {
                     detectTapGestures(
                         onDoubleTap = {
                             scope.launch {
@@ -176,11 +233,12 @@ fun GlobeView(
                             val d2 = dx * dx + dy * dy
 
                             // Direct Screen-Space Tap on ISS Badge / Satellite marker
-                            if (showSatellites && issTelemetry != null && issScreenPos != null) {
+                            val telemetry = currentIssTelemetry
+                            if (currentShowSatellites && telemetry != null && issScreenPos != null) {
                                 val sp = issScreenPos!!
                                 val distSq = (offset.x - sp.x) * (offset.x - sp.x) + (offset.y - sp.y) * (offset.y - sp.y)
                                 if (distSq <= 38f * 38f) {
-                                    onIssSelected?.invoke(issTelemetry)
+                                    currentOnIssSelected?.invoke(telemetry)
                                     return@detectTapGestures
                                 }
                             }
@@ -194,42 +252,45 @@ fun GlobeView(
                                 val cosY = cos(radY); val sinY = sin(radY)
 
                                 var p = Point3D(dx, -dy, dz)
-                                p = rotateY(p, cosY, sinY)
                                 p = rotateX(p, cosX, sinX)
+                                p = rotateY(p, cosY, sinY)
 
                                 val lat = atan2(p.y, sqrt(p.x * p.x + p.z * p.z)).toDegrees
                                 val lng = atan2(p.x, p.z).toDegrees
                                 val tappedLatLng = LatLng(lat, lng)
 
                                 // Check ISS Proximity Tap (orbital ground radius)
-                                if (showSatellites && issTelemetry != null) {
+                                if (currentShowSatellites && telemetry != null) {
                                     val issDistance = AstronomyMath.calculateGreatCircleDistance(
                                         tappedLatLng,
-                                        LatLng(issTelemetry.latitude, issTelemetry.longitude)
+                                        LatLng(telemetry.latitude, telemetry.longitude)
                                     )
                                     if (issDistance < 700.0) {
-                                        onIssSelected?.invoke(issTelemetry)
+                                        currentOnIssSelected?.invoke(telemetry)
                                         return@detectTapGestures
                                     }
                                 }
 
                                 // Check Hazards tap
-                                if (showHazards && hazards.isNotEmpty()) {
-                                    val nearbyHazard = hazards.find { h ->
+                                val hazardsList = currentHazards
+                                if (currentShowHazards && hazardsList.isNotEmpty()) {
+                                    val nearbyHazard = hazardsList.find { h ->
                                         AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(h.lat, h.lng)) < 350.0
                                     }
                                     if (nearbyHazard != null) {
-                                        onHazardSelected?.invoke(nearbyHazard)
+                                        currentOnHazardSelected?.invoke(nearbyHazard)
                                         return@detectTapGestures
                                     }
                                 }
 
-                                val clickedCountry = countries.find { country ->
-                                    country.polygons.any { poly -> isPointInPolygon(tappedLatLng, poly) }
+                                val countryList = currentCountries
+                                val clickedCountry = countryList.find { country ->
+                                    country.boundingBox.contains(tappedLatLng) &&
+                                        country.polygons.any { poly -> isPointInPolygon(tappedLatLng, poly) }
                                 }
-                                onCountrySelected(clickedCountry?.id)
+                                currentOnCountrySelected(clickedCountry?.id)
                             } else {
-                                onCountrySelected(null)
+                                currentOnCountrySelected(null)
                             }
                         }
                     )
@@ -290,9 +351,8 @@ fun GlobeView(
             // A. Dynamic Day/Night Adaptive Cartographic Borders
             // -------------------------------------------------------------
             if (showBorders) {
-                val daylightBordersPath = Path()
-                val nightBordersPath = Path()
-                val transitionSegments = mutableListOf<TransitionSegment>()
+                daylightBordersPath.reset()
+                nightBordersPath.reset()
 
                 val colorDayCore = Color(0xFF0F172A)    // Crisp obsidian black
                 val colorDayHalo = Color(0x66FFFFFF)    // Soft white halo for daylight visibility
@@ -301,18 +361,24 @@ fun GlobeView(
 
                 countries.forEach { country ->
                     if (country.id != selectedCountryId) {
+                        // Fast back-face centroid culling: skip entire country if on far side of Earth
+                        var cp = latLngToCartesian(country.center.lat, country.center.lng, 1.0)
+                        cp = rotateY(cp, cosY, sinY)
+                        cp = rotateX(cp, cosX, sinX)
+                        if (cp.z < -0.45) return@forEach
+
                         country.polygons.forEach { polygon ->
                             for (i in polygon.indices) {
                                 val latLngA = polygon[i]
                                 val latLngB = polygon[(i + 1) % polygon.size]
 
                                 var pA = latLngToCartesian(latLngA.lat, latLngA.lng, currentRadius.toDouble())
-                                pA = rotateX(pA, cosX, sinX)
                                 pA = rotateY(pA, cosY, sinY)
+                                pA = rotateX(pA, cosX, sinX)
 
                                 var pB = latLngToCartesian(latLngB.lat, latLngB.lng, currentRadius.toDouble())
-                                pB = rotateX(pB, cosX, sinX)
                                 pB = rotateY(pB, cosY, sinY)
+                                pB = rotateX(pB, cosX, sinX)
 
                                 // Both vertices must be on the front hemisphere facing the camera
                                 if (pA.z > 0.0 && pB.z > 0.0) {
@@ -336,7 +402,7 @@ fun GlobeView(
                                         nightBordersPath.moveTo(sxA, syA)
                                         nightBordersPath.lineTo(sxB, syB)
                                     } else {
-                                        // Twilight transition segment (Connected gradient blend)
+                                        // Twilight transition segment (Rendered inline with zero GC allocations)
                                         val tA = ((sA + 0.04) / 0.08).coerceIn(0.0, 1.0).toFloat()
                                         val tB = ((sB + 0.04) / 0.08).coerceIn(0.0, 1.0).toFloat()
 
@@ -345,16 +411,12 @@ fun GlobeView(
                                         val haloA = androidx.compose.ui.graphics.lerp(colorNightHalo, colorDayHalo, tA)
                                         val haloB = androidx.compose.ui.graphics.lerp(colorNightHalo, colorDayHalo, tB)
 
-                                        transitionSegments.add(
-                                            TransitionSegment(
-                                                p1 = Offset(sxA, syA),
-                                                p2 = Offset(sxB, syB),
-                                                coreColor1 = coreA,
-                                                coreColor2 = coreB,
-                                                haloColor1 = haloA,
-                                                haloColor2 = haloB
-                                            )
-                                        )
+                                        val p1 = Offset(sxA, syA)
+                                        val p2 = Offset(sxB, syB)
+                                        val haloBrush = Brush.linearGradient(listOf(haloA, haloB), start = p1, end = p2)
+                                        drawLine(brush = haloBrush, start = p1, end = p2, strokeWidth = 2.4f, cap = StrokeCap.Round)
+                                        val coreBrush = Brush.linearGradient(listOf(coreA, coreB), start = p1, end = p2)
+                                        drawLine(brush = coreBrush, start = p1, end = p2, strokeWidth = 1.3f, cap = StrokeCap.Round)
                                     }
                                 }
                             }
@@ -369,32 +431,47 @@ fun GlobeView(
                 // 2. Night borders: dark slate halo + luminous ivory white core
                 drawPath(nightBordersPath, colorNightHalo, style = Stroke(width = 2.4f, cap = StrokeCap.Round, join = StrokeJoin.Round))
                 drawPath(nightBordersPath, colorNightCore, style = Stroke(width = 1.3f, cap = StrokeCap.Round, join = StrokeJoin.Round))
-
-                // 3. Transition segments (connecting seamlessly across the terminator)
-                transitionSegments.forEach { seg ->
-                    val haloBrush = Brush.linearGradient(listOf(seg.haloColor1, seg.haloColor2), start = seg.p1, end = seg.p2)
-                    drawLine(brush = haloBrush, start = seg.p1, end = seg.p2, strokeWidth = 2.4f, cap = StrokeCap.Round)
-
-                    val coreBrush = Brush.linearGradient(listOf(seg.coreColor1, seg.coreColor2), start = seg.p1, end = seg.p2)
-                    drawLine(brush = coreBrush, start = seg.p1, end = seg.p2, strokeWidth = 1.3f, cap = StrokeCap.Round)
-                }
             }
 
             // -------------------------------------------------------------
-            // C. Selected Country Highlight (vivid glowing neon cyan)
+            // C. Selected Country & Quiz Target Highlight
             // -------------------------------------------------------------
-            val selectedCountry = countries.find { it.id == selectedCountryId }
-            selectedCountry?.let { country ->
+            val highlightCountryId = when {
+                quizTargetCountryId != null && quizIsCorrect == true -> quizTargetCountryId
+                quizTargetCountryId != null && selectedCountryId != null -> selectedCountryId
+                else -> selectedCountryId
+            }
+
+            val highlightCountry = countries.find { it.id == highlightCountryId }
+            val isQuizSuccess = quizTargetCountryId != null && quizIsCorrect == true
+            val isQuizTarget = quizTargetCountryId != null
+
+            val auraFillColor = when {
+                isQuizSuccess -> Color(0x5510B981)
+                isQuizTarget -> Color(0x44F59E0B)
+                else -> Color(0x4438BDF8)
+            }
+            val auraOuterGlow = when {
+                isQuizSuccess -> Color(0x6610B981)
+                isQuizTarget -> Color(0x66F59E0B)
+                else -> Color(0x5538BDF8)
+            }
+            val auraCoreStroke = when {
+                isQuizSuccess -> Color(0xFF10B981)
+                isQuizTarget -> Color(0xFFF59E0B)
+                else -> Color(0xFF38BDF8)
+            }
+
+            highlightCountry?.let { country ->
                 country.polygons.forEach { polygon ->
                     val selectedPath = Path()
                     var inPath = false
-                    var allPointsVis = true
 
                     for (i in polygon.indices) {
                         val latLng = polygon[i]
                         var p = latLngToCartesian(latLng.lat, latLng.lng, currentRadius.toDouble())
-                        p = rotateX(p, cosX, sinX)
                         p = rotateY(p, cosY, sinY)
+                        p = rotateX(p, cosX, sinX)
 
                         if (p.z > 0.0) {
                             val sx = canvasCenter.x + p.x.toFloat()
@@ -407,25 +484,24 @@ fun GlobeView(
                             }
                         } else {
                             inPath = false
-                            allPointsVis = false
                         }
                     }
 
                     if (inPath) {
                         selectedPath.close()
-                        drawPath(selectedPath, Color(0x4438BDF8).copy(alpha = strobeAlpha * 0.45f), style = Fill)
+                        drawPath(selectedPath, auraFillColor.copy(alpha = strobeAlpha * 0.45f), style = Fill)
                     }
 
                     // Outer soft glow halo
                     drawPath(
                         path = selectedPath,
-                        color = Color(0x5538BDF8),
+                        color = auraOuterGlow,
                         style = Stroke(width = 5.0f, cap = StrokeCap.Round, join = StrokeJoin.Round)
                     )
-                    // Inner sharp vibrant neon cyan stroke
+                    // Inner sharp vibrant neon stroke
                     drawPath(
                         path = selectedPath,
-                        color = Color(0xFF38BDF8),
+                        color = auraCoreStroke,
                         style = Stroke(width = 2.6f, cap = StrokeCap.Round, join = StrokeJoin.Round)
                     )
                 }
@@ -438,10 +514,11 @@ fun GlobeView(
                 val arcPath = Path()
                 var inArc = false
 
+                // 1. Great circle flight arc
                 for (pt in flightRoute) {
                     var p = latLngToCartesian(pt.lat, pt.lng, (currentRadius * 1.01).toDouble())
-                    p = rotateX(p, cosX, sinX)
                     p = rotateY(p, cosY, sinY)
+                    p = rotateX(p, cosX, sinX)
 
                     if (p.z > 0.0) {
                         val sx = canvasCenter.x + p.x.toFloat()
@@ -459,26 +536,168 @@ fun GlobeView(
 
                 // Glowing flight arc
                 drawPath(arcPath, Color(0x40F59E0B), style = Stroke(width = 5f, cap = StrokeCap.Round))
-                drawPath(arcPath, Color(0xFFF59E0B), style = Stroke(width = 2.5f, cap = StrokeCap.Round, pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 6f), 0f)))
+                drawPath(
+                    arcPath,
+                    Color(0xFFF59E0B),
+                    style = Stroke(
+                        width = 2.5f,
+                        cap = StrokeCap.Round,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 6f), 0f)
+                    )
+                )
 
-                // Animated flight plane traveling along arc
+                // 2. Departure & Arrival Radar Pulse Rings
+                val departure = flightRoute.first()
+                var depP = latLngToCartesian(departure.lat, departure.lng, (currentRadius * 1.008).toDouble())
+                depP = rotateY(depP, cosY, sinY)
+                depP = rotateX(depP, cosX, sinX)
+                if (depP.z > 0.0) {
+                    val dx = canvasCenter.x + depP.x.toFloat()
+                    val dy = canvasCenter.y - depP.y.toFloat()
+                    val depPulse = (planeProgress * 3f) % 1f
+                    drawCircle(color = Color(0x6610B981), radius = 4f + depPulse * 12f, center = Offset(dx, dy), style = Stroke(width = 1.5f))
+                    drawCircle(color = Color(0xFF10B981), radius = 3.5f, center = Offset(dx, dy))
+                }
+
+                val arrival = flightRoute.last()
+                var arrP = latLngToCartesian(arrival.lat, arrival.lng, (currentRadius * 1.008).toDouble())
+                arrP = rotateY(arrP, cosY, sinY)
+                arrP = rotateX(arrP, cosX, sinX)
+                if (arrP.z > 0.0) {
+                    val ax = canvasCenter.x + arrP.x.toFloat()
+                    val ay = canvasCenter.y - arrP.y.toFloat()
+                    val arrPulse = ((planeProgress * 3f) + 0.5f) % 1f
+                    drawCircle(color = Color(0x6638BDF8), radius = 4f + arrPulse * 12f, center = Offset(ax, ay), style = Stroke(width = 1.5f))
+                    drawCircle(color = Color(0xFF38BDF8), radius = 3.5f, center = Offset(ax, ay))
+                }
+
+                // 3. Supersonic Aircraft Position & Parabolic Altitude Arc
+                val altitudeFactor = 1.012 + 0.026 * sin(planeProgress * PI)
                 val indexFloat = planeProgress * (flightRoute.size - 1)
                 val idx = indexFloat.toInt().coerceIn(0, flightRoute.size - 2)
                 val frac = indexFloat - idx
                 val planeLat = flightRoute[idx].lat + (flightRoute[idx + 1].lat - flightRoute[idx].lat) * frac
                 val planeLng = flightRoute[idx].lng + (flightRoute[idx + 1].lng - flightRoute[idx].lng) * frac
 
-                var planeP = latLngToCartesian(planeLat, planeLng, (currentRadius * 1.015).toDouble())
-                planeP = rotateX(planeP, cosX, sinX)
+                var planeP = latLngToCartesian(planeLat, planeLng, (currentRadius * altitudeFactor).toDouble())
                 planeP = rotateY(planeP, cosY, sinY)
+                planeP = rotateX(planeP, cosX, sinX)
 
                 if (planeP.z > 0.0) {
                     val px = canvasCenter.x + planeP.x.toFloat()
                     val py = canvasCenter.y - planeP.y.toFloat()
 
-                    drawCircle(color = Color(0x66F59E0B), radius = 10f, center = Offset(px, py))
-                    drawCircle(color = Color(0xFFF59E0B), radius = 5f, center = Offset(px, py))
-                    drawCircle(color = Color.White, radius = 2.5f, center = Offset(px, py))
+                    // Compute forward tangent heading
+                    val nextProgress = (planeProgress + 0.015f).coerceAtMost(1.0f)
+                    val nIndexFloat = nextProgress * (flightRoute.size - 1)
+                    val nIdx = nIndexFloat.toInt().coerceIn(0, flightRoute.size - 2)
+                    val nFrac = nIndexFloat - nIdx
+                    val nLat = flightRoute[nIdx].lat + (flightRoute[nIdx + 1].lat - flightRoute[nIdx].lat) * nFrac
+                    val nLng = flightRoute[nIdx].lng + (flightRoute[nIdx + 1].lng - flightRoute[nIdx].lng) * nFrac
+
+                    var nextP = latLngToCartesian(nLat, nLng, (currentRadius * altitudeFactor).toDouble())
+                    nextP = rotateY(nextP, cosY, sinY)
+                    nextP = rotateX(nextP, cosX, sinX)
+                    val nx = canvasCenter.x + nextP.x.toFloat()
+                    val ny = canvasCenter.y - nextP.y.toFloat()
+
+                    val headingRad = atan2(ny - py, nx - px)
+                    val headingDeg = (headingRad * 180.0 / PI).toFloat()
+
+                    // 4. Jet Contrail Trail Afterglow
+                    for (step in 1..6) {
+                        val trailProg = (planeProgress - step * 0.012f).coerceAtLeast(0f)
+                        val tIndexFloat = trailProg * (flightRoute.size - 1)
+                        val tIdx = tIndexFloat.toInt().coerceIn(0, flightRoute.size - 2)
+                        val tFrac = tIndexFloat - tIdx
+                        val tLat = flightRoute[tIdx].lat + (flightRoute[tIdx + 1].lat - flightRoute[tIdx].lat) * tFrac
+                        val tLng = flightRoute[tIdx].lng + (flightRoute[tIdx + 1].lng - flightRoute[tIdx].lng) * tFrac
+
+                        var trailP = latLngToCartesian(tLat, tLng, (currentRadius * (1.012 + 0.026 * sin(trailProg * PI))).toDouble())
+                        trailP = rotateY(trailP, cosY, sinY)
+                        trailP = rotateX(trailP, cosX, sinX)
+                        if (trailP.z > 0.0) {
+                            val tx = canvasCenter.x + trailP.x.toFloat()
+                            val ty = canvasCenter.y - trailP.y.toFloat()
+                            val alpha = (0.55f * (1f - step / 7f)).coerceIn(0f, 1f)
+                            val trailColor = if (isSupersonic) Color(0xFFEF4444) else Color(0xFFF59E0B)
+                            drawCircle(
+                                color = trailColor.copy(alpha = alpha),
+                                radius = (4.5f - step * 0.5f).coerceAtLeast(1.5f),
+                                center = Offset(tx, ty)
+                            )
+                        }
+                    }
+
+                    // 5. Supersonic Aircraft Vector Silhouette & Navigation Strobes
+                    withTransform({
+                        rotate(degrees = headingDeg, pivot = Offset(px, py))
+                    }) {
+                        // Authentic Commercial Airliner Vector Silhouette (Fuselage, Swept Wings, Tail Fin)
+                        val airlinerPath = Path().apply {
+                            // Rounded aerodynamic nose cone
+                            moveTo(px + 18f, py)
+                            // Port cockpit & fuselage
+                            cubicTo(px + 13f, py - 3f, px + 5f, py - 3.2f, px + 2f, py - 3.2f)
+                            // Port swept airliner wing leading edge
+                            lineTo(px - 7f, py - 19f)
+                            // Port winglet tip
+                            lineTo(px - 9.5f, py - 19f)
+                            // Port wing trailing edge
+                            lineTo(px - 7f, py - 3.2f)
+                            // Port rear fuselage
+                            lineTo(px - 14f, py - 2.2f)
+                            // Port horizontal tailplane
+                            lineTo(px - 18.5f, py - 8f)
+                            lineTo(px - 20.5f, py - 8f)
+                            // Tail cone apex
+                            lineTo(px - 19f, py)
+                            // Starboard horizontal tailplane
+                            lineTo(px - 20.5f, py + 8f)
+                            lineTo(px - 18.5f, py + 8f)
+                            // Starboard rear fuselage
+                            lineTo(px - 14f, py + 2.2f)
+                            // Starboard wing trailing edge
+                            lineTo(px - 7f, py + 3.2f)
+                            // Starboard winglet tip
+                            lineTo(px - 9.5f, py + 19f)
+                            // Starboard swept airliner wing leading edge
+                            lineTo(px - 7f, py + 19f)
+                            // Starboard forward fuselage
+                            lineTo(px + 2f, py + 3.2f)
+                            // Starboard cockpit to nose
+                            cubicTo(px + 5f, py + 3.2f, px + 13f, py + 3f, px + 18f, py)
+                            close()
+                        }
+
+                        // Aircraft outer atmospheric glow & solid fuselage fill
+                        drawPath(airlinerPath, color = Color(0x66F59E0B), style = Stroke(width = 3.5f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+                        drawPath(airlinerPath, color = Color(0xFF0F172A), style = Fill)
+                        drawPath(airlinerPath, color = Color(0xFFFDE68A), style = Stroke(width = 1.3f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+
+                        // Dual Underwing Jet Turbofan Engine Nacelles
+                        val enginePulse = (sin(planeProgress * 30.0) * 0.5 + 0.5).toFloat()
+                        // Port Engine
+                        drawCircle(color = Color(0xFF1E293B), radius = 2.4f, center = Offset(px - 2f, py - 8f))
+                        drawCircle(color = Color(0xFF38BDF8).copy(alpha = 0.7f + 0.3f * enginePulse), radius = 1.8f, center = Offset(px - 3.5f, py - 8f))
+                        // Starboard Engine
+                        drawCircle(color = Color(0xFF1E293B), radius = 2.4f, center = Offset(px - 2f, py + 8f))
+                        drawCircle(color = Color(0xFF38BDF8).copy(alpha = 0.7f + 0.3f * enginePulse), radius = 1.8f, center = Offset(px - 3.5f, py + 8f))
+
+                        // Cockpit Windscreen Slit
+                        drawLine(color = Color(0xFF38BDF8), start = Offset(px + 10f, py - 1.8f), end = Offset(px + 10f, py + 1.8f), strokeWidth = 1.5f, cap = StrokeCap.Round)
+
+                        // FAA-Standard Blinking Navigation Strobes
+                        val strobeOn = sin(planeProgress * 20.0) > 0.0
+                        if (strobeOn) {
+                            // Port Wingtip (Red)
+                            drawCircle(color = Color(0xFFEF4444), radius = 2.2f, center = Offset(px - 8f, py - 19f))
+                            // Starboard Wingtip (Green)
+                            drawCircle(color = Color(0xFF10B981), radius = 2.2f, center = Offset(px - 8f, py + 19f))
+                            // Tail Beacon Strobe (White Flash)
+                            drawCircle(color = Color.White, radius = 2.0f, center = Offset(px - 19f, py))
+                        }
+                    }
                 }
             }
 
@@ -488,8 +707,8 @@ fun GlobeView(
             if (showHazards) {
                 hazards.forEach { hazard ->
                     var p = latLngToCartesian(hazard.lat, hazard.lng, currentRadius.toDouble())
-                    p = rotateX(p, cosX, sinX)
                     p = rotateY(p, cosY, sinY)
+                    p = rotateX(p, cosX, sinX)
 
                     if (p.z > 0.0) {
                         val hx = canvasCenter.x + p.x.toFloat()
@@ -539,8 +758,8 @@ fun GlobeView(
                     val orbitLng = ((issTelemetry.longitude + (u - u0).toDegrees * cos(incRad) - earthRotDeg + 540.0) % 360.0) - 180.0
 
                     var op = latLngToCartesian(orbitLat, orbitLng, issRadius.toDouble())
-                    op = rotateX(op, cosX, sinX)
                     op = rotateY(op, cosY, sinY)
+                    op = rotateX(op, cosX, sinX)
 
                     if (op.z > 0.0) {
                         val ox = canvasCenter.x + op.x.toFloat()
@@ -573,8 +792,8 @@ fun GlobeView(
 
                 // Current ISS Satellite Position
                 var p = latLngToCartesian(issTelemetry.latitude, issTelemetry.longitude, issRadius.toDouble())
-                p = rotateX(p, cosX, sinX)
                 p = rotateY(p, cosY, sinY)
+                p = rotateX(p, cosX, sinX)
 
                 if (p.z > 0.0) {
                     val ix = canvasCenter.x + p.x.toFloat()
