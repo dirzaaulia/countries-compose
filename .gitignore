@@ -18,4 +18,6 @@ screen_*.png
 screen.png
 app/release/
 keystore.jks
-
+.agents/
+.artifacts/
+.idea/

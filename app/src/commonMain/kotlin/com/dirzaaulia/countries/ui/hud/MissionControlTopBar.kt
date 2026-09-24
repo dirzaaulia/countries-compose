@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -32,6 +33,8 @@ fun MissionControlTopBar(
     onToggleFlightMode: () -> Unit,
     isQuizMode: Boolean,
     onToggleQuizMode: () -> Unit,
+    moonDistanceKm: Double = 384400.0,
+    localTime: String = "",
     utcTime: String = "LIVE UTC",
     modifier: Modifier = Modifier
 ) {
@@ -50,29 +53,57 @@ fun MissionControlTopBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // A. Left: Live Status Badge
+            // A. Left: Live Status Badge with UTC (Top) and Local Time (Bottom)
             Surface(
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
                 color = Color(0xDD0B1220),
                 border = BorderStroke(1.dp, Color(0x3338BDF8))
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(7.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(7.dp)
                             .background(Color(0xFF10B981), CircleShape)
                     )
-                    Text(
-                        text = if (currentPage == 0) utcTime else "384.4K KM",
-                        color = Color(0xFFE0F2FE),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
-                    )
+                    if (currentPage == 0) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(1.dp)
+                        ) {
+                            Text(
+                                text = utcTime,
+                                color = Color(0xFFE0F2FE),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp
+                            )
+                            if (localTime.isNotEmpty()) {
+                                Text(
+                                    text = "$localTime LOCAL",
+                                    color = Color(0xFF38BDF8),
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    letterSpacing = 0.5.sp
+                                )
+                            }
+                        }
+                    } else {
+                        val distStr = if (moonDistanceKm >= 1000.0) {
+                            "${(moonDistanceKm / 1000.0).toInt()}K KM"
+                        } else {
+                            "${moonDistanceKm.toInt()} KM"
+                        }
+                        Text(
+                            text = distStr,
+                            color = Color(0xFFE0F2FE),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
                 }
             }
 
@@ -133,15 +164,17 @@ fun MissionControlTopBar(
                         if (activeLayersCount > 0) {
                             Box(
                                 modifier = Modifier
-                                    .size(16.dp)
+                                    .size(18.dp)
                                     .background(Color(0xFF38BDF8), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = "$activeLayersCount",
                                     color = Color(0xFF0B1220),
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    lineHeight = 10.sp
                                 )
                             }
                         }
@@ -211,7 +244,7 @@ fun MissionControlTopBar(
                         )
                     }
 
-                    // Grid of 5 Layer Toggle Items
+                    // Grid of Layer Toggle Items
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)

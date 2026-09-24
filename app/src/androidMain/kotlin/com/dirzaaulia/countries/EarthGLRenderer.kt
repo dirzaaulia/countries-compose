@@ -56,6 +56,7 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var uCloudTextureLoc = 0
     private var uSunDirectionLoc = 0
     private var uCloudOffsetLoc = 0
+    private var uIsMoonLoc = 0
 
     private var aPositionLoc = 0
     private var aTexCoordinateLoc = 0
@@ -64,6 +65,9 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var dayTextureId = 0
     private var nightTextureId = 0
     private var cloudTextureId = 0
+
+    @Volatile
+    private var isMoonMode = false
 
     @Volatile
     private var pendingDayBytes: ByteArray? = null
@@ -89,15 +93,30 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         currentZoom = zoom
     }
 
-    fun setTextures(dayBytes: ByteArray, nightBytes: ByteArray, cloudBytes: ByteArray) {
+    fun setIsMoon(isMoon: Boolean) {
+        isMoonMode = isMoon
+    }
+
+    @Volatile
+    private var moonPhaseAngle = 0.0
+
+    fun setMoonPhaseAngle(phaseAngle: Double) {
+        moonPhaseAngle = phaseAngle
+    }
+
+    fun setTextures(
+        dayBytes: ByteArray,
+        nightBytes: ByteArray? = null,
+        cloudBytes: ByteArray? = null
+    ) {
         pendingDayBytes = dayBytes
         pendingNightBytes = nightBytes
         pendingCloudBytes = cloudBytes
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        // Deep cosmic void background
-        GLES20.glClearColor(0.003f, 0.005f, 0.010f, 1.0f)
+        // Transparent OpenGL background so Compose deep space starfield shines through
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
         GLES20.glDepthFunc(GLES20.GL_LEQUAL)
         GLES20.glEnable(GLES20.GL_CULL_FACE)
@@ -114,6 +133,7 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         uCloudTextureLoc = GLES20.glGetUniformLocation(programId, "u_CloudTexture")
         uSunDirectionLoc = GLES20.glGetUniformLocation(programId, "u_SunDirection")
         uCloudOffsetLoc = GLES20.glGetUniformLocation(programId, "u_CloudOffset")
+        uIsMoonLoc = GLES20.glGetUniformLocation(programId, "u_IsMoon")
 
         aPositionLoc = GLES20.glGetAttribLocation(programId, "a_Position")
         aTexCoordinateLoc = GLES20.glGetAttribLocation(programId, "a_TexCoordinate")
@@ -137,11 +157,11 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         loadTexturesIfPending()
 
-        if (programId == 0 || dayTextureId == 0 || nightTextureId == 0) return
+        if (programId == 0 || dayTextureId == 0) return
 
         GLES20.glUseProgram(programId)
 
-        // Realistic static cloud cover (locked to planet surface, no fast moving drift)
+        // Realistic static cloud cover
         cloudOffset = 0f
 
         // Model matrix with rotation and responsive zoom
@@ -151,9 +171,6 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val baseRadius = minOf(viewportWidth, viewportHeight).toFloat() * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        // Matching GlobeMath rotation order:
-        // In GlobeMath: rotateX first, then rotateY!
-        // In OpenGL: post-multiplying rotateY then rotateX applies rotateX first to vertices!
         Matrix.rotateM(modelMatrix, 0, currentRotationY, 0f, 1f, 0f)
         Matrix.rotateM(modelMatrix, 0, currentRotationX, 1f, 0f, 0f)
         Matrix.scaleM(modelMatrix, 0, currentRadius, currentRadius, currentRadius)
@@ -164,16 +181,31 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(uMVPMatrixLoc, 1, false, mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(uMVMatrixLoc, 1, false, mvMatrix, 0)
         GLES20.glUniform1f(uCloudOffsetLoc, cloudOffset)
+        GLES20.glUniform1f(uIsMoonLoc, if (isMoonMode) 1.0f else 0.0f)
 
-        // Real-time astronomical Sun direction (matches current UTC subsolar point)
-        val sunPos = AstronomyMath.calculateSunPosition()
-        var sunEye = sunPos.vector
+        // Real-time astronomical Sun direction
         val radX = currentRotationX.toDouble().toRadians
         val radY = currentRotationY.toDouble().toRadians
         val cosX = cos(radX); val sinX = sin(radX)
         val cosY = cos(radY); val sinY = sin(radY)
-        sunEye = rotateX(sunEye, cosX, sinX)
-        sunEye = rotateY(sunEye, cosY, sinY)
+
+        val sunEye = if (isMoonMode) {
+            val phaseRad = moonPhaseAngle.toRadians
+            // At phase 180 (Full Moon), Sun is at +Z (facing front)
+            // At phase 0 (New Moon), Sun is at -Z (behind Moon)
+            // At phase 90 (First Quarter), Sun is at +X (right)
+            // At phase 270 (Last Quarter), Sun is at -X (left)
+            var p = Point3D(sin(phaseRad), 0.0, -cos(phaseRad))
+            p = rotateX(p, cosX, sinX)
+            p = rotateY(p, cosY, sinY)
+            p
+        } else {
+            val sunPos = AstronomyMath.calculateSunPosition()
+            var p = sunPos.vector
+            p = rotateX(p, cosX, sinX)
+            p = rotateY(p, cosY, sinY)
+            p
+        }
 
         GLES20.glUniform3f(
             uSunDirectionLoc,
@@ -187,17 +219,15 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, dayTextureId)
         GLES20.glUniform1i(uDayTextureLoc, 0)
 
-        // Bind Night Texture to Unit 1
+        // Bind Night Texture to Unit 1 (fallback to dayTextureId if not present)
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, nightTextureId)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (nightTextureId != 0) nightTextureId else dayTextureId)
         GLES20.glUniform1i(uNightTextureLoc, 1)
 
-        // Bind Cloud Texture to Unit 2
-        if (cloudTextureId != 0) {
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE2)
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, cloudTextureId)
-            GLES20.glUniform1i(uCloudTextureLoc, 2)
-        }
+        // Bind Cloud Texture to Unit 2 (fallback to dayTextureId if not present)
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE2)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (cloudTextureId != 0) cloudTextureId else dayTextureId)
+        GLES20.glUniform1i(uCloudTextureLoc, 2)
 
         // Vertex positions
         GLES20.glEnableVertexAttribArray(aPositionLoc)
@@ -228,33 +258,43 @@ class EarthGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val dBytes = pendingDayBytes
         if (dBytes != null) {
             pendingDayBytes = null
+            if (dayTextureId != 0) {
+                GLES20.glDeleteTextures(1, intArrayOf(dayTextureId), 0)
+            }
             dayTextureId = loadGLTexture(dBytes)
         }
         val nBytes = pendingNightBytes
         if (nBytes != null) {
             pendingNightBytes = null
+            if (nightTextureId != 0) {
+                GLES20.glDeleteTextures(1, intArrayOf(nightTextureId), 0)
+            }
             nightTextureId = loadGLTexture(nBytes)
         }
         val cBytes = pendingCloudBytes
         if (cBytes != null) {
             pendingCloudBytes = null
+            if (cloudTextureId != 0) {
+                GLES20.glDeleteTextures(1, intArrayOf(cloudTextureId), 0)
+            }
             cloudTextureId = loadGLTexture(cBytes)
         }
     }
 
     private fun loadGLTexture(bytes: ByteArray): Int {
+        if (bytes.isEmpty()) return 0
+        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return 0
         val textureHandle = IntArray(1)
         GLES20.glGenTextures(1, textureHandle, 0)
         if (textureHandle[0] != 0) {
-            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0])
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0)
-            bitmap.recycle()
         }
+        bitmap.recycle()
         return textureHandle[0]
     }
 

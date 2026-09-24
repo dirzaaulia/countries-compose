@@ -112,7 +112,20 @@ class GlobeRepository {
                 }
             }
 
-            val center = if (totalPoints > 0) {
+            // Use mainland (largest polygon) for center so distant overseas territories don't skew center
+            val mainlandPoly = polygons.maxByOrNull { it.size }
+            val center = if (mainlandPoly != null && mainlandPoly.isNotEmpty()) {
+                var mX = 0.0; var mY = 0.0; var mZ = 0.0
+                mainlandPoly.forEach {
+                    val latRad = it.lat.toRadians
+                    val lngRad = it.lng.toRadians
+                    mX += cos(latRad) * cos(lngRad)
+                    mY += cos(latRad) * sin(lngRad)
+                    mZ += sin(latRad)
+                }
+                val hyp = sqrt(mX * mX + mY * mY)
+                LatLng(atan2(mZ, hyp).toDegrees, atan2(mY, mX).toDegrees)
+            } else if (totalPoints > 0) {
                 val avgX = totalX / totalPoints
                 val avgY = totalY / totalPoints
                 val avgZ = totalZ / totalPoints
@@ -122,11 +135,28 @@ class GlobeRepository {
                 LatLng(0.0, 0.0)
             }
 
-            val areaEst = feature.properties["name_len"]?.jsonPrimitive?.content?.toDoubleOrNull() ?: 10.0
+            val effectiveArea = if (area > 0.0) area else {
+                val minLat = mainlandPoly?.minOfOrNull { it.lat } ?: 0.0
+                val maxLat = mainlandPoly?.maxOfOrNull { it.lat } ?: 0.0
+                val minLng = mainlandPoly?.minOfOrNull { it.lng } ?: 0.0
+                val maxLng = mainlandPoly?.maxOfOrNull { it.lng } ?: 0.0
+                val dLatKm = (maxLat - minLat).absoluteValue * 111.0
+                val dLngKm = (maxLng - minLng).absoluteValue * 111.0 * cos(center.lat.toRadians).absoluteValue
+                dLatKm * dLngKm
+            }
+
+            // Calibrated zoom levels ensuring entire country fits in viewport with comfortable margin
             val zoomLevel = when {
-                areaEst > 12 -> 1.0f
-                areaEst > 8 -> 1.3f
-                else -> 1.6f
+                effectiveArea >= 8_000_000 -> 1.05f  // Russia, Canada, China, USA
+                effectiveArea >= 5_000_000 -> 1.15f  // Brazil, Australia
+                effectiveArea >= 2_000_000 -> 1.35f  // India, Argentina, Kazakhstan, Algeria, Saudi Arabia, Greenland
+                effectiveArea >= 1_000_000 -> 1.50f  // Mexico, Indonesia, Sudan, Libya, Iran, Mongolia, Peru
+                effectiveArea >= 500_000   -> 1.75f  // France, Germany, Spain, Ukraine, Turkey, Colombia, Egypt
+                effectiveArea >= 200_000   -> 2.00f  // UK, Italy, Japan, New Zealand, Poland, Vietnam, Philippines
+                effectiveArea >= 80_000    -> 2.30f  // Greece, Portugal, Austria, Iceland, Cuba, Jordan, Ireland
+                effectiveArea >= 25_000    -> 2.60f  // Switzerland, Netherlands, Belgium, Taiwan, Denmark, Albania
+                effectiveArea >= 5_000     -> 2.90f  // Luxembourg, Cyprus, Lebanon, Jamaica, Qatar, Brunei
+                else                       -> 3.20f  // Singapore, Bahrain, Malta, Andorra, Monaco, Vatican
             }
 
             Country(
@@ -454,6 +484,10 @@ class GlobeRepository {
                         catTitle.contains("Flood", ignoreCase = true) || catTitle.contains("Water", ignoreCase = true) -> "🌊"
                         else -> "⚠️"
                     }
+                    val magVal = geom["magnitudeValue"]?.jsonPrimitive?.contentOrNull
+                    val magUnit = geom["magnitudeUnit"]?.jsonPrimitive?.contentOrNull
+                    val magnitude = if (magVal != null) "$magVal ${magUnit ?: ""}".trim() else null
+
                     list.add(
                         NasaNaturalEvent(
                             id = id,
@@ -462,7 +496,8 @@ class GlobeRepository {
                             categoryIcon = icon,
                             date = date,
                             lat = lat,
-                            lng = lng
+                            lng = lng,
+                            magnitude = magnitude
                         )
                     )
                 }

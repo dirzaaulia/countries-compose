@@ -1,6 +1,5 @@
 package com.dirzaaulia.countries
 
-import com.dirzaaulia.countries.util.formatNumber
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,26 +11,132 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+
+private fun getDaysInMonths(year: Int): IntArray {
+    val isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+    return intArrayOf(31, if (isLeap) 29 else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+}
+
+private fun epochMillisToYearAndDay(epochMillis: Long): Triple<Int, Int, Int> {
+    var days = epochMillis / 86400000L
+    var year = 1970
+    while (true) {
+        val leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+        val yearDays = if (leap) 366 else 365
+        if (days >= yearDays) {
+            days -= yearDays
+            year++
+        } else {
+            break
+        }
+    }
+    val dayOfYear = days.toInt() + 1
+    val isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+    val daysInMonth = intArrayOf(31, if (isLeap) 29 else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    var d = dayOfYear
+    var month = 0
+    for (m in 0 until 12) {
+        if (d <= daysInMonth[m]) {
+            month = m
+            break
+        }
+        d -= daysInMonth[m]
+    }
+    val dayOfMonth = d
+    return Triple(year, dayOfYear, dayOfMonth)
+}
+
+private fun dayOfYearToEpochMillis(year: Int, dayOfYear: Int, hour: Int = 12): Long {
+    var days = 0L
+    for (y in 1970 until year) {
+        val leap = (y % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+        days += if (leap) 366 else 365
+    }
+    days += (dayOfYear - 1)
+    return days * 86400000L + hour * 3600000L
+}
+
+private fun formatDayAndMonth(year: Int, dayOfYear: Int): String {
+    val monthNames = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    val isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+    val daysInMonth = intArrayOf(31, if (isLeap) 29 else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    var d = dayOfYear.coerceIn(1, if (isLeap) 366 else 365)
+    for (m in 0 until 12) {
+        if (d <= daysInMonth[m]) {
+            return "$d ${monthNames[m]} $year"
+        }
+        d -= daysInMonth[m]
+    }
+    return "31 Dec $year"
+}
+
+private fun getMonthFromDayOfYear(year: Int, dayOfYear: Int): Int {
+    val daysInMonth = getDaysInMonths(year)
+    var d = dayOfYear
+    for (m in 0 until 12) {
+        if (d <= daysInMonth[m]) return m
+        d -= daysInMonth[m]
+    }
+    return 11
+}
+
+private fun getFirstDayOfMonth(year: Int, monthIndex: Int): Int {
+    val daysInMonth = getDaysInMonths(year)
+    var day = 1
+    for (m in 0 until monthIndex.coerceIn(0, 11)) {
+        day += daysInMonth[m]
+    }
+    return day
+}
 
 data class ApolloSite(
     val name: String,
@@ -100,77 +205,77 @@ val APOLLO_SITES = listOf(
     )
 )
 
-// Major Lunar Maria (Basaltic volcanic dark plains)
-private data class LunarMare(val name: String, val lat: Double, val lng: Double, val radiusDeg: Double)
-private val LUNAR_MARIA = listOf(
-    LunarMare("Oceanus Procellarum", 18.4, -57.4, 38.0),
-    LunarMare("Mare Imbrium", 32.8, -15.6, 26.0),
-    LunarMare("Mare Serenitatis", 28.0, 17.5, 16.0),
-    LunarMare("Mare Tranquillitatis", 8.5, 31.4, 18.0),
-    LunarMare("Mare Crisium", 17.0, 59.1, 12.0),
-    LunarMare("Mare Fecunditatis", -7.8, 51.3, 15.0),
-    LunarMare("Mare Nectaris", -15.2, 35.5, 10.0),
-    LunarMare("Mare Nubium", -21.3, -16.6, 17.0),
-    LunarMare("Mare Humorum", -24.4, -38.4, 11.0)
-)
-
-// Major Impact Craters with high albedo and ray systems
-private data class LunarCrater(val name: String, val lat: Double, val lng: Double, val radiusDeg: Double, val hasRays: Boolean)
-private val LUNAR_CRATERS = listOf(
-    LunarCrater("Tycho", -43.3, -11.2, 4.0, true),
-    LunarCrater("Copernicus", 9.6, -20.1, 4.5, true),
-    LunarCrater("Kepler", 8.1, -38.0, 2.8, true),
-    LunarCrater("Aristarchus", 23.7, -47.4, 3.0, true),
-    LunarCrater("Plato", 51.6, -9.3, 4.2, false),
-    LunarCrater("Langrenus", -8.9, 61.1, 5.0, false)
-)
-
 @Composable
 fun MoonView(
     moonInfo: MoonInfo,
     modifier: Modifier = Modifier,
+    isPageActive: Boolean = true,
     state: GlobeState = remember { GlobeState(initialRotationX = 0f, initialRotationY = 0f, initialZoom = 1.0f) },
     sensitivity: Float = 0.38f
 ) {
     val scope = rememberCoroutineScope()
     var selectedApolloSite by remember { mutableStateOf<ApolloSite?>(null) }
 
+    // Hourly refresh so the Moon terminator stays accurate throughout the day
+    var now by remember { mutableStateOf(currentEpochMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3_600_000L)
+            now = currentEpochMillis()
+        }
+    }
+    val (currentYear, todayDayOfYear, _) = remember(now) { epochMillisToYearAndDay(now) }
+    var selectedDayOfYear by remember { mutableStateOf(todayDayOfYear) }
+    val isLeapYear = (currentYear % 4 == 0 && currentYear % 100 != 0) || (currentYear % 400 == 0)
+    val totalDaysInYear = if (isLeapYear) 366 else 365
+
+    // Dynamic Moon phase computed for selected day of year (1 Jan to 31 Dec)
+    val displayedMoonInfo = remember(selectedDayOfYear, currentYear) {
+        if (selectedDayOfYear == todayDayOfYear) {
+            moonInfo
+        } else {
+            val millis = dayOfYearToEpochMillis(currentYear, selectedDayOfYear)
+            AstronomyMath.calculateMoonInfo(millis)
+        }
+    }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "moonStarTwinkle")
+    val starTwinkle by infiniteTransition.animateFloat(
+        initialValue = 0.35f,
+        targetValue = 1.0f,
+        animationSpec = infiniteRepeatable(tween(2400, easing = LinearEasing), RepeatMode.Reverse),
+        label = "moonStarTwinkle"
+    )
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF020408))
     ) {
-        // 1. Deep Space Cosmic Starfield
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val starCount = 95
-            val seed = 1337L
-            val random = kotlin.random.Random(seed)
-            for (i in 0 until starCount) {
-                val sx = random.nextFloat() * size.width
-                val sy = random.nextFloat() * size.height
-                val r = if (i % 8 == 0) 1.8f else if (i % 3 == 0) 1.2f else 0.8f
-                val alpha = 0.35f + (random.nextFloat() * 0.55f)
-                val color = if (i % 6 == 0) Color(0xFFBAE6FD) else if (i % 11 == 0) Color(0xFFFEF08A) else Color.White
-                drawCircle(color = color.copy(alpha = alpha), radius = r, center = Offset(sx, sy))
-            }
-        }
+        // 1. Hardware Accelerated 3D Moon Sphere (OpenGL ES / WebGL with NASA texture & sun lighting)
+        Moon3DPlatformView(
+            state = state,
+            phaseAngle = displayedMoonInfo.phaseAngle,
+            isPageActive = isPageActive,
+            modifier = Modifier.fillMaxSize()
+        )
 
-        // 2. Interactive 3D Moon Canvas
+        // 2. Interactive Apollo Landing Sites, Stars & Gesture Control Overlay
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectTapGestures { offset ->
                         val canvasCenter = Offset(size.width / 2f, size.height / 2f)
-                        val baseRadius = minOf(size.width, size.height) * 0.36f
+                        val baseRadius = minOf(size.width, size.height) * 0.38f
                         val currentRadius = baseRadius * state.zoom
                         val dx = (offset.x - canvasCenter.x).toDouble()
                         val dy = (offset.y - canvasCenter.y).toDouble()
                         val d2 = dx * dx + dy * dy
 
                         if (d2 <= currentRadius * currentRadius) {
-                            val radX = state.rotationX.toDouble().toRadians
-                            val radY = state.rotationY.toDouble().toRadians
+                            val radX = (-state.rotationX.toDouble()).toRadians
+                            val radY = (-state.rotationY.toDouble()).toRadians
                             val cosX = cos(radX); val sinX = sin(radX)
                             val cosY = cos(radY); val sinY = sin(radY)
 
@@ -179,8 +284,8 @@ fun MoonView(
                             var minDistance = Double.MAX_VALUE
                             APOLLO_SITES.forEach { site ->
                                 var p = latLngToCartesian(site.lat, site.lng, currentRadius.toDouble())
-                                p = rotateX(p, cosX, sinX)
                                 p = rotateY(p, cosY, sinY)
+                                p = rotateX(p, cosX, sinX)
                                 if (p.z > 0.0) {
                                     val sx = canvasCenter.x + p.x.toFloat()
                                     val sy = canvasCenter.y - p.y.toFloat()
@@ -211,140 +316,52 @@ fun MoonView(
                 }
         ) {
             val canvasCenter = center
-            val baseRadius = minOf(size.width, size.height) * 0.36f
+            val baseRadius = minOf(size.width, size.height) * 0.38f
             val currentRadius = baseRadius * state.zoom
 
-            val radX = state.rotationX.toDouble().toRadians
-            val radY = state.rotationY.toDouble().toRadians
+            // 0. Twinkling Stars in Deep Space
+            val moonR2 = currentRadius * currentRadius
+            CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
+                val sx = normX * size.width
+                val sy = normY * size.height
+                val dx = sx - canvasCenter.x
+                val dy = sy - canvasCenter.y
+                if (dx * dx + dy * dy > moonR2 + 10f) {
+                    val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.25f, 1f)
+                    val starColor = when {
+                        idx % 7 == 0 -> Color(0xFF90CAF9)
+                        idx % 11 == 0 -> Color(0xFFFFE082)
+                        idx % 13 == 0 -> Color(0xFFFFCCBC)
+                        else -> Color.White
+                    }
+                    if (starRadius > 1.6f) {
+                        drawCircle(
+                            color = starColor.copy(alpha = alpha * 0.35f),
+                            radius = starRadius * 2.5f,
+                            center = Offset(sx, sy)
+                        )
+                    }
+                    drawCircle(
+                        color = starColor.copy(alpha = alpha * 0.92f),
+                        radius = starRadius * 1.3f,
+                        center = Offset(sx, sy)
+                    )
+                }
+            }
+
+            val radX = (-state.rotationX.toDouble()).toRadians
+            val radY = (-state.rotationY.toDouble()).toRadians
             val cosX = cos(radX); val sinX = sin(radX)
             val cosY = cos(radY); val sinY = sin(radY)
 
-            // A. Outer Ethereal Lunar Glow Aura
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(
-                        Color(0x35E2E8F0),
-                        Color(0x1594A3B8),
-                        Color(0x0594A3B8),
-                        Color.Transparent
-                    ),
-                    center = canvasCenter,
-                    radius = currentRadius * 1.35f
-                ),
-                radius = currentRadius * 1.35f,
-                center = canvasCenter
-            )
-
-            // B. Unlit Regolith Base Disc (velvety charcoal dark side with subtle earthshine)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(Color(0xFF1E293B), Color(0xFF0F172A), Color(0xFF080D18)),
-                    center = canvasCenter,
-                    radius = currentRadius
-                ),
-                radius = currentRadius,
-                center = canvasCenter
-            )
-
-            // C. 3D Projector Helper
             fun project(lat: Double, lng: Double, radius: Double = currentRadius.toDouble()): Point3D? {
                 var p = latLngToCartesian(lat, lng, radius)
-                p = rotateX(p, cosX, sinX)
                 p = rotateY(p, cosY, sinY)
+                p = rotateX(p, cosX, sinX)
                 return if (p.z > 0.0) p else null
             }
 
-            // D. Lunar Maria (Dark Basaltic Seas)
-            LUNAR_MARIA.forEach { mare ->
-                val p = project(mare.lat, mare.lng)
-                if (p != null) {
-                    val mx = canvasCenter.x + p.x.toFloat()
-                    val my = canvasCenter.y - p.y.toFloat()
-                    val mareRadius = (currentRadius * (mare.radiusDeg / 90.0) * (p.z / currentRadius).coerceIn(0.2, 1.0)).toFloat()
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(Color(0xCC0B1320), Color(0x880F172A), Color.Transparent),
-                            center = Offset(mx, my),
-                            radius = mareRadius
-                        ),
-                        radius = mareRadius,
-                        center = Offset(mx, my)
-                    )
-                }
-            }
-
-            // E. Real-Time Astronomical Phase Lighting & Terminator
-            val illum = moonInfo.illuminatedFraction.toFloat()
-            val phaseAngle = moonInfo.phaseAngle
-            val isWaxing = phaseAngle in 0.0..180.0
-            val sunDirectionSign = if (isWaxing) 1.0 else -1.0
-
-            val lightCenterOffset = Offset(
-                canvasCenter.x + (currentRadius * 0.45f * sunDirectionSign).toFloat(),
-                canvasCenter.y
-            )
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(
-                        Color(0xEEF8FAFC),
-                        Color(0xCCE2E8F0),
-                        Color(0x8894A3B8),
-                        Color.Transparent
-                    ),
-                    center = lightCenterOffset,
-                    radius = currentRadius * (0.85f + illum * 0.55f)
-                ),
-                radius = currentRadius,
-                center = canvasCenter
-            )
-
-            // F. Major Craters & Tycho Ray System
-            LUNAR_CRATERS.forEach { crater ->
-                val p = project(crater.lat, crater.lng)
-                if (p != null) {
-                    val cx = canvasCenter.x + p.x.toFloat()
-                    val cy = canvasCenter.y - p.y.toFloat()
-                    val cRadius = (currentRadius * (crater.radiusDeg / 90.0)).toFloat().coerceAtLeast(3.5f)
-
-                    // Draw Tycho bright ejecta ray streamers across the globe
-                    if (crater.hasRays && crater.name == "Tycho") {
-                        val rayAngles = listOf(15f, 45f, 85f, 130f, 175f, 220f, 260f, 310f)
-                        rayAngles.forEach { deg ->
-                            val rad = (deg.toDouble()).toRadians
-                            val rayLength = currentRadius * 0.85f
-                            val ex = cx + (rayLength * cos(rad)).toFloat()
-                            val ey = cy + (rayLength * sin(rad)).toFloat()
-                            drawLine(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(Color(0x44F8FAFC), Color(0x10FFFFFF), Color.Transparent),
-                                    start = Offset(cx, cy),
-                                    end = Offset(ex, ey)
-                                ),
-                                start = Offset(cx, cy),
-                                end = Offset(ex, ey),
-                                strokeWidth = 1.8f
-                            )
-                        }
-                    }
-
-                    // Crater outer rim
-                    drawCircle(
-                        color = Color(0x66FFFFFF),
-                        radius = cRadius,
-                        center = Offset(cx, cy),
-                        style = Stroke(width = 1.6f)
-                    )
-                    // Crater central peak highlight
-                    drawCircle(
-                        color = Color(0xAAFFFFFF),
-                        radius = (cRadius * 0.35f).coerceAtLeast(1.5f),
-                        center = Offset(cx, cy),
-                        style = Fill
-                    )
-                }
-            }
-
-            // G. Historic Apollo Landing Sites (Interactive Glowing Markers)
+            // Interactive Apollo Landing Sites (Glowing Target Beacons)
             APOLLO_SITES.forEach { site ->
                 val p = project(site.lat, site.lng)
                 if (p != null) {
@@ -354,27 +371,19 @@ fun MoonView(
 
                     // Pulsing golden beacon
                     drawCircle(
-                        color = if (isSelected) Color(0xFFFFD54F) else Color(0xFF38BDF8).copy(alpha = 0.40f),
+                        color = if (isSelected) Color(0xFFFFD54F) else Color(0xFF38BDF8).copy(alpha = 0.50f),
                         radius = if (isSelected) 14f else 8f,
                         center = Offset(ax, ay),
                         style = Stroke(width = if (isSelected) 2.5f else 1.5f)
                     )
                     drawCircle(
                         color = if (isSelected) Color(0xFFFFD54F) else Color(0xFF38BDF8),
-                        radius = if (isSelected) 5f else 3.5f,
+                        radius = if (isSelected) 5.5f else 3.5f,
                         center = Offset(ax, ay),
                         style = Fill
                     )
                 }
             }
-
-            // H. Spherical Limb Outline
-            drawCircle(
-                color = Color(0x4494A3B8),
-                radius = currentRadius,
-                center = canvasCenter,
-                style = Stroke(width = 1.5f)
-            )
         }
 
         // 3. Floating Apollo Mission Inspector Card
@@ -448,15 +457,15 @@ fun MoonView(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Astronauts: ${site.astronaut}",
+                                text = "📅 ${site.date}",
+                                color = Color(0xFF94A3B8),
+                                fontSize = 11.sp
+                            )
+                            Text(
+                                text = "👨‍🚀 ${site.astronaut}",
                                 color = Color(0xFF38BDF8),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                text = site.date,
-                                color = Color(0xFF94A3B8),
-                                fontSize = 11.sp
                             )
                         }
                     }
@@ -464,36 +473,146 @@ fun MoonView(
             }
         }
 
-        // 4. Compact Real-Time Lunar Telemetry HUD (Bottom Bar)
+        // 4. Yearly Lunar Phase Scrubber HUD (1 Jan to 31 Dec)
         if (selectedApolloSite == null) {
             Surface(
-                shape = RoundedCornerShape(18.dp),
-                color = Color(0xDD0B1324),
+                shape = RoundedCornerShape(20.dp),
+                color = Color(0xEE0B1220),
                 border = BorderStroke(1.dp, Color(0x3338BDF8)),
-                shadowElevation = 10.dp,
+                shadowElevation = 16.dp,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(horizontal = 20.dp, vertical = 16.dp)
+                    .padding(horizontal = 14.dp, vertical = 12.dp)
                     .navigationBarsPadding()
+                    .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
                 ) {
-                    Text(moonInfo.phaseEmoji, fontSize = 28.sp)
-                    Column {
-                        Text(
-                            text = "${moonInfo.phaseName} • ${(moonInfo.illuminatedFraction * 100).toInt()}% Illuminated",
-                            color = Color.White,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Earth Distance: ${formatNumber(moonInfo.distanceKm)} km • 6 Apollo Sites",
-                            color = Color(0xFF38BDF8),
-                            fontSize = 11.sp
-                        )
+                    // Header: Phase Info & Date / Today Reset
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Text(
+                                text = displayedMoonInfo.phaseEmoji,
+                                fontSize = 28.sp
+                            )
+                            Column {
+                                Text(
+                                    text = "${displayedMoonInfo.phaseName} • ${(displayedMoonInfo.illuminatedFraction * 100).toInt()}%",
+                                    color = Color.White,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = formatDayAndMonth(currentYear, selectedDayOfYear),
+                                    color = Color(0xFFFFD54F),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            // Prev day button
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0x2238BDF8))
+                                    .clickable {
+                                        if (selectedDayOfYear > 1) selectedDayOfYear--
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("‹", color = Color(0xFF38BDF8), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            }
+
+                            // Next day button
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0x2238BDF8))
+                                    .clickable {
+                                        if (selectedDayOfYear < totalDaysInYear) selectedDayOfYear++
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("›", color = Color(0xFF38BDF8), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            }
+
+                            // Today reset button if navigated away
+                            if (selectedDayOfYear != todayDayOfYear) {
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = Color(0x3338BDF8),
+                                    border = BorderStroke(1.dp, Color(0xFF38BDF8)),
+                                    modifier = Modifier.clickable { selectedDayOfYear = todayDayOfYear }
+                                ) {
+                                    Text(
+                                        text = "TODAY",
+                                        color = Color(0xFF38BDF8),
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Scrubber Slider: 1 Jan to 31 Dec
+                    Slider(
+                        value = selectedDayOfYear.toFloat(),
+                        onValueChange = { selectedDayOfYear = it.toInt().coerceIn(1, totalDaysInYear) },
+                        valueRange = 1f..totalDaysInYear.toFloat(),
+                        colors = SliderDefaults.colors(
+                            thumbColor = Color(0xFFFFD54F),
+                            activeTrackColor = Color(0xFFFFD54F),
+                            inactiveTrackColor = Color(0x3338BDF8)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(30.dp)
+                    )
+
+                    // Month Quick Chips (Jan - Dec)
+                    val monthNames = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        monthNames.forEachIndexed { mIdx, mName ->
+                            val isCurrentMonth = getMonthFromDayOfYear(currentYear, selectedDayOfYear) == mIdx
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (isCurrentMonth) Color(0xFFFFD54F).copy(alpha = 0.25f) else Color(0x15FFFFFF),
+                                border = if (isCurrentMonth) BorderStroke(1.dp, Color(0xFFFFD54F)) else null,
+                                modifier = Modifier.clickable {
+                                    selectedDayOfYear = getFirstDayOfMonth(currentYear, mIdx)
+                                }
+                            ) {
+                                Text(
+                                    text = mName,
+                                    color = if (isCurrentMonth) Color(0xFFFFD54F) else Color(0xFF94A3B8),
+                                    fontSize = 10.sp,
+                                    fontWeight = if (isCurrentMonth) FontWeight.Bold else FontWeight.Normal,
+                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }

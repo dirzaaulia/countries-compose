@@ -59,6 +59,10 @@ fun App() {
             "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} UTC"
         }
 
+        val localTimeStr = remember(currentTimeMillis / 60_000L) {
+            formatLocalTime(currentTimeMillis)
+        }
+
         var liveDetails by remember { mutableStateOf<LiveCountryDetails?>(null) }
         var isFetchingLive by remember { mutableStateOf(false) }
 
@@ -71,6 +75,7 @@ fun App() {
 
         // Real-time telemetry & hazard state
         var issTelemetry by remember { mutableStateOf<ISSTelemetry?>(null) }
+        var selectedIss by remember { mutableStateOf<ISSTelemetry?>(null) }
         var globalHazards by remember { mutableStateOf<List<NasaNaturalEvent>>(emptyList()) }
         var selectedHazard by remember { mutableStateOf<NasaNaturalEvent?>(null) }
 
@@ -87,10 +92,14 @@ fun App() {
         var quizFeedback by remember { mutableStateOf<String?>(null) }
         var quizIsCorrect by remember { mutableStateOf<Boolean?>(null) }
 
-        // Initial Data Load
+        // Initial Data Load + EONET periodic refresh (every 30 minutes)
         LaunchedEffect(Unit) {
             countries = repository.loadCountries()
             globalHazards = repository.fetchGlobalNasaEvents()
+            while (isActive) {
+                delay(1_800_000L) // 30 minutes
+                globalHazards = repository.fetchGlobalNasaEvents()
+            }
         }
 
         // Periodic ISS Orbit Telemetry Polling (every 6 seconds when layer is active)
@@ -100,6 +109,9 @@ fun App() {
                     val tele = repository.fetchISSTelemetry()
                     if (tele != null) {
                         issTelemetry = tele
+                        if (selectedIss != null) {
+                            selectedIss = tele
+                        }
                     }
                     delay(6000)
                 }
@@ -113,6 +125,11 @@ fun App() {
         LaunchedEffect(selectedCountryId) {
             val country = selectedCountry
             if (country != null && !isQuizMode) {
+                globeState.flyTo(
+                    targetLat = country.center.lat.toFloat(),
+                    targetLng = -country.center.lng.toFloat(),
+                    targetZoom = country.zoomLevel
+                )
                 isFetchingLive = true
                 liveDetails = repository.fetchLiveDetails(country)
                 isFetchingLive = false
@@ -185,9 +202,21 @@ fun App() {
                             } else {
                                 selectedCountryId = clickedId
                                 selectedHazard = null
+                                selectedIss = null
+                                val tapped = countries.find { it.id == clickedId }
+                                if (tapped != null) {
+                                    scope.launch {
+                                        globeState.flyTo(
+                                            targetLat = tapped.center.lat.toFloat(),
+                                            targetLng = -tapped.center.lng.toFloat(),
+                                            targetZoom = tapped.zoomLevel
+                                        )
+                                    }
+                                }
                             }
                         },
                         state = globeState,
+                        isPageActive = page == 0,
                         showBorders = showBorders,
                         showSatellites = showSatellites,
                         showHazards = showHazards,
@@ -197,6 +226,12 @@ fun App() {
                         onHazardSelected = { hazard ->
                             selectedHazard = hazard
                             selectedCountryId = null
+                            selectedIss = null
+                        },
+                        onIssSelected = { iss ->
+                            selectedIss = iss
+                            selectedHazard = null
+                            selectedCountryId = null
                         },
                         sunPos = sunPos,
                         modifier = Modifier.fillMaxSize()
@@ -205,6 +240,7 @@ fun App() {
                     MoonView(
                         moonInfo = moonInfo,
                         state = moonState,
+                        isPageActive = page == 1,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -244,6 +280,8 @@ fun App() {
                         generateNextQuizQuestion()
                     }
                 },
+                moonDistanceKm = moonInfo.distanceKm,
+                localTime = localTimeStr,
                 utcTime = utcTimeStr
             )
 
@@ -292,6 +330,23 @@ fun App() {
                         HazardDetailSheet(
                             hazard = selectedHazard!!,
                             onClose = { selectedHazard = null }
+                        )
+                    }
+
+                    // D. Live ISS Orbital Telemetry Card
+                    selectedIss != null -> {
+                        ISSTelemetryCard(
+                            telemetry = selectedIss!!,
+                            onClose = { selectedIss = null },
+                            onCenterView = {
+                                scope.launch {
+                                    globeState.flyTo(
+                                        targetLat = selectedIss!!.latitude.toFloat(),
+                                        targetLng = -selectedIss!!.longitude.toFloat(),
+                                        targetZoom = 1.6f
+                                    )
+                                }
+                            }
                         )
                     }
 

@@ -21,16 +21,17 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import kotlin.math.*
 import kotlin.random.Random
 
-// 220 deterministic star positions in space
-private val STARS = (0..220).map { i ->
+// Deterministic celestial starfield positions in deep space
+internal val CELESTIAL_STARS = (0..260).map { i ->
     val rng = Random(i * 7919)
-    Triple(rng.nextFloat(), rng.nextFloat(), 0.6f + rng.nextFloat() * 1.5f)
+    Triple(rng.nextFloat(), rng.nextFloat(), 0.7f + rng.nextFloat() * 1.6f)
 }
 
 private data class TransitionSegment(
@@ -48,6 +49,7 @@ fun GlobeView(
     selectedCountryId: String?,
     onCountrySelected: (String?) -> Unit,
     state: GlobeState,
+    isPageActive: Boolean = true,
     showBorders: Boolean = true,
     showSatellites: Boolean = true,
     showHazards: Boolean = true,
@@ -55,6 +57,7 @@ fun GlobeView(
     hazards: List<NasaNaturalEvent> = emptyList(),
     flightRoute: List<LatLng>? = null,
     onHazardSelected: ((NasaNaturalEvent) -> Unit)? = null,
+    onIssSelected: ((ISSTelemetry) -> Unit)? = null,
     sunPos: SunPosition = AstronomyMath.calculateSunPosition(),
     modifier: Modifier = Modifier
 ) {
@@ -79,6 +82,13 @@ fun GlobeView(
         animationSpec = infiniteRepeatable(tween(1400, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "beaconPulse"
     )
+    val planeProgress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(4500, easing = LinearEasing)),
+        label = "flightPlane"
+    )
+    var issScreenPos by remember { mutableStateOf<Offset?>(null) }
 
     val sensitivity = 0.18f
 
@@ -101,7 +111,7 @@ fun GlobeView(
             )
 
             // Twinkling stars in deep space
-            STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
+            CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
                 val x = normX * size.width
                 val y = normY * size.height
                 val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.2f, 1f)
@@ -122,6 +132,7 @@ fun GlobeView(
         // 2. 3D Platform Globe (OpenGL ES on Android, WebGL/Canvas on WASM)
         Globe3DPlatformView(
             state = state,
+            isPageActive = isPageActive,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -164,6 +175,16 @@ fun GlobeView(
                             val dy = (offset.y - canvasCenter.y).toDouble()
                             val d2 = dx * dx + dy * dy
 
+                            // Direct Screen-Space Tap on ISS Badge / Satellite marker
+                            if (showSatellites && issTelemetry != null && issScreenPos != null) {
+                                val sp = issScreenPos!!
+                                val distSq = (offset.x - sp.x) * (offset.x - sp.x) + (offset.y - sp.y) * (offset.y - sp.y)
+                                if (distSq <= 38f * 38f) {
+                                    onIssSelected?.invoke(issTelemetry)
+                                    return@detectTapGestures
+                                }
+                            }
+
                             if (d2 <= currentRadius * currentRadius) {
                                 val dz = sqrt(currentRadius * currentRadius - d2)
 
@@ -179,6 +200,18 @@ fun GlobeView(
                                 val lat = atan2(p.y, sqrt(p.x * p.x + p.z * p.z)).toDegrees
                                 val lng = atan2(p.x, p.z).toDegrees
                                 val tappedLatLng = LatLng(lat, lng)
+
+                                // Check ISS Proximity Tap (orbital ground radius)
+                                if (showSatellites && issTelemetry != null) {
+                                    val issDistance = AstronomyMath.calculateGreatCircleDistance(
+                                        tappedLatLng,
+                                        LatLng(issTelemetry.latitude, issTelemetry.longitude)
+                                    )
+                                    if (issDistance < 700.0) {
+                                        onIssSelected?.invoke(issTelemetry)
+                                        return@detectTapGestures
+                                    }
+                                }
 
                                 // Check Hazards tap
                                 if (showHazards && hazards.isNotEmpty()) {
@@ -222,6 +255,36 @@ fun GlobeView(
             val radY = state.rotationY.toDouble().toRadians
             val cosX = cos(radX); val sinX = sin(radX)
             val cosY = cos(radY); val sinY = sin(radY)
+
+            // 0. Twinkling Stars in Deep Space (Rendered on top of GL background)
+            val earthR2 = currentRadius * currentRadius
+            CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
+                val sx = normX * size.width
+                val sy = normY * size.height
+                val dx = sx - canvasCenter.x
+                val dy = sy - canvasCenter.y
+                if (dx * dx + dy * dy > earthR2 + 10f) {
+                    val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.25f, 1f)
+                    val starColor = when {
+                        idx % 7 == 0 -> Color(0xFF90CAF9)
+                        idx % 11 == 0 -> Color(0xFFFFE082)
+                        idx % 13 == 0 -> Color(0xFFFFCCBC)
+                        else -> Color.White
+                    }
+                    if (starRadius > 1.6f) {
+                        drawCircle(
+                            color = starColor.copy(alpha = alpha * 0.35f),
+                            radius = starRadius * 2.5f,
+                            center = Offset(sx, sy)
+                        )
+                    }
+                    drawCircle(
+                        color = starColor.copy(alpha = alpha * 0.92f),
+                        radius = starRadius * 1.3f,
+                        center = Offset(sx, sy)
+                    )
+                }
+            }
 
             // -------------------------------------------------------------
             // A. Dynamic Day/Night Adaptive Cartographic Borders
@@ -348,20 +411,22 @@ fun GlobeView(
                         }
                     }
 
-                    if (inPath && allPointsVis) {
+                    if (inPath) {
                         selectedPath.close()
-                        drawPath(selectedPath, Color(0x2838BDF8).copy(alpha = strobeAlpha * 0.35f), style = Fill)
+                        drawPath(selectedPath, Color(0x4438BDF8).copy(alpha = strobeAlpha * 0.45f), style = Fill)
                     }
 
+                    // Outer soft glow halo
                     drawPath(
                         path = selectedPath,
-                        color = Color(0x4038BDF8),
-                        style = Stroke(width = 4.2f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        color = Color(0x5538BDF8),
+                        style = Stroke(width = 5.0f, cap = StrokeCap.Round, join = StrokeJoin.Round)
                     )
+                    // Inner sharp vibrant neon cyan stroke
                     drawPath(
                         path = selectedPath,
                         color = Color(0xFF38BDF8),
-                        style = Stroke(width = 2.2f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        style = Stroke(width = 2.6f, cap = StrokeCap.Round, join = StrokeJoin.Round)
                     )
                 }
             }
@@ -395,6 +460,26 @@ fun GlobeView(
                 // Glowing flight arc
                 drawPath(arcPath, Color(0x40F59E0B), style = Stroke(width = 5f, cap = StrokeCap.Round))
                 drawPath(arcPath, Color(0xFFF59E0B), style = Stroke(width = 2.5f, cap = StrokeCap.Round, pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 6f), 0f)))
+
+                // Animated flight plane traveling along arc
+                val indexFloat = planeProgress * (flightRoute.size - 1)
+                val idx = indexFloat.toInt().coerceIn(0, flightRoute.size - 2)
+                val frac = indexFloat - idx
+                val planeLat = flightRoute[idx].lat + (flightRoute[idx + 1].lat - flightRoute[idx].lat) * frac
+                val planeLng = flightRoute[idx].lng + (flightRoute[idx + 1].lng - flightRoute[idx].lng) * frac
+
+                var planeP = latLngToCartesian(planeLat, planeLng, (currentRadius * 1.015).toDouble())
+                planeP = rotateX(planeP, cosX, sinX)
+                planeP = rotateY(planeP, cosY, sinY)
+
+                if (planeP.z > 0.0) {
+                    val px = canvasCenter.x + planeP.x.toFloat()
+                    val py = canvasCenter.y - planeP.y.toFloat()
+
+                    drawCircle(color = Color(0x66F59E0B), radius = 10f, center = Offset(px, py))
+                    drawCircle(color = Color(0xFFF59E0B), radius = 5f, center = Offset(px, py))
+                    drawCircle(color = Color.White, radius = 2.5f, center = Offset(px, py))
+                }
             }
 
             // -------------------------------------------------------------
@@ -433,11 +518,60 @@ fun GlobeView(
             }
 
             // -------------------------------------------------------------
-            // F. Live International Space Station (ISS) Tracker
+            // F. Live International Space Station (ISS) Tracker & Orbit
             // -------------------------------------------------------------
             if (showSatellites && issTelemetry != null) {
                 // Altitude of ~420km above Earth (radius * 1.066)
                 val issRadius = currentRadius * 1.066
+
+                // Orbital Ground Track (~92.9 minute LEO orbit, inclination 51.6 deg)
+                val orbitPath = Path()
+                var inOrbit = false
+                val incRad = 51.6.toRadians
+                val lat0Rad = issTelemetry.latitude.toRadians.coerceIn(-incRad + 0.001, incRad - 0.001)
+                val u0 = asin((sin(lat0Rad) / sin(incRad)).coerceIn(-1.0, 1.0))
+
+                for (step in 0..72) {
+                    val t = step * (92.9 / 72.0)
+                    val u = u0 + (step * (2 * PI / 72.0))
+                    val orbitLat = asin((sin(incRad) * sin(u)).coerceIn(-1.0, 1.0)).toDegrees
+                    val earthRotDeg = t * (360.0 / 1440.0)
+                    val orbitLng = ((issTelemetry.longitude + (u - u0).toDegrees * cos(incRad) - earthRotDeg + 540.0) % 360.0) - 180.0
+
+                    var op = latLngToCartesian(orbitLat, orbitLng, issRadius.toDouble())
+                    op = rotateX(op, cosX, sinX)
+                    op = rotateY(op, cosY, sinY)
+
+                    if (op.z > 0.0) {
+                        val ox = canvasCenter.x + op.x.toFloat()
+                        val oy = canvasCenter.y - op.y.toFloat()
+                        if (!inOrbit) {
+                            orbitPath.moveTo(ox, oy)
+                            inOrbit = true
+                        } else {
+                            orbitPath.lineTo(ox, oy)
+                        }
+                    } else {
+                        inOrbit = false
+                    }
+                }
+
+                drawPath(
+                    path = orbitPath,
+                    color = Color(0x3338BDF8),
+                    style = Stroke(width = 3.5f, cap = StrokeCap.Round)
+                )
+                drawPath(
+                    path = orbitPath,
+                    color = Color(0x8838BDF8),
+                    style = Stroke(
+                        width = 1.8f,
+                        cap = StrokeCap.Round,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 6f), 0f)
+                    )
+                )
+
+                // Current ISS Satellite Position
                 var p = latLngToCartesian(issTelemetry.latitude, issTelemetry.longitude, issRadius.toDouble())
                 p = rotateX(p, cosX, sinX)
                 p = rotateY(p, cosY, sinY)
@@ -446,22 +580,57 @@ fun GlobeView(
                     val ix = canvasCenter.x + p.x.toFloat()
                     val iy = canvasCenter.y - p.y.toFloat()
 
-                    // Glowing satellite marker
+                    issScreenPos = Offset(ix, iy)
+
+                    // Glowing satellite beacon
                     drawCircle(
-                        color = Color(0x3338BDF8),
-                        radius = 12f,
+                        color = Color(0x3338BDF8).copy(alpha = strobeAlpha * 0.6f),
+                        radius = 16f,
+                        center = Offset(ix, iy)
+                    )
+                    drawCircle(
+                        color = Color(0x6638BDF8),
+                        radius = 9f,
                         center = Offset(ix, iy)
                     )
                     drawCircle(
                         color = Color(0xFF38BDF8),
-                        radius = 5f,
+                        radius = 4.5f,
                         center = Offset(ix, iy)
                     )
                     drawCircle(
                         color = Color.White,
-                        radius = 2.5f,
+                        radius = 2.2f,
                         center = Offset(ix, iy)
                     )
+                } else {
+                    issScreenPos = null
+                }
+            } else {
+                issScreenPos = null
+            }
+        }
+
+        // 4. Interactive Floating ISS Badge
+        if (showSatellites && issTelemetry != null && issScreenPos != null) {
+            val pos = issScreenPos!!
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xE60B1220),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x8838BDF8)),
+                shadowElevation = 6.dp,
+                modifier = Modifier
+                    .offset { IntOffset((pos.x + 14).roundToInt(), (pos.y - 14).roundToInt()) }
+                    .clickable { onIssSelected?.invoke(issTelemetry) }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("🛰️ ISS", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text("•", color = Color(0xFF38BDF8), fontSize = 10.sp)
+                    Text("${issTelemetry.altitudeKm.toInt()} km", color = Color(0xFF38BDF8), fontSize = 10.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }

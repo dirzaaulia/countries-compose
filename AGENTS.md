@@ -30,3 +30,5 @@
 - Maintain Material 3 guidelines and Compose best practices.
 - Do NOT build full APK (e.g. `assembleDebug`, `packageDebug`, `installDebug`) and do NOT run remote or device tests unless explicitly asked by the user.
 - After code updates, only run standard compile tasks (e.g. `./gradlew :app:compileDebugKotlinAndroid` and `./gradlew :app:compileKotlinWasmJs`) to ensure there are no compilation errors.
+- Quota Optimization: Be extremely token-efficient, concise, avoid redundant checks, never run multiple compilation cycles unless asked, and avoid unnecessary tool calls.
+- Single Source of Truth: All feature roadmap items, task progress, and technical architecture plans MUST be read from and updated in `ROADMAP.md` at project root (`D:/Android/Projects/countries-compose/ROADMAP.md`), NOT inside agent-private or isolated brain directories.

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 @Composable
 actual fun Globe3DPlatformView(
     state: GlobeState,
+    isPageActive: Boolean,
     modifier: Modifier
 ) {
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -77,6 +78,58 @@ actual fun Globe3DPlatformView(
         // 4. Subtle razor-thin atmospheric limb edge
         drawCircle(
             color = Color(0xFF64B5F6).copy(alpha = 0.35f),
+            radius = currentRadius,
+            center = canvasCenter,
+            style = Stroke(width = 1.5f)
+        )
+    }
+}
+
+@Composable
+actual fun Moon3DPlatformView(
+    state: GlobeState,
+    phaseAngle: Double,
+    isPageActive: Boolean,
+    modifier: Modifier
+) {
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val canvasCenter = center
+        val baseRadius = minOf(size.width, size.height) * 0.38f
+        val currentRadius = baseRadius * state.zoom
+
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0x40F1F5F9),
+                    Color(0x18CBD5E1),
+                    Color(0x0594A3B8),
+                    Color.Transparent
+                ),
+                center = canvasCenter,
+                radius = currentRadius * 1.35f
+            ),
+            radius = currentRadius * 1.35f,
+            center = canvasCenter
+        )
+
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFFE2E8F0),
+                    Color(0xFFCBD5E1),
+                    Color(0xFF94A3B8),
+                    Color(0xFF64748B),
+                    Color(0xFF334155)
+                ),
+                center = Offset(canvasCenter.x - currentRadius * 0.2f, canvasCenter.y - currentRadius * 0.2f),
+                radius = currentRadius * 1.2f
+            ),
+            radius = currentRadius,
+            center = canvasCenter
+        )
+
+        drawCircle(
+            color = Color(0x66E2E8F0),
             radius = currentRadius,
             center = canvasCenter,
             style = Stroke(width = 1.5f)

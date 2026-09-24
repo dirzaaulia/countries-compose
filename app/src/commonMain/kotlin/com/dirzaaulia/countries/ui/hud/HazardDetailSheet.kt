@@ -86,6 +86,25 @@ fun HazardDetailSheet(
                     Text("$latStr, $lngStr", color = Color(0xFF38BDF8), fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
+
+            if (!hazard.magnitude.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0x22EF4444),
+                    border = BorderStroke(1.dp, Color(0x44EF4444)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("MAGNITUDE / SEVERITY", color = Color(0xFFF87171), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        Text(hazard.magnitude, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
         }
     }
 }
