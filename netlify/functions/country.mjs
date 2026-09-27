@@ -24,7 +24,7 @@ function jsonResponse(body, status, cache = false) {
   });
 }
 
-export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now }) {
+export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now, logError = console.error }) {
   return async function handle(request, context = {}) {
     if (request.method !== "GET") return jsonResponse({ error: "Method not allowed" }, 405);
     const code = context.params?.code?.trim().toUpperCase();
@@ -32,6 +32,7 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
     if (!apiKey || !redis) return jsonResponse({ error: "Country service unavailable" }, 503);
 
     const key = `country:v5:full:${code}`;
+    let operation = "cache read";
     try {
       const cached = await redis.get(key);
       if (cached && cached.expiresAt > clock()) return jsonResponse(cached.body, 200, true);
@@ -40,6 +41,7 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
       if (!pending) {
         pending = (async () => {
           // Redis EVAL atomically caps total upstream traffic across function instances.
+          operation = "upstream admission";
           const admitted = await redis.eval(
             ADMISSION_SCRIPT,
             [`country:upstream:${Math.floor(clock() / (UPSTREAM_WINDOW * 1000))}`],
@@ -48,6 +50,7 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
           if (Number(admitted) !== 1) return jsonResponse({ error: "Country service busy" }, 429);
 
           const field = code.length === 2 ? "codes.alpha_2" : "codes.alpha_3";
+          operation = "upstream request";
           const upstream = await fetcher(`https://api.restcountries.com/countries/v5/${field}/${code}`, {
             headers: { Authorization: `Bearer ${apiKey}` },
             signal: AbortSignal.timeout(8000)
@@ -55,17 +58,20 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
           if (upstream.status === 429) return jsonResponse({ error: "Country service busy" }, 503);
           if (upstream.status === 404) return jsonResponse({ error: "Country not found" }, 404);
           if (!upstream.ok) return jsonResponse({ error: "Country service unavailable" }, 502);
+          operation = "upstream JSON";
           const envelope = await upstream.json();
           const country = envelope?.data?.objects?.[0];
           if (!country) return jsonResponse({ error: "Country not found" }, 404);
           const body = { data: { objects: [country] } };
+          operation = "cache write";
           await redis.set(key, { body, expiresAt: clock() + CACHE_SECONDS * 1000 }, { ex: CACHE_SECONDS });
           return jsonResponse(body, 200, true);
         })().finally(() => inflight.delete(key));
         inflight.set(key, pending);
       }
       return await pending;
-    } catch {
+    } catch (error) {
+      logError("Country middleware failure", operation, error instanceof Error ? error.name : "UnknownError");
       return jsonResponse({ error: "Country service unavailable" }, 503);
     }
   };

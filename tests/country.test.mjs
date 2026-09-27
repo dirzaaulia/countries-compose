@@ -49,3 +49,26 @@ test("does not cache upstream failures", async () => {
   assert.equal((await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } })).status, 503);
   assert.equal(redis.entries.size, 0);
 });
+
+test("reports failing Redis operation without exposing the error to clients", async () => {
+  const failures = [];
+  const redis = { ...fakeRedis(), async eval() { throw new Error("private Redis detail"); } };
+  const handler = createHandler({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
+  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), { error: "Country service unavailable" });
+  assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "Error"]]);
+});
+
+test("reports failing upstream operation without exposing the error to clients", async () => {
+  const failures = [];
+  const handler = createHandler({
+    redis: fakeRedis(), apiKey: "test",
+    fetcher: async () => { throw new Error("private upstream detail"); },
+    logError: (...args) => failures.push(args)
+  });
+  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), { error: "Country service unavailable" });
+  assert.deepEqual(failures, [["Country middleware failure", "upstream request", "Error"]]);
+});
