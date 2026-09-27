@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.detekt)
 }
 
 kotlin {
@@ -157,4 +158,15 @@ spotless {
         target("*.gradle.kts")
         ktlint("1.5.0")
     }
+}
+
+dependencies {
+    detektPlugins(libs.detekt.compose.rules)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    parallel = true
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
 }

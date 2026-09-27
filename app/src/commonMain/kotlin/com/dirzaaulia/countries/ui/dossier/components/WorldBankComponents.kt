@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,7 +32,123 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dirzaaulia.countries.domain.country.Country
+import com.dirzaaulia.countries.domain.country.LiveCountryDetails
+import com.dirzaaulia.countries.platform.PlatformCountryFlag
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import com.dirzaaulia.countries.util.formatDecimal
+import com.dirzaaulia.countries.util.formatNumber
+
+@Composable
+internal fun WorldBankHeader(
+    country: Country,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            PlatformCountryFlag(country.iso2, Modifier.size(28.dp), "${country.name} flag")
+            Column {
+                Text(
+                    text = "WORLD BANK MACROECONOMIC SUITE",
+                    color = Color(0xFF10B981),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                )
+                Text(
+                    text = "${country.name} • Macro Analytics",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+
+        MinimalistCloseButton(onClick = onClose)
+    }
+}
+
+@Composable
+internal fun WorldBankHeroCard(
+    country: Country,
+    details: LiveCountryDetails,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        shape = RoundedCornerShape(18.dp),
+        color = Color(0x28064E3B),
+        border = BorderStroke(1.dp, Color(0x4410B981)),
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column {
+                    Text(
+                        text = "GDP PER CAPITA (CURRENT USD)",
+                        color = Color(0xFF6EE7B7),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp,
+                    )
+                    val gdpCap = details.gdpPerCapita ?: 0.0
+                    Text(
+                        text = "$${formatNumber(gdpCap)}",
+                        color = Color.White,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Black,
+                    )
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0x3310B981),
+                    border = BorderStroke(1.dp, Color(0x6610B981)),
+                ) {
+                    Text(
+                        text = country.incomeGroup.ifEmpty { "Emerging Economy" },
+                        color = Color(0xFFA7F3D0),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                MacroStatBox(
+                    title = "ESTIMATED TOTAL GDP",
+                    value = "$${formatNumber(country.gdpMillions)}M",
+                    sub = "Global Tier: ${country.economy.ifEmpty { "High-Income" }}",
+                    modifier = Modifier.weight(1f),
+                )
+                MacroStatBox(
+                    title = "POPULATION",
+                    value = formatNumber(country.population.toDouble()),
+                    sub = "Total Citizens",
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
+}
 
 @Composable
 internal fun MacroStatBox(

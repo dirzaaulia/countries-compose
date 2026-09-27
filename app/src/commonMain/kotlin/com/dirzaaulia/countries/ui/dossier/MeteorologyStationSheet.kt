@@ -1,7 +1,6 @@
 package com.dirzaaulia.countries.ui.dossier
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -26,21 +25,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.country.Country
-import com.dirzaaulia.countries.domain.country.DailyForecastItem
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
+import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
 import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.ui.components.uiSymbolFor
+import com.dirzaaulia.countries.ui.dossier.weather.DailyForecastRow
 import com.dirzaaulia.countries.ui.dossier.weather.DiurnalSolarArcCanvas
 import com.dirzaaulia.countries.ui.dossier.weather.HourlySplineChart
+import com.dirzaaulia.countries.ui.dossier.weather.SensorBadge
 import com.dirzaaulia.countries.ui.dossier.weather.WindCompassCanvas
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,20 +53,19 @@ fun MeteorologyStationSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val details = liveDetails ?: return
 
-    ModalBottomSheet(
+    AdaptiveInfoSheet(
         onDismissRequest = onClose,
         sheetState = sheetState,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         containerColor = Color(0xF2070D18),
-        tonalElevation = 16.dp,
-        scrimColor = Color.Black.copy(alpha = 0.72f),
+        contentColor = Color.White,
+        scrimColor = Color.Transparent,
         dragHandle = {
-            Surface(
-                modifier = Modifier.padding(top = 10.dp, bottom = 4.dp),
-                color = Color(0x4438BDF8),
-                shape = RoundedCornerShape(3.dp),
-            ) {
-                Box(modifier = Modifier.size(width = 36.dp, height = 4.dp))
-            }
+            BottomSheetDefaults.DragHandle(
+                color = Color(0xFF38BDF8),
+                width = 36.dp,
+                height = 4.dp,
+            )
         },
         modifier = modifier,
     ) {
@@ -388,102 +386,6 @@ fun MeteorologyStationSheet(
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SensorBadge(
-    label: String,
-    value: String,
-    symbol: UiSymbol,
-) {
-    Surface(
-        shape = RoundedCornerShape(10.dp),
-        color = Color(0x221E293B),
-        border = BorderStroke(1.dp, Color(0x18FFFFFF)),
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            SemanticIcon(symbol = symbol, contentDescription = null, tint = Color(0xFF38BDF8), modifier = Modifier.size(14.dp))
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(value, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-            Text(label, color = Color(0xFF64748B), fontSize = 8.sp, fontWeight = FontWeight.Medium)
-        }
-    }
-}
-
-@Composable
-private fun DailyForecastRow(day: DailyForecastItem) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = Color(0x250F172A),
-        border = BorderStroke(1.dp, Color(0x18FFFFFF)),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = day.dayName,
-                color = Color(0xFFE2E8F0),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.width(76.dp),
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Text(day.weatherIcon, fontSize = 16.sp)
-                if (day.precipitationProb > 0) {
-                    Text(
-                        text = "💧${day.precipitationProb}%",
-                        color = Color(0xFF38BDF8),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                }
-            }
-
-            // Min/Max Spread
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = "${day.tempMin.toInt()}°",
-                    color = Color(0xFF94A3B8),
-                    fontSize = 13.sp,
-                )
-                // Color bar
-                Box(
-                    modifier =
-                        Modifier
-                            .width(48.dp)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(Color(0xFF38BDF8), Color(0xFFF59E0B)),
-                                ),
-                            ),
-                )
-                Text(
-                    text = "${day.tempMax.toInt()}°",
-                    color = Color.White,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                )
             }
         }
     }
