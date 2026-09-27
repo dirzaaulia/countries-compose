@@ -3,15 +3,16 @@ package com.dirzaaulia.countries.data.repository
 import com.dirzaaulia.countries.data.geoboundaries.GeoBoundariesApiClient
 import com.dirzaaulia.countries.domain.country.AdminLevel
 import com.dirzaaulia.countries.domain.country.AdministrativeDivision
+import com.dirzaaulia.countries.domain.repository.AdministrativeRepository
 
-class AdministrativeRepository(
+class AdministrativeRepositoryImpl(
     private val geoBoundariesApiClient: GeoBoundariesApiClient,
-) {
+) : AdministrativeRepository {
     private val cachedAdministrativeDivisions = mutableMapOf<String, List<AdministrativeDivision>>()
 
-    suspend fun fetchAdministrativeDivisions(
+    override suspend fun fetchAdministrativeDivisions(
         iso3: String,
-        level: AdminLevel = AdminLevel.ADM1,
+        level: AdminLevel,
     ): List<AdministrativeDivision> {
         val cacheKey = "$iso3-${level.name}"
         cachedAdministrativeDivisions[cacheKey]?.let { return it }

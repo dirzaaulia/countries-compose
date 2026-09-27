@@ -7,6 +7,8 @@ import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.DailyForecastItem
 import com.dirzaaulia.countries.domain.country.HourlyForecastItem
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
+import com.dirzaaulia.countries.domain.repository.CountryDetailRepository
+import com.dirzaaulia.countries.domain.repository.HazardRepository
 import com.dirzaaulia.countries.platform.currentEpochMillis
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
@@ -14,12 +16,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlin.math.PI
 import kotlin.math.sin
 
-class CountryDetailRepository(
+class CountryDetailRepositoryImpl(
     private val restCountriesApiClient: RestCountriesApiClient,
     private val worldBankApiClient: WorldBankApiClient,
     private val openMeteoApiClient: OpenMeteoApiClient,
     private val hazardRepository: HazardRepository,
-) {
+) : CountryDetailRepository {
     private data class CachedLiveDetails(
         val details: LiveCountryDetails,
         val timestamp: Long,
@@ -27,7 +29,7 @@ class CountryDetailRepository(
 
     private val liveDetailsCache = mutableMapOf<String, CachedLiveDetails>()
 
-    suspend fun fetchLiveDetails(country: Country): LiveCountryDetails {
+    override suspend fun fetchLiveDetails(country: Country): LiveCountryDetails {
         val now = currentEpochMillis()
         val cached = liveDetailsCache[country.id]
         if (cached != null && (now - cached.timestamp < 15 * 60 * 1000L)) {

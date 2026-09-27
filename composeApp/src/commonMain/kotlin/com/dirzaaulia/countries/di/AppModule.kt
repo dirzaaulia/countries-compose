@@ -5,15 +5,21 @@ import com.dirzaaulia.countries.data.geoboundaries.GeoBoundariesApiClient
 import com.dirzaaulia.countries.data.iss.ISSTelemetryApiClient
 import com.dirzaaulia.countries.data.nasa.NasaEonetApiClient
 import com.dirzaaulia.countries.data.openmeteo.OpenMeteoApiClient
-import com.dirzaaulia.countries.data.repository.AdministrativeRepository
-import com.dirzaaulia.countries.data.repository.CountryDetailRepository
-import com.dirzaaulia.countries.data.repository.CountryRepository
-import com.dirzaaulia.countries.data.repository.EclipseRepository
+import com.dirzaaulia.countries.data.repository.AdministrativeRepositoryImpl
+import com.dirzaaulia.countries.data.repository.CountryDetailRepositoryImpl
+import com.dirzaaulia.countries.data.repository.CountryRepositoryImpl
+import com.dirzaaulia.countries.data.repository.EclipseRepositoryImpl
 import com.dirzaaulia.countries.data.repository.GlobeRepository
-import com.dirzaaulia.countries.data.repository.HazardRepository
-import com.dirzaaulia.countries.data.repository.IssRepository
+import com.dirzaaulia.countries.data.repository.HazardRepositoryImpl
+import com.dirzaaulia.countries.data.repository.IssRepositoryImpl
 import com.dirzaaulia.countries.data.restcountries.RestCountriesApiClient
 import com.dirzaaulia.countries.data.worldbank.WorldBankApiClient
+import com.dirzaaulia.countries.domain.repository.AdministrativeRepository
+import com.dirzaaulia.countries.domain.repository.CountryDetailRepository
+import com.dirzaaulia.countries.domain.repository.CountryRepository
+import com.dirzaaulia.countries.domain.repository.EclipseRepository
+import com.dirzaaulia.countries.domain.repository.HazardRepository
+import com.dirzaaulia.countries.domain.repository.IssRepository
 import com.dirzaaulia.countries.platform.countriesMiddlewareUrl
 import com.dirzaaulia.countries.platform.platformHttpClientEngine
 import com.dirzaaulia.countries.ui.dossier.DossierViewModel
@@ -66,12 +72,12 @@ val apiModule =
 
 val repositoryModule =
     module {
-        singleOf(::CountryRepository)
-        singleOf(::EclipseRepository)
-        singleOf(::HazardRepository)
-        singleOf(::IssRepository)
-        singleOf(::AdministrativeRepository)
-        singleOf(::CountryDetailRepository)
+        single<CountryRepository> { CountryRepositoryImpl() }
+        single<EclipseRepository> { EclipseRepositoryImpl(get()) }
+        single<HazardRepository> { HazardRepositoryImpl(get()) }
+        single<IssRepository> { IssRepositoryImpl(get()) }
+        single<AdministrativeRepository> { AdministrativeRepositoryImpl(get()) }
+        single<CountryDetailRepository> { CountryDetailRepositoryImpl(get(), get(), get(), get()) }
         singleOf(::GlobeRepository)
     }
 

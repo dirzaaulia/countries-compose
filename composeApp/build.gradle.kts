@@ -71,6 +71,7 @@ kotlin {
 dependencies {
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.no.op)
+    detektPlugins(libs.detekt.compose.rules)
 }
 
 compose.resources {
@@ -78,7 +79,6 @@ compose.resources {
 }
 
 android {
-
     namespace = "com.dirzaaulia.countries"
     compileSdk = 37
 
@@ -180,10 +180,6 @@ spotless {
         target("*.gradle.kts")
         ktlint("1.5.0")
     }
-}
-
-dependencies {
-    detektPlugins(libs.detekt.compose.rules)
 }
 
 detekt {

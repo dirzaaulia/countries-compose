@@ -4,6 +4,7 @@ import com.dirzaaulia.countries.data.nasa.NasaEonetApiClient
 import com.dirzaaulia.countries.domain.country.LatLng
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.domain.globe.toRadians
+import com.dirzaaulia.countries.domain.repository.HazardRepository
 import com.dirzaaulia.countries.platform.currentEpochMillis
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -11,9 +12,9 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class HazardRepository(
+class HazardRepositoryImpl(
     private val nasaEonetApiClient: NasaEonetApiClient,
-) {
+) : HazardRepository {
     private data class CachedNasaEvents(
         val events: List<NasaNaturalEvent>,
         val timestamp: Long,
@@ -21,7 +22,7 @@ class HazardRepository(
 
     private var cachedNasaEvents: CachedNasaEvents? = null
 
-    suspend fun fetchGlobalNasaEvents(forceRefresh: Boolean = false): List<NasaNaturalEvent> {
+    override suspend fun fetchGlobalNasaEvents(forceRefresh: Boolean): List<NasaNaturalEvent> {
         val now = currentEpochMillis()
         val cached = cachedNasaEvents
         if (!forceRefresh && cached != null && (now - cached.timestamp < 30 * 60 * 1000L)) {
@@ -35,10 +36,10 @@ class HazardRepository(
         return events
     }
 
-    suspend fun fetchNearbyNasaEvents(
+    override suspend fun fetchNearbyNasaEvents(
         center: LatLng,
-        radiusKm: Double = 3500.0,
-        limit: Int = 4,
+        radiusKm: Double,
+        limit: Int,
     ): List<NasaNaturalEvent> {
         val globalEvents = fetchGlobalNasaEvents()
         return globalEvents

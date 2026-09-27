@@ -6,6 +6,7 @@ import com.dirzaaulia.countries.domain.country.GeoJson
 import com.dirzaaulia.countries.domain.country.LatLng
 import com.dirzaaulia.countries.domain.globe.toDegrees
 import com.dirzaaulia.countries.domain.globe.toRadians
+import com.dirzaaulia.countries.domain.repository.CountryRepository
 import com.dirzaaulia.countries.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,10 +29,10 @@ private val jsonFormatter =
         coerceInputValues = true
     }
 
-class CountryRepository {
+class CountryRepositoryImpl : CountryRepository {
     private var cachedCountries: List<Country>? = null
 
-    suspend fun loadCountries(): List<Country> =
+    override suspend fun loadCountries(): List<Country> =
         withContext(Dispatchers.Default) {
             cachedCountries?.let { return@withContext it }
 
@@ -175,7 +176,7 @@ class CountryRepository {
             countries
         }
 
-    suspend fun loadCloudBytes(): ByteArray = Res.readBytes("files/earth_clouds.jpg")
+    override suspend fun loadCloudBytes(): ByteArray = Res.readBytes("files/earth_clouds.jpg")
 
     private fun parsePolygon(jsonCoords: JsonArray): List<LatLng> =
         jsonCoords.map { point ->

@@ -49,5 +49,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Countries"
-include(":app")
+include(":composeApp")
  

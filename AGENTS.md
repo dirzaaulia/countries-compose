@@ -176,8 +176,8 @@ Enforce strict boundaries across architectural layers:
 - **Build & Verification Restrictions**:
   - Do NOT build full APKs (`assembleDebug`, `packageDebug`, `installDebug`) and do NOT run remote or device tests unless explicitly requested.
   - After code updates, run standard compile tasks separately:
-    - `./gradlew :app:compileDebugKotlinAndroid`
-    - `./gradlew :app:compileKotlinWasmJs`
+    - `./gradlew :composeApp:compileDebugKotlinAndroid`
+    - `./gradlew :composeApp:compileKotlinWasmJs`
   - Never run target compile tasks in one Gradle invocation or concurrently.
   - Treat an observed `BUILD SUCCESSFUL` marker as completed verification.
 - **Quota Optimization**: Be token-efficient, concise, avoid redundant checks, never run multiple compilation cycles unless asked.

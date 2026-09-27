@@ -7,6 +7,12 @@ import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
+import com.dirzaaulia.countries.domain.repository.AdministrativeRepository
+import com.dirzaaulia.countries.domain.repository.CountryDetailRepository
+import com.dirzaaulia.countries.domain.repository.CountryRepository
+import com.dirzaaulia.countries.domain.repository.EclipseRepository
+import com.dirzaaulia.countries.domain.repository.HazardRepository
+import com.dirzaaulia.countries.domain.repository.IssRepository
 
 /**
  * Composite repository delegating to specialized domain repositories.

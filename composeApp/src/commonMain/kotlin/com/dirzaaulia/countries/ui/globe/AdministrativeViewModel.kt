@@ -2,10 +2,10 @@ package com.dirzaaulia.countries.ui.globe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dirzaaulia.countries.data.repository.AdministrativeRepository
 import com.dirzaaulia.countries.domain.country.AdminLevel
 import com.dirzaaulia.countries.domain.country.AdministrativeDivision
 import com.dirzaaulia.countries.domain.country.Country
+import com.dirzaaulia.countries.domain.repository.AdministrativeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

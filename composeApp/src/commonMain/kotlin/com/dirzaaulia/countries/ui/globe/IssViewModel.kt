@@ -2,8 +2,8 @@ package com.dirzaaulia.countries.ui.globe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dirzaaulia.countries.data.repository.IssRepository
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
+import com.dirzaaulia.countries.domain.repository.IssRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

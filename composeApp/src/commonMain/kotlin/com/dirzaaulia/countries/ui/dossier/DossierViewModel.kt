@@ -2,9 +2,9 @@ package com.dirzaaulia.countries.ui.dossier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dirzaaulia.countries.data.repository.CountryDetailRepository
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
+import com.dirzaaulia.countries.domain.repository.CountryDetailRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

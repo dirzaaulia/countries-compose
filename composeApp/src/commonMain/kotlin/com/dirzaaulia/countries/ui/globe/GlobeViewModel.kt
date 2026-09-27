@@ -2,10 +2,10 @@ package com.dirzaaulia.countries.ui.globe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dirzaaulia.countries.data.repository.CountryRepository
-import com.dirzaaulia.countries.data.repository.EclipseRepository
 import com.dirzaaulia.countries.domain.astronomy.EclipseFeed
 import com.dirzaaulia.countries.domain.country.Country
+import com.dirzaaulia.countries.domain.repository.CountryRepository
+import com.dirzaaulia.countries.domain.repository.EclipseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
