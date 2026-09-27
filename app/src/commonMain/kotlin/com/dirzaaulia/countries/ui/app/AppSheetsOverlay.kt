@@ -11,7 +11,7 @@ import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
 import com.dirzaaulia.countries.ui.dossier.administration.AdministrativeDivisionSheetHost
 import com.dirzaaulia.countries.ui.hud.CountrySearchSheet
 import com.dirzaaulia.countries.ui.hud.MissionLegendSheet
-import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineHud
+import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineSheet
 
 @Composable
 fun AppSheetsOverlay(
@@ -90,7 +90,7 @@ fun AppSheetsOverlay(
     }
 
     if (showTimeMachine && currentPage == 0 && isSheetOpen) {
-        PlanetaryTimeMachineHud(
+        PlanetaryTimeMachineSheet(
             epochMillis = currentTimeMillis,
             isLive = isTimeMachineLive,
             onScrubStarted = onScrubStarted,

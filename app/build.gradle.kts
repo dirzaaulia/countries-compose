@@ -73,7 +73,7 @@ android {
     defaultConfig {
         applicationId = "com.dirzaaulia.countries"
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 37
         val propVersionCode =
             providers.gradleProperty("VERSION_CODE").orNull?.toIntOrNull()
                 ?: System.getenv("VERSION_CODE")?.toIntOrNull()

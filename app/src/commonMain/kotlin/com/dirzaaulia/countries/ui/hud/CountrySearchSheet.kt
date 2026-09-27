@@ -63,10 +63,10 @@ fun CountrySearchSheet(
             }
         }
     val results =
-        remember(query, index) {
+        remember(query, index, countries) {
             val normalizedQuery = query.searchNormalized()
             if (normalizedQuery.isBlank()) {
-                emptyList()
+                countries.sortedBy { it.name }
             } else {
                 index
                     .mapNotNull { entry ->
@@ -75,7 +75,6 @@ fun CountrySearchSheet(
                             .minOrNull()
                             ?.let { score -> entry.country to score }
                     }.sortedBy { it.second }
-                    .take(8)
                     .map { it.first }
             }
         }
@@ -138,15 +137,14 @@ fun CountrySearchSheet(
             )
 
             Spacer(Modifier.height(12.dp))
-            when {
-                query.isBlank() -> SearchHint("Type to search the countries loaded on this globe.")
-                results.isEmpty() -> SearchHint("No loaded country matches that search.")
-                else ->
-                    LazyColumn(modifier = Modifier.heightIn(max = 360.dp)) {
-                        items(results, key = { it.id }) { country ->
-                            SearchResultRow(country = country, onClick = { onSelectCountry(country) })
-                        }
+            if (results.isEmpty()) {
+                SearchHint("No loaded country matches that search.")
+            } else {
+                LazyColumn(modifier = Modifier.heightIn(max = 420.dp)) {
+                    items(results, key = { it.id }) { country ->
+                        SearchResultRow(country = country, onClick = { onSelectCountry(country) })
                     }
+                }
             }
         }
     }

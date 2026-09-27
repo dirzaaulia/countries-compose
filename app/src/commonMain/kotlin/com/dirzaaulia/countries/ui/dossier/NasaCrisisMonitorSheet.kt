@@ -9,17 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,7 +62,7 @@ fun NasaCrisisMonitorSheet(
     onFlyToEpicenter: (NasaNaturalEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var selectedCategory by remember { mutableStateOf("All") }
     val categories = listOf("All", "Volcanoes", "Wildfires", "Storms", "Ice", "Floods")
@@ -92,128 +92,122 @@ fun NasaCrisisMonitorSheet(
     AdaptiveInfoSheet(
         onDismissRequest = onClose,
         sheetState = sheetState,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         containerColor = Color(0xF2070D18),
-        tonalElevation = 16.dp,
-        scrimColor = Color.Black.copy(alpha = 0.72f),
+        contentColor = Color.White,
+        scrimColor = Color.Transparent,
         dragHandle = {
-            Surface(
-                modifier = Modifier.padding(top = 10.dp, bottom = 4.dp),
-                color = Color(0x44EF4444),
-                shape = RoundedCornerShape(3.dp),
-            ) {
-                Box(modifier = Modifier.size(width = 36.dp, height = 4.dp))
-            }
+            BottomSheetDefaults.DragHandle(
+                color = Color(0xFFEF4444),
+                width = 36.dp,
+                height = 4.dp,
+            )
         },
         modifier = modifier,
     ) {
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            item {
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(36.dp)
-                                .background(Color(0x33EF4444), CircleShape),
-                        contentAlignment = Alignment.Center,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        Text("ALERT", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(36.dp)
+                                    .background(Color(0x33EF4444), CircleShape),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            SemanticIcon(UiSymbol.Hazard, "Crisis Monitor", Color(0xFFEF4444), Modifier.size(20.dp))
+                        }
+                        Column {
+                            Text(
+                                text = "PLANETARY CRISIS MONITOR",
+                                color = Color(0xFFEF4444),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.2.sp,
+                            )
+                            Text(
+                                text = "NASA EONET Real-Time Disasters",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
-                    Column {
-                        Text(
-                            text = "PLANETARY CRISIS MONITOR",
-                            color = Color(0xFFEF4444),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.2.sp,
-                        )
-                        Text(
-                            text = "NASA EONET Real-Time Disasters",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+
+                    MinimalistCloseButton(onClick = onClose)
                 }
-
-                MinimalistCloseButton(onClick = onClose)
             }
-
-            Spacer(modifier = Modifier.height(14.dp))
 
             // Category Filter Row (Compact Horizontal LazyRow)
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(categories) { cat ->
-                    CategoryPill(
-                        label = cat,
-                        isSelected = selectedCategory == cat,
-                        onClick = { selectedCategory = cat },
-                    )
+            item {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(categories) { cat ->
+                        CategoryPill(
+                            label = cat,
+                            isSelected = selectedCategory == cat,
+                            onClick = { selectedCategory = cat },
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             // Subtitle status
-            Text(
-                text = "${filteredHazards.size} ACTIVE PLANETARY INCIDENTS DETECTED",
-                color = Color(0xFF94A3B8),
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
+            item {
+                Text(
+                    text = "${filteredHazards.size} ACTIVE PLANETARY INCIDENTS DETECTED",
+                    color = Color(0xFF94A3B8),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
+                )
+            }
 
             // Crisis Feed List
             if (filteredHazards.isEmpty()) {
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(160.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "No active hazards reported in this category.",
-                        color = Color(0xFF64748B),
-                        fontSize = 13.sp,
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 420.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(filteredHazards, key = { it.id }) { hazard ->
-                        CrisisCard(
-                            hazard = hazard,
-                            currentCountry = currentCountry,
-                            onFlyTo = {
-                                onClose()
-                                onFlyToEpicenter(hazard)
-                            },
+                item {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(160.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "No active hazards reported in this category.",
+                            color = Color(0xFF64748B),
+                            fontSize = 13.sp,
                         )
                     }
+                }
+            } else {
+                items(filteredHazards, key = { it.id }) { hazard ->
+                    CrisisCard(
+                        hazard = hazard,
+                        currentCountry = currentCountry,
+                        onFlyTo = {
+                            onClose()
+                            onFlyToEpicenter(hazard)
+                        },
+                    )
                 }
             }
         }
@@ -234,13 +228,13 @@ private fun CategoryPill(
         modifier = modifier.clickable { onClick() },
     ) {
         Box(
-            modifier = Modifier.padding(vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = label,
                 color = if (isSelected) Color.White else Color(0xFF94A3B8),
-                fontSize = 10.sp,
+                fontSize = 11.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             )
         }

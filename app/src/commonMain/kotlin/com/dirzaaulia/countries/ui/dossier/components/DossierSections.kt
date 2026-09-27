@@ -123,7 +123,7 @@ internal fun DossierGeographySection(
             title = "AREA",
             value = formatArea(area),
             subValue =
-                listOfNotNull(restAreaSubvalue, landlocked?.let { if (it) "Landlocked" else "Coastal" })
+                listOfNotNull(restAreaSubvalue, if (landlocked) "Landlocked" else "Coastal")
                     .joinToString(" · ")
                     .ifBlank { null },
             modifier = Modifier.weight(1f),

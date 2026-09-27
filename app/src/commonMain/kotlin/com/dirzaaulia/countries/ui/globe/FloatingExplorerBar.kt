@@ -146,9 +146,9 @@ fun FloatingExplorerBar(
                         },
                     )
 
-                    // 2. Time Machine
+                    // 2. Planetary Time
                     MenuActionButton(
-                        label = "Time Machine",
+                        label = "Planetary Time",
                         symbol = UiSymbol.Time,
                         color = if (showTimeMachine) Color(0xFFF59E0B) else Color(0xFF64748B),
                         isActive = showTimeMachine,

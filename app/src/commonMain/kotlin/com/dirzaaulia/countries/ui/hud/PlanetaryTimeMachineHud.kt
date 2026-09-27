@@ -1,20 +1,29 @@
 package com.dirzaaulia.countries.ui.hud
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
 import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 
 private const val DAY_MILLIS = 86_400_000L
@@ -59,16 +69,18 @@ private fun calendarFor(epochMillis: Long): TimeMachineCalendar {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanetaryTimeMachineHud(
+fun PlanetaryTimeMachineSheet(
     epochMillis: Long,
     isLive: Boolean,
     onScrubStarted: () -> Unit,
     onEpochSelected: (Long) -> Unit,
     onResetLive: () -> Unit,
-    onClose: (() -> Unit)? = null,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedEpochMillis by remember { mutableStateOf(epochMillis) }
     LaunchedEffect(epochMillis, isLive) {
         if (isLive) selectedEpochMillis = epochMillis
@@ -79,67 +91,111 @@ fun PlanetaryTimeMachineHud(
     val minute = calendar.minuteOfDay % 60
     val accent = Color(0xFFF59E0B)
 
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xE80B1220),
-        border = BorderStroke(1.dp, Color(0x33F59E0B)),
-        shadowElevation = 12.dp,
-        modifier = modifier.fillMaxWidth(),
+    AdaptiveInfoSheet(
+        onDismissRequest = onClose,
+        sheetState = sheetState,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        containerColor = Color(0xF209111E),
+        contentColor = Color.White,
+        scrimColor = Color.Transparent,
+        dragHandle = { BottomSheetDefaults.DragHandle(color = Color(0xFFF59E0B), width = 36.dp, height = 4.dp) },
+        modifier = modifier,
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+        LazyColumn(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 24.dp)
+                    .navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Planetary Time", color = Color(0xFFF8FAFC), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                    Text(
-                        text = if (isLive) "LIVE UTC" else "SIMULATED UTC",
-                        color = if (isLive) Color(0xFF34D399) else accent,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 0.6.sp,
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column {
+                            Text("PLANETARY TIME", color = Color(0xFFF59E0B), fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+                            Text(
+                                text = if (isLive) "LIVE REAL-TIME SIMULATION" else "SIMULATED PLANETARY TIME",
+                                color = if (isLive) Color(0xFF34D399) else accent,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color(0x33F59E0B),
+                                border = BorderStroke(1.dp, Color(0x66F59E0B)),
+                                modifier = Modifier.clickable { onResetLive() },
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                ) {
+                                    Icon(Icons.Outlined.Restore, contentDescription = "Reset to live time", tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
+                                    Text("RESET LIVE", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                            MinimalistCloseButton(onClick = onClose)
+                        }
+                    }
+
+                    Spacer(Modifier.height(4.dp))
+
+                    // Time Slider (0 - 24 hours)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("TIME OF DAY", color = Color(0xFF94A3B8), fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                        Text("${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} UTC", color = Color(0xFFE0F2FE), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Slider(
+                        value = calendar.minuteOfDay.toFloat(),
+                        onValueChange = { minuteOfDay ->
+                            onScrubStarted()
+                            val selectedEpoch =
+                                calendar.yearStartMillis +
+                                    (calendar.dayOfYear - 1) * DAY_MILLIS + minuteOfDay.toLong() * 60_000L
+                            selectedEpochMillis = selectedEpoch
+                            onEpochSelected(selectedEpoch)
+                        },
+                        valueRange = 0f..1439f,
+                        colors = SliderDefaults.colors(thumbColor = accent, activeTrackColor = accent),
+                    )
+
+                    // Day / Year Slider
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("DAY OF YEAR", color = Color(0xFF94A3B8), fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                        Text("DAY ${calendar.dayOfYear} / ${calendar.daysInYear}  ·  YEAR ${calendar.year}", color = Color(0xFF38BDF8), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Slider(
+                        value = calendar.dayOfYear.toFloat(),
+                        onValueChange = { dayOfYear ->
+                            onScrubStarted()
+                            val selectedEpoch =
+                                calendar.yearStartMillis +
+                                    (dayOfYear.toLong() - 1L) * DAY_MILLIS + calendar.minuteOfDay * 60_000L
+                            selectedEpochMillis = selectedEpoch
+                            onEpochSelected(selectedEpoch)
+                        },
+                        valueRange = 1f..calendar.daysInYear.toFloat(),
+                        steps = calendar.daysInYear - 2,
+                        colors = SliderDefaults.colors(thumbColor = Color(0xFF38BDF8), activeTrackColor = Color(0xFF38BDF8)),
                     )
                 }
-                TextButton(onClick = onResetLive) {
-                    Icon(Icons.Outlined.Restore, contentDescription = "Reset to live time", tint = Color(0xFF94A3B8))
-                    Text("LIVE", color = Color(0xFFCBD5E1), fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                }
-                if (onClose != null) {
-                    MinimalistCloseButton(onClick = onClose)
-                }
             }
-
-            Text("${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} UTC", color = Color(0xFFE0F2FE), fontSize = 13.sp)
-            Slider(
-                value = calendar.minuteOfDay.toFloat(),
-                onValueChange = { minuteOfDay ->
-                    onScrubStarted()
-                    val selectedEpoch =
-                        calendar.yearStartMillis +
-                            (calendar.dayOfYear - 1) * DAY_MILLIS + minuteOfDay.toLong() * 60_000L
-                    selectedEpochMillis = selectedEpoch
-                    onEpochSelected(selectedEpoch)
-                },
-                valueRange = 0f..1439f,
-                colors = SliderDefaults.colors(thumbColor = accent, activeTrackColor = accent),
-            )
-
-            Text("DAY ${calendar.dayOfYear} / ${calendar.daysInYear}  |  ${calendar.year}", color = Color(0xFF94A3B8), fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-            Slider(
-                value = calendar.dayOfYear.toFloat(),
-                onValueChange = { dayOfYear ->
-                    onScrubStarted()
-                    val selectedEpoch =
-                        calendar.yearStartMillis +
-                            (dayOfYear.toLong() - 1L) * DAY_MILLIS + calendar.minuteOfDay * 60_000L
-                    selectedEpochMillis = selectedEpoch
-                    onEpochSelected(selectedEpoch)
-                },
-                valueRange = 1f..calendar.daysInYear.toFloat(),
-                steps = calendar.daysInYear - 2,
-                colors = SliderDefaults.colors(thumbColor = Color(0xFF38BDF8), activeTrackColor = Color(0xFF38BDF8)),
-            )
         }
     }
 }

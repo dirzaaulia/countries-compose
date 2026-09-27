@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -70,140 +70,145 @@ fun MissionLegendSheet(
         },
         modifier = modifier,
     ) {
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(horizontal = 20.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(bottom = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "MISSION CONTROL HUD LEGEND",
-                        color = Color(0xFF38BDF8),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    // Header
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "MISSION CONTROL HUD LEGEND",
+                                color = Color(0xFF38BDF8),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Cartographic Symbology & Sensor Guide",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+
+                        MinimalistCloseButton(onClick = onClose)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // 1. Planetary Boundaries & Astronomy
+                    LegendCategorySection(
+                        title = "PLANETARY BOUNDARIES & ASTRONOMY",
+                        items =
+                            listOf(
+                                LegendItem(
+                                    title = "Selected Nation Focus",
+                                    description = "Inspected national borders highlighted with outer atmospheric neon cyan glow.",
+                                    badgeColor = Color(0xFF38BDF8),
+                                    strokeWidth = 4f,
+                                ),
+                                LegendItem(
+                                    title = "Daylight Cartographic Borders",
+                                    description = "Crisp obsidian black boundaries with soft white halo visible across sunlit land and oceans.",
+                                    badgeColor = Color(0xFF0F172A),
+                                    strokeWidth = 2.5f,
+                                ),
+                                LegendItem(
+                                    title = "Nighttime Cartographic Borders",
+                                    description = "Luminous ivory boundaries with dark rims illuminated against nocturnal city lights and darkness.",
+                                    badgeColor = Color(0xFFF8FAFC),
+                                    strokeWidth = 2.5f,
+                                ),
+                                LegendItem(
+                                    title = "Solar Twilight Terminator",
+                                    description = "Dynamic Golden-amber transition band dividing solar daylight and night in astronomical real time.",
+                                    badgeColor = Color(0xFFF59E0B),
+                                    strokeWidth = 3f,
+                                ),
+                            ),
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "Cartographic Symbology & Sensor Guide",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    // 2. Aviation & Spaceflight Navigation
+                    LegendCategorySection(
+                        title = "AVIATION & SPACE TRAJECTORIES",
+                        items =
+                            listOf(
+                                LegendItem(
+                                    title = "Geodesic Great Circle Flight Path",
+                                    description = "Aviation gold dashed geodesic flight route with supersonic aircraft heading & altitude climb arc.",
+                                    badgeColor = Color(0xFFF59E0B),
+                                    icon = "[FLIGHT]",
+                                    isDashed = true,
+                                    strokeWidth = 3f,
+                                ),
+                                LegendItem(
+                                    title = "ISS Orbital Ground Track",
+                                    description = "Real-time micro-dashed Low Earth Orbit trajectory completing a full 92.9-minute global pass at ~420km altitude.",
+                                    badgeColor = Color(0xFF06B6D4),
+                                    icon = "[ISS]",
+                                    isDashed = true,
+                                    strokeWidth = 2.5f,
+                                ),
+                                LegendItem(
+                                    title = "Apollo Lunar Landing Sites",
+                                    description = "NASA Apollo 11–17 historic touchdown sites on the 3D Moon explorer with mission telemetry cards.",
+                                    badgeColor = Color(0xFFFBBF24),
+                                    icon = "[APOLLO]",
+                                ),
+                            ),
                     )
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    // 3. NASA EONET Active Natural Hazards
+                    LegendCategorySection(
+                        title = "NASA EONET LIVE PLANETARY HAZARDS",
+                        items =
+                            listOf(
+                                LegendItem(
+                                    title = "Volcanic Eruption",
+                                    description = "Active volcanic eruption or hazardous ash plume detected by satellite.",
+                                    badgeColor = Color(0xFFEF4444),
+                                    icon = "[VOLCANO]",
+                                ),
+                                LegendItem(
+                                    title = "Wildfire Complex",
+                                    description = "Thermal anomaly or major active wildfire burning in the region.",
+                                    badgeColor = Color(0xFFF97316),
+                                    icon = "[FIRE]",
+                                ),
+                                LegendItem(
+                                    title = "Severe Storm / Cyclone",
+                                    description = "Tropical cyclone, hurricane, typhoon, or extreme convective storm system.",
+                                    badgeColor = Color(0xFFA855F7),
+                                    icon = "[STORM]",
+                                ),
+                                LegendItem(
+                                    title = "Polar / Sea Ice Activity",
+                                    description = "Significant sea ice breakup, glacial movement, or navigational iceberg hazard.",
+                                    badgeColor = Color(0xFF38BDF8),
+                                    icon = "[ICE]",
+                                ),
+                            ),
+                    )
+
+                    Spacer(modifier = Modifier.height(28.dp))
                 }
-
-                MinimalistCloseButton(onClick = onClose)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 1. Planetary Boundaries & Astronomy
-            LegendCategorySection(
-                title = "PLANETARY BOUNDARIES & ASTRONOMY",
-                items =
-                    listOf(
-                        LegendItem(
-                            title = "Selected Nation Focus",
-                            description = "Inspected national borders highlighted with outer atmospheric neon cyan glow.",
-                            badgeColor = Color(0xFF38BDF8),
-                            strokeWidth = 4f,
-                        ),
-                        LegendItem(
-                            title = "Daylight Cartographic Borders",
-                            description = "Crisp obsidian black boundaries with soft white halo visible across sunlit land and oceans.",
-                            badgeColor = Color(0xFF0F172A),
-                            strokeWidth = 2.5f,
-                        ),
-                        LegendItem(
-                            title = "Nighttime Cartographic Borders",
-                            description = "Luminous ivory boundaries with dark rims illuminated against nocturnal city lights and darkness.",
-                            badgeColor = Color(0xFFF8FAFC),
-                            strokeWidth = 2.5f,
-                        ),
-                        LegendItem(
-                            title = "Solar Twilight Terminator",
-                            description = "Dynamic Golden-amber transition band dividing solar daylight and night in astronomical real time.",
-                            badgeColor = Color(0xFFF59E0B),
-                            strokeWidth = 3f,
-                        ),
-                    ),
-            )
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            // 2. Aviation & Spaceflight Navigation
-            LegendCategorySection(
-                title = "AVIATION & SPACE TRAJECTORIES",
-                items =
-                    listOf(
-                        LegendItem(
-                            title = "Geodesic Great Circle Flight Path",
-                            description = "Aviation gold dashed geodesic flight route with supersonic aircraft heading & altitude climb arc.",
-                            badgeColor = Color(0xFFF59E0B),
-                            icon = "[FLIGHT]",
-                            isDashed = true,
-                            strokeWidth = 3f,
-                        ),
-                        LegendItem(
-                            title = "ISS Orbital Ground Track",
-                            description = "Real-time micro-dashed Low Earth Orbit trajectory completing a full 92.9-minute global pass at ~420km altitude.",
-                            badgeColor = Color(0xFF06B6D4),
-                            icon = "[ISS]",
-                            isDashed = true,
-                            strokeWidth = 2.5f,
-                        ),
-                        LegendItem(
-                            title = "Apollo Lunar Landing Sites",
-                            description = "NASA Apollo 11–17 historic touchdown sites on the 3D Moon explorer with mission telemetry cards.",
-                            badgeColor = Color(0xFFFBBF24),
-                            icon = "[APOLLO]",
-                        ),
-                    ),
-            )
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            // 3. NASA EONET Active Natural Hazards
-            LegendCategorySection(
-                title = "NASA EONET LIVE PLANETARY HAZARDS",
-                items =
-                    listOf(
-                        LegendItem(
-                            title = "Volcanic Eruption",
-                            description = "Active volcanic eruption or hazardous ash plume detected by satellite.",
-                            badgeColor = Color(0xFFEF4444),
-                            icon = "[VOLCANO]",
-                        ),
-                        LegendItem(
-                            title = "Wildfire Complex",
-                            description = "Thermal anomaly or major active wildfire burning in the region.",
-                            badgeColor = Color(0xFFF97316),
-                            icon = "[FIRE]",
-                        ),
-                        LegendItem(
-                            title = "Severe Storm / Cyclone",
-                            description = "Tropical cyclone, hurricane, typhoon, or extreme convective storm system.",
-                            badgeColor = Color(0xFFA855F7),
-                            icon = "[STORM]",
-                        ),
-                        LegendItem(
-                            title = "Polar / Sea Ice Activity",
-                            description = "Significant sea ice breakup, glacial movement, or navigational iceberg hazard.",
-                            badgeColor = Color(0xFF38BDF8),
-                            icon = "[ICE]",
-                        ),
-                    ),
-            )
-
-            Spacer(modifier = Modifier.height(28.dp))
         }
     }
 }

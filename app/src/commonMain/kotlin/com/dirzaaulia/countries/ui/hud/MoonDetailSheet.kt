@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -56,91 +56,95 @@ fun MoonDetailSheet(
         },
         modifier = modifier,
     ) {
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(horizontal = 20.dp)
-                    .padding(bottom = 28.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(bottom = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "ASTRONOMICAL CELESTIAL BODY",
-                    color = Color(0xFF94A3B8),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                )
-                MinimalistCloseButton(onClick = onClose)
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
-            ) {
-                SemanticIcon(UiSymbol.Moon, moonInfo.phaseName, Color(0xFFFFD54F), Modifier.size(36.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Earth's Moon (Luna)",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = "${moonInfo.phaseName} • ${(moonInfo.illuminatedFraction * 100).toInt()}% Illuminated",
-                        color = Color(0xFF38BDF8),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color(0x351E293B),
-                    border = BorderStroke(1.dp, Color(0x22FFFFFF)),
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("ORBITAL DISTANCE", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Text(
-                            text = "${formatNumber(moonInfo.distanceKm)} km",
-                            color = Color.White,
-                            fontSize = 14.sp,
+                            text = "ASTRONOMICAL CELESTIAL BODY",
+                            color = Color(0xFF94A3B8),
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
                         )
-                        Text("~1.28 light-seconds", color = Color(0xFF64748B), fontSize = 10.sp)
+                        MinimalistCloseButton(onClick = onClose)
                     }
-                }
 
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color(0x351E293B),
-                    border = BorderStroke(1.dp, Color(0x22FFFFFF)),
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("ORBITAL PERIOD", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                        Text(
-                            text = "27.3 Days",
-                            color = Color.White,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text("Tidally locked to Earth", color = Color(0xFF64748B), fontSize = 10.sp)
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
+                        SemanticIcon(UiSymbol.Moon, moonInfo.phaseName, Color(0xFFFFD54F), Modifier.size(36.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Earth's Moon (Luna)",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "${moonInfo.phaseName} • ${(moonInfo.illuminatedFraction * 100).toInt()}% Illuminated",
+                                color = Color(0xFF38BDF8),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0x351E293B),
+                            border = BorderStroke(1.dp, Color(0x22FFFFFF)),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text("ORBITAL DISTANCE", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "${formatNumber(moonInfo.distanceKm)} km",
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Text("~1.28 light-seconds", color = Color(0xFF64748B), fontSize = 10.sp)
+                            }
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0x351E293B),
+                            border = BorderStroke(1.dp, Color(0x22FFFFFF)),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text("ORBITAL PERIOD", color = Color(0xFF94A3B8), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "27.3 Days",
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Text("Tidally locked to Earth", color = Color(0xFF64748B), fontSize = 10.sp)
+                            }
+                        }
                     }
                 }
             }

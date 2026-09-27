@@ -101,26 +101,26 @@ fun App() {
                     }
                 }
                 val sunPos =
-                    remember(currentTimeMillis / 30_000L) {
+                    remember(currentTimeMillis) {
                         AstronomyMath.calculateSunPosition(currentTimeMillis)
                     }
                 val moonInfo =
-                    remember(currentTimeMillis / 30_000L) {
+                    remember(currentTimeMillis) {
                         AstronomyMath.calculateMoonInfo(currentTimeMillis)
                     }
                 val utcTimeStr =
-                    remember(currentTimeMillis / 60_000L) {
+                    remember(currentTimeMillis / 1000L) {
                         val utcMillis = ((currentTimeMillis % 86400000L) + 86400000L) % 86400000L
                         val hours = (utcMillis / 3600000L).toInt()
                         val minutes = ((utcMillis % 3600000L) / 60000L).toInt()
                         "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} UTC"
                     }
                 val localTimeStr =
-                    remember(currentTimeMillis / 60_000L) {
+                    remember(currentTimeMillis / 1000L) {
                         formatLocalTime(currentTimeMillis)
                     }
 
-                var showBorders by remember { mutableStateOf(false) }
+                var showBorders by remember { mutableStateOf(true) }
                 var showSatellites by remember { mutableStateOf(true) }
                 var showHazards by remember { mutableStateOf(true) }
                 var showLegendSheet by remember { mutableStateOf(false) }
@@ -227,6 +227,7 @@ fun App() {
                                 onHazardSelected = hazardViewModel::selectHazard,
                                 onIssSelected = issViewModel::selectIss,
                                 sunPos = sunPos,
+                                showTimeMachine = showTimeMachine,
                                 modifier = Modifier.fillMaxSize(),
                             )
                         } else {
@@ -256,29 +257,11 @@ fun App() {
                         onToggleSatellites = { showSatellites = !showSatellites },
                         showHazards = showHazards,
                         onToggleHazards = { showHazards = !showHazards },
-                        isFlightMode = isFlightMode,
-                        onToggleFlightMode = {
-                            flightViewModel.toggleFlightMode(countries)
-                            if (!isFlightMode) {
-                                flightViewModel.flightOrigin.value?.let { origin ->
-                                    scope.launch {
-                                        globeState.flyTo(
-                                            origin.center.lat.toFloat(),
-                                            -origin.center.lng.toFloat(),
-                                            1.3f,
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        isQuizMode = isQuizMode,
-                        onToggleQuizMode = { quizViewModel.toggleQuizMode(countries) },
                         moonDistanceKm = moonInfo.distanceKm,
                         localTime = localTimeStr,
                         utcTime = utcTimeStr,
                         onOpenLegend = { showLegendSheet = true },
                         onOpenSearch = { showSearchSheet = true },
-                        onOpenNasaCrisis = { showNasaCrisisSheet = true },
                     )
 
                     if (pagerState.currentPage == 0) {

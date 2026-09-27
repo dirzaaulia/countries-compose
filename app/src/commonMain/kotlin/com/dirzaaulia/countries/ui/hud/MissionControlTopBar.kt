@@ -6,9 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -53,10 +57,6 @@ fun MissionControlTopBar(
     onToggleSatellites: () -> Unit,
     showHazards: Boolean,
     onToggleHazards: () -> Unit,
-    isFlightMode: Boolean,
-    onToggleFlightMode: () -> Unit,
-    isQuizMode: Boolean,
-    onToggleQuizMode: () -> Unit,
     showTimeMachine: Boolean = false,
     onToggleTimeMachine: () -> Unit = {},
     moonDistanceKm: Double = 384400.0,
@@ -64,7 +64,6 @@ fun MissionControlTopBar(
     utcTime: String = "LIVE UTC",
     onOpenLegend: () -> Unit = {},
     onOpenSearch: () -> Unit = {},
-    onOpenNasaCrisis: () -> Unit = {},
     earthMissionContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
@@ -78,18 +77,27 @@ fun MissionControlTopBar(
                 .padding(horizontal = 16.dp, vertical = 6.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            TimeDisplayCard(
+                utcTime = utcTime,
+                localTime = localTime,
+                modifier = Modifier.fillMaxHeight(),
+            )
             CelestialSwitcher(
                 currentPage = currentPage,
                 onSelectPage = onSelectPage,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
             )
             TopBarIconButton(
                 contentDescription = "Mission control",
                 onClick = { showMissionControl = true },
+                modifier = Modifier.fillMaxHeight(),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.MoreVert,
@@ -151,8 +159,6 @@ fun MissionControlTopBar(
 
                 MissionStatusCard(
                     currentPage = currentPage,
-                    utcTime = utcTime,
-                    localTime = localTime,
                     moonDistanceKm = moonDistanceKm,
                 )
 
@@ -167,16 +173,6 @@ fun MissionControlTopBar(
                 )
 
                 if (currentPage == 0) {
-                    MissionActionRow(
-                        title = "NASA Planetary Crisis Monitor",
-                        symbol = UiSymbol.Hazard,
-                        tint = Color(0xFFEF4444),
-                        onClick = {
-                            showMissionControl = false
-                            onOpenNasaCrisis()
-                        },
-                    )
-
                     Text(
                         text = "VISUALIZATION LAYERS",
                         color = Color(0xFF94A3B8),
@@ -192,13 +188,51 @@ fun MissionControlTopBar(
                         LayerToggleCard("Satellites", if (showSatellites) "Live ISS" else "Off", UiSymbol.Iss, showSatellites, Color(0xFF38BDF8), onToggleSatellites, Modifier.weight(1f))
                         LayerToggleCard("Hazards", if (showHazards) "NASA Events" else "Off", UiSymbol.Hazard, showHazards, Color(0xFFEF4444), onToggleHazards, Modifier.weight(1f))
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        LayerToggleCard("Flight Route", if (isFlightMode) "Active Arc" else "Start Flight", UiSymbol.Flight, isFlightMode, Color(0xFFF59E0B), onToggleFlightMode, Modifier.weight(1f))
-                        LayerToggleCard("World Quiz", if (isQuizMode) "Playing" else "Start Quiz", UiSymbol.Quiz, isQuizMode, Color(0xFF10B981), onToggleQuizMode, Modifier.weight(1f))
-                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimeDisplayCard(
+    utcTime: String,
+    localTime: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        shape = RoundedCornerShape(19.dp),
+        color = Color(0xEE0B1220),
+        border = BorderStroke(1.dp, Color(0x4438BDF8)),
+        modifier = modifier,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            SemanticIcon(
+                symbol = UiSymbol.Time,
+                contentDescription = "Time",
+                tint = Color(0xFF38BDF8),
+                modifier = Modifier.size(14.dp),
+            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = utcTime.ifEmpty { "12:00 UTC" },
+                    color = Color.White,
+                    fontSize = 10.5.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                if (localTime.isNotEmpty()) {
+                    Text(
+                        text = "$localTime LOCAL",
+                        color = Color(0xFF94A3B8),
+                        fontSize = 8.5.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
                 }
             }
         }
@@ -212,14 +246,38 @@ private fun CelestialSwitcher(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(19.dp),
         color = Color(0xEE0B1220),
         border = BorderStroke(1.dp, Color(0x4438BDF8)),
-        modifier = modifier.heightIn(min = 50.dp),
+        modifier = modifier.heightIn(min = 38.dp),
     ) {
-        Row(modifier = Modifier.padding(3.dp), verticalAlignment = Alignment.CenterVertically) {
-            CelestialTabPill("Earth", UiSymbol.Earth, currentPage == 0, Color(0xFF38BDF8), { onSelectPage(0) }, Modifier.weight(1f))
-            CelestialTabPill("Moon", UiSymbol.Moon, currentPage == 1, Color(0xFFFFD54F), { onSelectPage(1) }, Modifier.weight(1f))
+        Row(modifier = Modifier.padding(2.dp), verticalAlignment = Alignment.CenterVertically) {
+            CelestialTabPill("Earth", UiSymbol.Earth, currentPage == 0, Color(0xFF38BDF8), { onSelectPage(0) }, Modifier.weight(1f).fillMaxHeight())
+            CelestialTabPill("Moon", UiSymbol.Moon, currentPage == 1, Color(0xFFFFD54F), { onSelectPage(1) }, Modifier.weight(1f).fillMaxHeight())
+        }
+    }
+}
+
+@Composable
+private fun CelestialTabPill(
+    label: String,
+    icon: UiSymbol,
+    isSelected: Boolean,
+    activeColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(17.dp))
+                .background(if (isSelected) activeColor.copy(alpha = 0.25f) else Color.Transparent)
+                .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            SemanticIcon(icon, label, if (isSelected) Color.White else Color(0xFF94A3B8), Modifier.size(13.dp))
+            Text(label, color = if (isSelected) Color.White else Color(0xFF94A3B8), fontSize = 11.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium)
         }
     }
 }
@@ -229,16 +287,17 @@ private fun TopBarIconButton(
     symbol: UiSymbol? = null,
     contentDescription: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable (() -> Unit)? = null,
 ) {
     Surface(
         shape = CircleShape,
         color = Color(0xDD0B1220),
         border = BorderStroke(1.dp, Color(0x3338BDF8)),
-        modifier = Modifier.size(44.dp),
+        modifier = modifier.aspectRatio(1f),
     ) {
         IconButton(onClick = onClick, modifier = Modifier.fillMaxSize()) {
-            if (content != null) content() else SemanticIcon(symbol!!, contentDescription, Color.White, Modifier.size(20.dp))
+            if (content != null) content() else SemanticIcon(symbol!!, contentDescription, Color.White, Modifier.size(18.dp))
         }
     }
 }
@@ -246,8 +305,6 @@ private fun TopBarIconButton(
 @Composable
 private fun MissionStatusCard(
     currentPage: Int,
-    utcTime: String,
-    localTime: String,
     moonDistanceKm: Double,
 ) {
     Surface(
@@ -259,9 +316,14 @@ private fun MissionStatusCard(
         Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.size(8.dp).background(if (currentPage == 0) Color(0xFF10B981) else Color(0xFFFFD54F), CircleShape))
             Column(modifier = Modifier.padding(start = 10.dp)) {
-                Text(if (currentPage == 0) utcTime else "LUNAR RANGE", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    text = if (currentPage == 0) localTime.takeIf { it.isNotEmpty() }?.plus(" LOCAL") ?: "LOCAL TIME UNAVAILABLE" else "${(moonDistanceKm / 1000.0).toInt()}K KM",
+                    text = if (currentPage == 0) "EARTH ORBITAL TRACKING" else "LUNAR RANGE",
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = if (currentPage == 0) "OPERATIONAL · LIVE TELEMETRY" else "${(moonDistanceKm / 1000.0).toInt()}K KM FROM EARTH",
                     color = Color(0xFF94A3B8),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -287,31 +349,6 @@ private fun MissionActionRow(
         Row(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             SemanticIcon(symbol, title, tint, Modifier.size(20.dp))
             Text(title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-        }
-    }
-}
-
-@Composable
-private fun CelestialTabPill(
-    label: String,
-    icon: UiSymbol,
-    isSelected: Boolean,
-    activeColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier =
-            modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(if (isSelected) activeColor.copy(alpha = 0.25f) else Color.Transparent)
-                .clickable { onClick() }
-                .heightIn(min = 44.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            SemanticIcon(icon, label, if (isSelected) Color.White else Color(0xFF94A3B8), Modifier.size(16.dp))
-            Text(label, color = if (isSelected) Color.White else Color(0xFF94A3B8), fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium)
         }
     }
 }

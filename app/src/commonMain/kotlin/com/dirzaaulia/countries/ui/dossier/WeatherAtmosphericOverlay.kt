@@ -148,7 +148,7 @@ fun WeatherAtmosphericOverlay(
                 val stepH = hw.height / steps
                 for (s in 1..steps) {
                     val progressY = baseY - s * stepH
-                    val waveOffset = sin((heatProgress * 2 * PI + hw.phase + s * 0.8f).toDouble()).toFloat() * 6f
+                    val waveOffset = sin(heatProgress * 2 * PI.toFloat() + hw.phase + s * 0.8f) * 6f
                     heatWavePath.lineTo(startX + waveOffset, progressY)
                 }
             }
@@ -218,7 +218,7 @@ fun WeatherAtmosphericOverlay(
         if (isSnow) {
             snowFlakes.forEach { flake ->
                 val currProgress = (snowProgress * flake.speed + flake.seed) % 1f
-                val sway = sin((currProgress * 4 * PI + flake.seed).toDouble()).toFloat() * 14f
+                val sway = sin(currProgress * 4 * PI.toFloat() + flake.seed) * 14f
                 val sx = flake.xRel * w + sway
                 val sy = currProgress * h
 

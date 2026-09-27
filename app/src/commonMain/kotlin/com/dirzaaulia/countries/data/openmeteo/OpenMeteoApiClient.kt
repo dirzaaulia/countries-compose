@@ -62,10 +62,10 @@ class OpenMeteoApiClient(
             if (dailyDates != null) {
                 for (i in 0 until minOf(7, dailyDates.size)) {
                     val dateStr = dailyDates[i]
-                    val dCode = daily?.weatherCodes?.getOrNull(i) ?: 0
-                    val dMax = daily?.temperaturesMax?.getOrNull(i) ?: 20.0
-                    val dMin = daily?.temperaturesMin?.getOrNull(i) ?: 12.0
-                    val dPrecip = daily?.precipitationMax?.getOrNull(i) ?: 0
+                    val dCode = daily.weatherCodes.getOrNull(i) ?: 0
+                    val dMax = daily.temperaturesMax.getOrNull(i) ?: 20.0
+                    val dMin = daily.temperaturesMin.getOrNull(i) ?: 12.0
+                    val dPrecip = daily.precipitationMax.getOrNull(i) ?: 0
                     val (dIcon, _) = mapWeatherCode(dCode)
                     val dayName =
                         when (i) {
@@ -98,9 +98,9 @@ class OpenMeteoApiClient(
             if (hourlyTimes != null) {
                 for (i in 0 until minOf(24, hourlyTimes.size)) {
                     val timeStr = hourlyTimes[i]
-                    val hTemp = hourly?.temperatures?.getOrNull(i) ?: 18.0
-                    val hPrecip = hourly?.precipitation?.getOrNull(i) ?: 0
-                    val hCode = hourly?.weatherCodes?.getOrNull(i) ?: 0
+                    val hTemp = hourly.temperatures.getOrNull(i) ?: 18.0
+                    val hPrecip = hourly.precipitation.getOrNull(i) ?: 0
+                    val hCode = hourly.weatherCodes.getOrNull(i) ?: 0
                     val hour = timeStr.substringAfter("T").take(2).toIntOrNull() ?: i
                     hourlyForecast.add(
                         HourlyForecastItem(

@@ -285,7 +285,7 @@ internal fun DrawScope.drawFlightPathSimulator(
     var inArc = false
 
     for (pt in flightRoute) {
-        var p = latLngToCartesian(pt.lat, pt.lng, (currentRadius * 1.01).toDouble())
+        var p = latLngToCartesian(pt.lat, pt.lng, currentRadius * 1.01)
         p = rotateY(p, cosY, sinY)
         p = rotateX(p, cosX, sinX)
 
@@ -316,7 +316,7 @@ internal fun DrawScope.drawFlightPathSimulator(
     )
 
     val departure = flightRoute.first()
-    var depP = latLngToCartesian(departure.lat, departure.lng, (currentRadius * 1.008).toDouble())
+    var depP = latLngToCartesian(departure.lat, departure.lng, currentRadius * 1.008)
     depP = rotateY(depP, cosY, sinY)
     depP = rotateX(depP, cosX, sinX)
     if (depP.z > 0.0) {
@@ -328,7 +328,7 @@ internal fun DrawScope.drawFlightPathSimulator(
     }
 
     val arrival = flightRoute.last()
-    var arrP = latLngToCartesian(arrival.lat, arrival.lng, (currentRadius * 1.008).toDouble())
+    var arrP = latLngToCartesian(arrival.lat, arrival.lng, currentRadius * 1.008)
     arrP = rotateY(arrP, cosY, sinY)
     arrP = rotateX(arrP, cosX, sinX)
     if (arrP.z > 0.0) {
@@ -346,7 +346,7 @@ internal fun DrawScope.drawFlightPathSimulator(
     val planeLat = flightRoute[idx].lat + (flightRoute[idx + 1].lat - flightRoute[idx].lat) * frac
     val planeLng = flightRoute[idx].lng + (flightRoute[idx + 1].lng - flightRoute[idx].lng) * frac
 
-    var planeP = latLngToCartesian(planeLat, planeLng, (currentRadius * altitudeFactor).toDouble())
+    var planeP = latLngToCartesian(planeLat, planeLng, currentRadius * altitudeFactor)
     planeP = rotateY(planeP, cosY, sinY)
     planeP = rotateX(planeP, cosX, sinX)
 
@@ -361,7 +361,7 @@ internal fun DrawScope.drawFlightPathSimulator(
         val nLat = flightRoute[nIdx].lat + (flightRoute[nIdx + 1].lat - flightRoute[nIdx].lat) * nFrac
         val nLng = flightRoute[nIdx].lng + (flightRoute[nIdx + 1].lng - flightRoute[nIdx].lng) * nFrac
 
-        var nextP = latLngToCartesian(nLat, nLng, (currentRadius * altitudeFactor).toDouble())
+        var nextP = latLngToCartesian(nLat, nLng, currentRadius * altitudeFactor)
         nextP = rotateY(nextP, cosY, sinY)
         nextP = rotateX(nextP, cosX, sinX)
         val nx = canvasCenter.x + nextP.x.toFloat()
@@ -378,7 +378,7 @@ internal fun DrawScope.drawFlightPathSimulator(
             val tLat = flightRoute[tIdx].lat + (flightRoute[tIdx + 1].lat - flightRoute[tIdx].lat) * tFrac
             val tLng = flightRoute[tIdx].lng + (flightRoute[tIdx + 1].lng - flightRoute[tIdx].lng) * tFrac
 
-            var trailP = latLngToCartesian(tLat, tLng, (currentRadius * (1.012 + 0.026 * sin(trailProg * PI))).toDouble())
+            var trailP = latLngToCartesian(tLat, tLng, currentRadius * (1.012 + 0.026 * sin(trailProg * PI)))
             trailP = rotateY(trailP, cosY, sinY)
             trailP = rotateX(trailP, cosX, sinX)
             if (trailP.z > 0.0) {
@@ -543,7 +543,7 @@ internal fun DrawScope.drawISSTracker(
         val earthRotDeg = t * (360.0 / 1440.0)
         val orbitLng = ((issTelemetry.longitude + (u - u0).toDegrees * cos(incRad) - earthRotDeg + 540.0) % 360.0) - 180.0
 
-        var op = latLngToCartesian(orbitLat, orbitLng, issRadius.toDouble())
+        var op = latLngToCartesian(orbitLat, orbitLng, issRadius)
         op = rotateY(op, cosY, sinY)
         op = rotateX(op, cosX, sinX)
 
@@ -577,7 +577,7 @@ internal fun DrawScope.drawISSTracker(
             ),
     )
 
-    var p = latLngToCartesian(issTelemetry.latitude, issTelemetry.longitude, issRadius.toDouble())
+    var p = latLngToCartesian(issTelemetry.latitude, issTelemetry.longitude, issRadius)
     p = rotateY(p, cosY, sinY)
     p = rotateX(p, cosX, sinX)
 

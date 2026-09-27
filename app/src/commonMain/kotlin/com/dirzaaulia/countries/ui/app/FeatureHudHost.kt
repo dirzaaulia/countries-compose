@@ -149,7 +149,7 @@ fun BoxScope.FeatureHudHost(
                     onNextQuestion = { quizVm.generateNextQuizQuestion(countries) },
                     onEndQuiz = { quizVm.toggleQuizMode(countries) },
                 )
-            selectedCountry == null && selectedHazard == null && selectedIss == null && !flightMode ->
+            selectedCountry == null && selectedHazard == null && selectedIss == null && !flightMode && !showTimeMachine ->
                 FloatingExplorerBar(
                     onOpenSearch = onOpenSearch,
                     onExploreRandom = { countries.randomOrNull()?.let { onSelectCountry(it.id) } },

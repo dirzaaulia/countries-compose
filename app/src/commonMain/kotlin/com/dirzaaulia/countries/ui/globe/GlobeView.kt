@@ -104,6 +104,7 @@ fun GlobeView(
     onHazardSelected: ((NasaNaturalEvent) -> Unit)? = null,
     onIssSelected: ((ISSTelemetry) -> Unit)? = null,
     sunPos: SunPosition = AstronomyMath.calculateSunPosition(),
+    showTimeMachine: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -226,11 +227,13 @@ fun GlobeView(
             }
         }
 
+        val currentSunPos by rememberUpdatedState(sunPos)
+
         // 2. 3D Platform Globe (OpenGL ES on Android, WebGL/Canvas on WASM)
         Globe3DPlatformView(
             state = state,
-            sunPosition = sunPos,
-            isPageActive = isPageActive && (!isSheetOpen || state.isAnimating),
+            sunPosition = currentSunPos,
+            isPageActive = isPageActive && (!isSheetOpen || state.isAnimating || showTimeMachine),
             modifier = Modifier.fillMaxSize(),
         )
 

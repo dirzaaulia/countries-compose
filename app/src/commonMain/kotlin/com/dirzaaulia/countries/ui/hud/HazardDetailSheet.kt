@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,106 +60,110 @@ fun HazardDetailSheet(
         },
         modifier = modifier,
     ) {
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(horizontal = 20.dp)
-                    .padding(bottom = 28.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(bottom = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "NASA EONET ACTIVE PLANETARY EVENT",
-                    color = Color(0xFFEF4444),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                )
-                MinimalistCloseButton(onClick = onClose)
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                SemanticIcon(uiSymbolFor(hazard.categoryIcon), hazard.category, Color(0xFFEF4444), Modifier.size(34.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = hazard.title,
-                        color = Color.White,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = "Category: ${hazard.category} • ${hazard.date.take(10)}",
-                        color = Color(0xFF94A3B8),
-                        fontSize = 12.sp,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0x221E293B),
-                border = BorderStroke(1.dp, Color(0x22FFFFFF)),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text("COORDINATES", color = Color(0xFF64748B), fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    val latStr = "${((hazard.lat * 10).toLong() / 10.0)}°" + if (hazard.lat >= 0) "N" else "S"
-                    val lngStr = "${((hazard.lng * 10).toLong() / 10.0)}°" + if (hazard.lng >= 0) "E" else "W"
-                    Text("$latStr, $lngStr", color = Color(0xFF38BDF8), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                }
-            }
-
-            if (!hazard.magnitude.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color(0x22EF4444),
-                    border = BorderStroke(1.dp, Color(0x44EF4444)),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("MAGNITUDE / SEVERITY", color = Color(0xFFF87171), fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                        Text(hazard.magnitude, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            text = "NASA EONET ACTIVE PLANETARY EVENT",
+                            color = Color(0xFFEF4444),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
+                        )
+                        MinimalistCloseButton(onClick = onClose)
                     }
-                }
-            }
 
-            if (onCenterView != null) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onCenterView,
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0x33EF4444)),
-                    border = BorderStroke(1.dp, Color(0x66EF4444)),
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = 10.dp),
-                ) {
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        SemanticIcon(UiSymbol.Location, "Center camera on epicenter", Color(0xFFFCA5A5), Modifier.size(16.dp))
-                        Text("Center Camera on Epicenter", color = Color(0xFFFCA5A5), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        SemanticIcon(uiSymbolFor(hazard.categoryIcon), hazard.category, Color(0xFFEF4444), Modifier.size(34.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = hazard.title,
+                                color = Color.White,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "Category: ${hazard.category} • ${hazard.date.take(10)}",
+                                color = Color(0xFF94A3B8),
+                                fontSize = 12.sp,
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0x221E293B),
+                        border = BorderStroke(1.dp, Color(0x22FFFFFF)),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("COORDINATES", color = Color(0xFF64748B), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            val latStr = "${((hazard.lat * 10).toLong() / 10.0)}°" + if (hazard.lat >= 0) "N" else "S"
+                            val lngStr = "${((hazard.lng * 10).toLong() / 10.0)}°" + if (hazard.lng >= 0) "E" else "W"
+                            Text("$latStr, $lngStr", color = Color(0xFF38BDF8), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+
+                    if (!hazard.magnitude.isNullOrEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0x22EF4444),
+                            border = BorderStroke(1.dp, Color(0x44EF4444)),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text("MAGNITUDE / SEVERITY", color = Color(0xFFF87171), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                Text(hazard.magnitude, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            }
+                        }
+                    }
+
+                    if (onCenterView != null) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = onCenterView,
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0x33EF4444)),
+                            border = BorderStroke(1.dp, Color(0x66EF4444)),
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(vertical = 10.dp),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                SemanticIcon(UiSymbol.Location, "Center camera on epicenter", Color(0xFFFCA5A5), Modifier.size(16.dp))
+                                Text("Center Camera on Epicenter", color = Color(0xFFFCA5A5), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
                     }
                 }
             }
