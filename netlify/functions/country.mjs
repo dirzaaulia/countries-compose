@@ -18,23 +18,20 @@ function jsonResponse(body, status, cache = false) {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      "Access-Control-Allow-Origin": "*",
       ...(cache ? { "Netlify-CDN-Cache-Control": `public, durable, max-age=${EDGE_SECONDS}` } : {})
     }
   });
 }
 
 export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now }) {
-  return async function handle(request) {
+  return async function handle(request, context = {}) {
     if (request.method !== "GET") return jsonResponse({ error: "Method not allowed" }, 405);
-    const url = new URL(request.url);
-    const code = url.searchParams.get("code")?.trim().toUpperCase();
-    if ([...url.searchParams.keys()].some((key) => key !== "code") || url.searchParams.getAll("code").length !== 1) {
-      return jsonResponse({ error: "Invalid query" }, 400);
-    }
+    const code = context.params?.code?.trim().toUpperCase();
     if (!code || !/^[A-Z]{2,3}$/.test(code)) return jsonResponse({ error: "Invalid ISO code" }, 400);
     if (!apiKey || !redis) return jsonResponse({ error: "Country service unavailable" }, 503);
 
-    const key = `country:v5:${code}`;
+    const key = `country:v5:full:${code}`;
     try {
       const cached = await redis.get(key);
       if (cached && cached.expiresAt > clock()) return jsonResponse(cached.body, 200, true);
@@ -51,7 +48,7 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
           if (Number(admitted) !== 1) return jsonResponse({ error: "Country service busy" }, 429);
 
           const field = code.length === 2 ? "codes.alpha_2" : "codes.alpha_3";
-          const upstream = await fetcher(`https://api.restcountries.com/countries/v5/${field}/${code}?response_fields_omit=names.translations,leaders`, {
+          const upstream = await fetcher(`https://api.restcountries.com/countries/v5/${field}/${code}`, {
             headers: { Authorization: `Bearer ${apiKey}` },
             signal: AbortSignal.timeout(8000)
           });
@@ -75,7 +72,7 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
 }
 
 let handler;
-export default function country(request) {
+export default function country(request, context) {
   if (!handler) {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -84,5 +81,7 @@ export default function country(request) {
       apiKey: process.env.REST_COUNTRIES_API_KEY
     });
   }
-  return handler(request);
+  return handler(request, context);
 }
+
+export const config = { path: "/api/countries/:code" };
