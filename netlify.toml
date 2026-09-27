@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/countries/:code"
+  to = "/.netlify/functions/country?code=:code"
+  status = 200
