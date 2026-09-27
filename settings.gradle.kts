@@ -50,4 +50,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Countries"
 include(":composeApp")
+include(":androidApp")
  
