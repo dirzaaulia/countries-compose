@@ -20,6 +20,7 @@
 - Run relevant tests after modifying shared/business logic.
 - Check Android and shared source sets when changing KMP code.
 - Prefer incremental changes over large rewrites.
+- Completion discipline: Do not report a cross-screen migration or audit as complete after fixing only examples. Inventory every affected shared component and caller, implement the full agreed scope, and verify no audited occurrences remain before declaring completion.
 
 ## Project-Specific Rules (Countries)
 
@@ -32,8 +33,12 @@
 - After code updates, only run standard compile tasks to verify changes:
   - `./gradlew :app:compileDebugKotlinAndroid`
   - `./gradlew :app:compileKotlinWasmJs`
+- Run these target compile tasks separately, never in one Gradle invocation or concurrently. Wait for one target's command to return before starting the other.
+- Shell completion: Treat an observed Gradle `BUILD SUCCESSFUL` marker as a completed verification. Do not poll or wait for wrapper cleanup after that marker; proceed and report success unless the output also contains a build failure or a nonzero exit status.
 - Quota Optimization: Be extremely token-efficient, concise, avoid redundant checks, never run multiple compilation cycles unless asked, and avoid unnecessary tool calls.
+- AI Reasoning & Thought Formatting: Whenever performing step-by-step reasoning or internal analysis, wrap it inside `<thought>...</thought>` tags so the IDE renders it as a collapsible "Thought" button in the chat interface.
 - Single Source of Truth: All feature roadmap items, task progress, and technical architecture plans MUST be read from and updated in `ROADMAP.md` at project root (`D:/Android/Projects/countries-compose/ROADMAP.md`), NOT inside agent-private or isolated brain directories.
+- **Clean Code & Modular File Decomposition**: Keep file lengths manageable and maintainable by adhering to Clean Code principles and Single Responsibility Principle (SRP). Avoid creating monolithic files with high line counts (target <= 300-400 lines per file). Break down large composable screens, data layers, or renderers into smaller, focused, reusable sub-components, helper files, or dedicated domain modules while strictly preserving existing functional behavior, architectural invariants, and public APIs.
 
 ---
 
@@ -66,8 +71,10 @@ Any AI agent modifying this codebase MUST strictly adhere to the following invar
   - Procedural Compose vector graphics / canvas paths.
 - Avoid introducing JVM- or Android-specific APIs (such as `java.time.*`, `android.graphics.*`, `java.util.*`) into `commonMain`. Use `kotlinx-datetime` and Compose multiplatform primitives.
 
-### 5. Unified Modal Bottom Sheet & Close Button Design System
-- All inspector and detail interfaces MUST use standard Material 3 `ModalBottomSheet` with drag handle and transparent scrim.
+### 5. Unified Adaptive Sheet & Close Button Design System
+- All inspector and detail interfaces MUST use Material 3 sheets with a drag handle and transparent scrim:
+  - Compact windows: standard `ModalBottomSheet`.
+  - Medium and expanded windows: supported Material 3 adaptive side sheet.
   - Examples: Country Dossier, ISS Telemetry, NASA EONET Hazards, Apollo Site Inspector, Flight Route Card, Map Legend.
 - **DO NOT** revert inspectors into floating `Card`s, custom popup `Surface`s, or ad-hoc dialogs.
 - **Minimalist Close Button**: Every sheet and top-level overlay MUST use `MinimalistCloseButton.kt` (36dp touch target, resolution-independent vector cross `#94A3B8`). Never use raw text characters like `"X"` or `"✕"`.
@@ -79,6 +86,49 @@ Any AI agent modifying this codebase MUST strictly adhere to the following invar
 ### 7. Flight Simulator InfiniteTransition Reactivity
 - Aircraft animation progress in `GlobeView.kt` is wrapped in `key(isSupersonic)` to properly recreate `rememberInfiniteTransition` when supersonic mode toggles. Do NOT remove this `key()` wrapper, or speed toggle state changes will not take effect dynamically.
 
-### 8. Offline-First Resilience & SWR Cache
-- `GlobeRepository.kt` implements Stale-While-Revalidate (SWR) in-memory caching and procedural fallbacks for all countries and metrics.
-- Network calls must never block UI rendering or camera flight transitions. The UI must show skeleton/cached data while streaming updates in the background.
+### 8. Live Data Loading & Session Cache
+- The app has no guaranteed offline mode; network-backed details may be unavailable without connectivity.
+- `GlobeRepository.kt` may reuse successfully fetched live country details, administrative divisions, division weather, and derived ADM2 filters from in-memory caches for the lifetime of its repository instance. These caches are not persisted to disk and do not constitute offline support; failed fetches are not cached as successful results.
+- Country dossiers may display bundled country estimates (including GDP per capita) when corresponding live World Bank values are unavailable. Treat such values as estimates, not live metrics; other unavailable live fields should remain absent/loading/unavailable rather than being fabricated.
+- Network calls must not block UI rendering or camera flight transitions. Show loading/skeleton state while live data loads, then show available values or an unavailable/empty state when no value exists.
+
+### 9. Clean Architecture Package Hierarchy & Expect/Actual Parity
+- **Package Hierarchy**:
+  - `com.dirzaaulia.countries.data.*`: External data sources, Ktor client, and repository implementations.
+  - `com.dirzaaulia.countries.domain.*`: Pure multiplatform business logic, astronomy math (`AstronomyMath.kt`), domain models (`Country.kt`, `ApolloSite.kt`), shaders (`GlobeShaders.kt`), mesh generation (`SphereMesh.kt`), and spherical coordinates (`SphericalMath.kt`, `GlobeState.kt`).
+  - `com.dirzaaulia.countries.platform.*`: Cross-platform abstractions (`Globe3DPlatformView`, `PlatformSymbols`, `PlatformStartup`, `PlatformTime`, `PlatformHttpClient`).
+  - `com.dirzaaulia.countries.di.*`: Dependency injection (Koin `AppModule.kt`).
+  - `com.dirzaaulia.countries.ui.*`: UI screens, HUD overlays, M3 sheets, and ViewModels.
+  - `com.dirzaaulia.countries.util.*`: Pure multiplatform formatters and helpers.
+- **Expect/Actual Package Parity**:
+  - Every `expect` in `commonMain` and its corresponding `actual` in `androidMain` and `wasmJsMain` **MUST reside in the exact same package** (`com.dirzaaulia.countries.platform`) and matching folder structure. Package mismatch causes immediate unresolved reference errors during multiplatform compilation.
+
+### 10. Pure Multiplatform API Hygiene (Zero JVM Leaks in commonMain)
+- `commonMain` compiles to both Android (JVM) and Web (WASM).
+- **NEVER** import or use JVM- or Android-specific APIs in `commonMain`:
+  - ❌ `java.util.*` (e.g. `toSortedMap()`, `Date`, `Calendar`, `Collections`) $\to$ ✅ Use Kotlin stdlib primitives (`.entries.sortedBy { it.key }`).
+  - ❌ `java.time.*` $\to$ ✅ Use `kotlinx-datetime` or `PlatformTime`.
+  - ❌ `android.graphics.*`, `android.view.*` $\to$ ✅ Use Compose Multiplatform primitives or isolate in `androidMain`.
+- When in doubt, consult the `compose-multiplatform-patterns` skill.
+
+### 11. Idiomatic Kotlin & CMP Architectural Patterns (No Java OOP Anti-Patterns)
+- **Separated Domain Repositories (No Monolithic God-Repositories)**:
+  - Repositories must be domain-focused with single responsibility: `CountryRepository`, `CountryDetailRepository`, `HazardRepository`, `IssRepository`, `AdministrativeRepository`, and `EclipseRepository`.
+  - ❌ Never pile all domain APIs into a single monolithic repository.
+- **Unified Architectural Pattern: MVVM with Unidirectional Data Flow (UDF)**:
+  - Do NOT mix ad-hoc MVI intents/reducers with MVVM, and do NOT scatter multiple individual `StateFlow`s for every single screen property.
+  - Every ViewModel defines an immutable `FeatureUiState` data class with sensible defaults.
+  - Exposes a single `val uiState: StateFlow<FeatureUiState> = _uiState.asStateFlow()`.
+  - Public ViewModel methods act as event handlers modifying `_uiState.value = _uiState.value.copy(...)`.
+- **Zero Java-Style DTO Wrappers**:
+  - ❌ DO NOT wrap API data transfer objects in intermediate Java-style classes with boilerplate getter delegates (e.g., `class CountryInfo(val response: CountryResponse) { val name get() = response.name }`).
+  - ✅ Use Kotlin **extension properties/functions** (`val CountryResponse.officialName: String get() = ...`) or direct domain model mapping (`Country.enrich(...)`).
+  - Keep response models clean, data-oriented, and decorated with idiomatic extensions.
+- **Dedicated ViewModel State Ownership (No Top-Level Prop-Drilling)**:
+  - Complex feature sheets and HUD modules MUST NOT have their state and fetch operations monolithic in `GlobeViewModel` or prop-drilled 15 levels down from `App.kt`.
+  - Feature domains MUST have dedicated ViewModels (e.g. `DossierViewModel`, `HazardViewModel`, `IssViewModel`, `FlightViewModel`, `QuizViewModel`, `AdministrativeViewModel`).
+  - Feature ViewModels own their coroutine jobs, loading states, and domain interactions, exposing unidirectional `StateFlow<UiState>`.
+- **Zero Wildcard Imports**:
+  - Never use wildcard (`*`) imports in any Kotlin source set (`commonMain`, `androidMain`, `wasmJsMain`). Every import must be explicit.
+- **Single Responsibility File Decomposition**:
+  - Maintain strict SRP: keep file sizes manageable ($\le 300\text{--}400$ lines). Break down monolithic composables into focused sub-components under feature component packages (e.g., `ui/dossier/components/`).

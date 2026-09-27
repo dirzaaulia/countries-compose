@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,30 +21,35 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun InfoCard(
-    icon: String,
+    symbol: UiSymbol,
     title: String,
     value: String,
     subValue: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         shape = RoundedCornerShape(14.dp),
         color = Color(0x351E293B),
         border = BorderStroke(1.dp, Color(0x24FFFFFF)),
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                Text(text = icon, fontSize = 11.sp)
+                SemanticIcon(
+                    symbol = symbol,
+                    contentDescription = null,
+                    tint = Color(0xFF94A3B8),
+                    modifier = Modifier.size(14.dp),
+                )
                 Text(
                     text = title,
                     color = Color(0xFF94A3B8),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.5.sp
+                    letterSpacing = 0.5.sp,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
@@ -52,7 +58,7 @@ fun InfoCard(
                 color = Color(0xFFF8FAFC),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                lineHeight = 17.sp
+                lineHeight = 17.sp,
             )
             if (subValue != null) {
                 Spacer(modifier = Modifier.height(2.dp))
@@ -60,7 +66,7 @@ fun InfoCard(
                     text = subValue,
                     color = Color(0xFF64748B),
                     fontSize = 10.sp,
-                    lineHeight = 13.sp
+                    lineHeight = 13.sp,
                 )
             }
         }

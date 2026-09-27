@@ -26,16 +26,17 @@ fun MinimalistCloseButton(
     modifier: Modifier = Modifier,
     buttonSize: Dp = 36.dp,
     iconSize: Dp = 16.dp,
-    iconColor: Color = Color(0xFF94A3B8)
+    iconColor: Color = Color(0xFF94A3B8),
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier.size(buttonSize),
         interactionSource = remember { MutableInteractionSource() },
-        colors = IconButtonDefaults.iconButtonColors(
-            contentColor = iconColor,
-            containerColor = Color.Transparent
-        )
+        colors =
+            IconButtonDefaults.iconButtonColors(
+                contentColor = iconColor,
+                containerColor = Color.Transparent,
+            ),
     ) {
         Canvas(modifier = Modifier.size(iconSize)) {
             val stroke = 1.75.dp.toPx()
@@ -45,14 +46,14 @@ fun MinimalistCloseButton(
                 start = Offset(inset, inset),
                 end = Offset(size.width - inset, size.height - inset),
                 strokeWidth = stroke,
-                cap = StrokeCap.Round
+                cap = StrokeCap.Round,
             )
             drawLine(
                 color = iconColor,
                 start = Offset(size.width - inset, inset),
                 end = Offset(inset, size.height - inset),
                 strokeWidth = stroke,
-                cap = StrokeCap.Round
+                cap = StrokeCap.Round,
             )
         }
     }

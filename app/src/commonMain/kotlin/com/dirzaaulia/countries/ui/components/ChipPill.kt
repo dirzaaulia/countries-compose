@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,32 +20,37 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ChipPill(
     text: String,
-    icon: String? = null,
+    symbol: UiSymbol? = null,
     backgroundColor: Color = Color(0x2238BDF8),
     borderColor: Color = Color(0x4438BDF8),
     textColor: Color = Color(0xFFE0F2FE),
     onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         shape = RoundedCornerShape(10.dp),
         color = backgroundColor,
         border = BorderStroke(1.dp, borderColor),
-        modifier = if (onClick != null) modifier.clickable(onClick = onClick) else modifier
+        modifier = if (onClick != null) modifier.clickable(onClick = onClick) else modifier,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            if (icon != null) {
-                Text(text = icon, fontSize = 11.sp)
+            if (symbol != null) {
+                SemanticIcon(
+                    symbol = symbol,
+                    contentDescription = null,
+                    tint = textColor,
+                    modifier = Modifier.size(14.dp),
+                )
             }
             Text(
                 text = text,
                 color = textColor,
                 fontSize = 11.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }

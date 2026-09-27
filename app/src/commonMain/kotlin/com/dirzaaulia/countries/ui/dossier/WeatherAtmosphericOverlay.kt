@@ -1,7 +1,6 @@
 package com.dirzaaulia.countries.ui.dossier
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -23,77 +22,107 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-private data class RainDrop(val xRel: Float, val speed: Float, val length: Float, val alpha: Float)
-private data class SnowFlake(val xRel: Float, val speed: Float, val radius: Float, val seed: Float)
-private data class CloudCluster(val yRel: Float, val speed: Float, val baseRadius: Float, val alpha: Float)
-private data class HeatWave(val xRel: Float, val speed: Float, val phase: Float, val height: Float)
+private data class RainDrop(
+    val xRel: Float,
+    val speed: Float,
+    val length: Float,
+    val alpha: Float,
+)
+
+private data class SnowFlake(
+    val xRel: Float,
+    val speed: Float,
+    val radius: Float,
+    val seed: Float,
+)
+
+private data class CloudCluster(
+    val yRel: Float,
+    val speed: Float,
+    val baseRadius: Float,
+    val alpha: Float,
+)
+
+private data class HeatWave(
+    val xRel: Float,
+    val speed: Float,
+    val phase: Float,
+    val height: Float,
+)
 
 @Composable
 fun WeatherAtmosphericOverlay(
     weatherCode: Int?,
     tempC: Double?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isActive: Boolean = true,
 ) {
+    if (!isActive) return
+
     // Single unified master clock eliminates 6 concurrent Compose transitions
     val transition = rememberInfiniteTransition(label = "weatherMaster")
     val masterProgress by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(tween(25200, easing = LinearEasing)),
-        label = "weatherMasterClock"
+        label = "weatherMasterClock",
     )
 
     val rainProgress = (masterProgress * 28f) % 1f
     val snowProgress = (masterProgress * 6.3f) % 1f
     val cloudProgress = (masterProgress * 1.8f) % 1f
     val heatProgress = (masterProgress * 14f) % 1f
-    val sunPulse = 0.85f + 0.30f * (sin(masterProgress * 10.5 * 2 * PI).toFloat() * 0.5f + 0.5f)
+    val sunPulse = 0.85f + 0.30f * ((sin(masterProgress * 10.5 * 2 * PI).toFloat() * 0.5f) + 0.5f)
     val lightningStrobe = (masterProgress * 7.875f) % 1f
 
     // Pre-computed deterministic particles
-    val rainDrops = remember {
-        val rng = Random(42)
-        List(32) {
-            RainDrop(
-                xRel = rng.nextFloat(),
-                speed = 0.7f + rng.nextFloat() * 0.6f,
-                length = 14f + rng.nextFloat() * 12f,
-                alpha = 0.35f + rng.nextFloat() * 0.45f
+    val rainDrops =
+        remember {
+            val rng = Random(42)
+            List(32) {
+                RainDrop(
+                    xRel = rng.nextFloat(),
+                    speed = 0.7f + rng.nextFloat() * 0.6f,
+                    length = 14f + rng.nextFloat() * 12f,
+                    alpha = 0.35f + rng.nextFloat() * 0.45f,
+                )
+            }
+        }
+
+    val snowFlakes =
+        remember {
+            val rng = Random(1337)
+            List(28) {
+                SnowFlake(
+                    xRel = rng.nextFloat(),
+                    speed = 0.4f + rng.nextFloat() * 0.6f,
+                    radius = 2.0f + rng.nextFloat() * 2.8f,
+                    seed = rng.nextFloat() * 10f,
+                )
+            }
+        }
+
+    val clouds =
+        remember {
+            listOf(
+                CloudCluster(yRel = 0.25f, speed = 0.6f, baseRadius = 24f, alpha = 0.18f),
+                CloudCluster(yRel = 0.45f, speed = 1.0f, baseRadius = 32f, alpha = 0.24f),
+                CloudCluster(yRel = 0.65f, speed = 1.3f, baseRadius = 28f, alpha = 0.16f),
             )
         }
-    }
 
-    val snowFlakes = remember {
-        val rng = Random(1337)
-        List(28) {
-            SnowFlake(
-                xRel = rng.nextFloat(),
-                speed = 0.4f + rng.nextFloat() * 0.6f,
-                radius = 2.0f + rng.nextFloat() * 2.8f,
-                seed = rng.nextFloat() * 10f
-            )
+    val heatWaves =
+        remember {
+            val rng = Random(999)
+            List(14) {
+                HeatWave(
+                    xRel = it / 14f + rng.nextFloat() * 0.05f,
+                    speed = 0.8f + rng.nextFloat() * 0.4f,
+                    phase = rng.nextFloat() * 2f * PI.toFloat(),
+                    height = 35f + rng.nextFloat() * 25f,
+                )
+            }
         }
-    }
-
-    val clouds = remember {
-        listOf(
-            CloudCluster(yRel = 0.25f, speed = 0.6f, baseRadius = 24f, alpha = 0.18f),
-            CloudCluster(yRel = 0.45f, speed = 1.0f, baseRadius = 32f, alpha = 0.24f),
-            CloudCluster(yRel = 0.65f, speed = 1.3f, baseRadius = 28f, alpha = 0.16f)
-        )
-    }
-
-    val heatWaves = remember {
-        val rng = Random(999)
-        List(14) {
-            HeatWave(
-                xRel = it / 14f + rng.nextFloat() * 0.05f,
-                speed = 0.8f + rng.nextFloat() * 0.4f,
-                phase = rng.nextFloat() * 2f * PI.toFloat(),
-                height = 35f + rng.nextFloat() * 25f
-            )
-        }
-    }
 
     val isHeatWave = (tempC != null && tempC >= 32.0)
     val isThunder = weatherCode in listOf(95, 96, 99)
@@ -126,7 +155,7 @@ fun WeatherAtmosphericOverlay(
             drawPath(
                 path = heatWavePath,
                 color = Color(0xFFF59E0B).copy(alpha = 0.25f),
-                style = Stroke(width = 2.5f, cap = StrokeCap.Round)
+                style = Stroke(width = 2.5f, cap = StrokeCap.Round),
             )
         }
 
@@ -140,17 +169,17 @@ fun WeatherAtmosphericOverlay(
                 drawCircle(
                     color = Color(0xFF94A3B8).copy(alpha = cl.alpha),
                     radius = cl.baseRadius * 1.5f,
-                    center = Offset(cx, cy)
+                    center = Offset(cx, cy),
                 )
                 drawCircle(
                     color = Color(0xFFE2E8F0).copy(alpha = cl.alpha * 0.8f),
                     radius = cl.baseRadius * 1.1f,
-                    center = Offset(cx + cl.baseRadius * 0.8f, cy - cl.baseRadius * 0.3f)
+                    center = Offset(cx + cl.baseRadius * 0.8f, cy - cl.baseRadius * 0.3f),
                 )
                 drawCircle(
                     color = Color(0xFF64748B).copy(alpha = cl.alpha * 0.9f),
                     radius = cl.baseRadius * 1.3f,
-                    center = Offset(cx - cl.baseRadius * 0.7f, cy + cl.baseRadius * 0.2f)
+                    center = Offset(cx - cl.baseRadius * 0.7f, cy + cl.baseRadius * 0.2f),
                 )
             }
         }
@@ -169,7 +198,7 @@ fun WeatherAtmosphericOverlay(
                     start = Offset(startX, startY),
                     end = Offset(endX, endY),
                     strokeWidth = 1.8f,
-                    cap = StrokeCap.Round
+                    cap = StrokeCap.Round,
                 )
 
                 // Splash ripples when hitting the bottom
@@ -179,7 +208,7 @@ fun WeatherAtmosphericOverlay(
                         color = Color(0xFF7DD3FC).copy(alpha = (1f - splashFrac) * 0.5f),
                         radius = splashFrac * 8f,
                         center = Offset(endX, h - 2f),
-                        style = Stroke(width = 1f)
+                        style = Stroke(width = 1f),
                     )
                 }
             }
@@ -196,7 +225,7 @@ fun WeatherAtmosphericOverlay(
                 drawCircle(
                     color = Color(0xFFF8FAFC).copy(alpha = 0.75f),
                     radius = flake.radius,
-                    center = Offset(sx, sy)
+                    center = Offset(sx, sy),
                 )
             }
         }
@@ -220,12 +249,12 @@ fun WeatherAtmosphericOverlay(
                 drawPath(
                     path = boltPath,
                     color = Color.White.copy(alpha = 0.9f),
-                    style = Stroke(width = 2.4f, cap = StrokeCap.Round)
+                    style = Stroke(width = 2.4f, cap = StrokeCap.Round),
                 )
                 drawPath(
                     path = boltPath,
                     color = Color(0xFF38BDF8).copy(alpha = 0.45f),
-                    style = Stroke(width = 6f, cap = StrokeCap.Round)
+                    style = Stroke(width = 6f, cap = StrokeCap.Round),
                 )
             }
         }
@@ -236,17 +265,19 @@ fun WeatherAtmosphericOverlay(
             val coronaRadius = 32f * sunPulse
 
             drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(
-                        Color(0x55FDE047),
-                        Color(0x22F59E0B),
-                        Color.Transparent
+                brush =
+                    Brush.radialGradient(
+                        colors =
+                            listOf(
+                                Color(0x55FDE047),
+                                Color(0x22F59E0B),
+                                Color.Transparent,
+                            ),
+                        center = sunCenter,
+                        radius = coronaRadius * 2.2f,
                     ),
-                    center = sunCenter,
-                    radius = coronaRadius * 2.2f
-                ),
                 radius = coronaRadius * 2.2f,
-                center = sunCenter
+                center = sunCenter,
             )
 
             // Solar ray sweeps
@@ -259,7 +290,7 @@ fun WeatherAtmosphericOverlay(
                     start = Offset(sunCenter.x + cos(angle) * r1, sunCenter.y + sin(angle) * r1),
                     end = Offset(sunCenter.x + cos(angle) * r2, sunCenter.y + sin(angle) * r2),
                     strokeWidth = 1.5f,
-                    cap = StrokeCap.Round
+                    cap = StrokeCap.Round,
                 )
             }
         }
