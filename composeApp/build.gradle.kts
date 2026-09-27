@@ -19,13 +19,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        outputModuleName.set("countries")
-        browser {
-            commonWebpackConfig {
-                outputFileName = "countries.js"
-            }
-        }
-        binaries.executable()
+        browser()
     }
 
     sourceSets {
