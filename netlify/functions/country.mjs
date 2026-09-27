@@ -12,6 +12,16 @@ return 1
 `;
 const inflight = new Map();
 
+function admissionErrorReason(error) {
+  if (error?.name !== "UpstashError") return null;
+  const reason = error.message?.split(", command was:", 1)[0] ?? "";
+  if (/unknown command|unsupported command/i.test(reason)) return "unsupported command";
+  if (/permission|not allowed|disabled|read.?only|noauth|unauthorized|forbidden/i.test(reason)) return "permission denied";
+  if (/lua|script|syntax|wrong number of arguments/i.test(reason)) return "script rejected";
+  if (/rate limit|quota|limit exceeded|too many requests/i.test(reason)) return "Upstash limit";
+  return "unclassified Upstash response";
+}
+
 function jsonResponse(body, status, cache = false) {
   return new Response(JSON.stringify(body), {
     status,
@@ -71,7 +81,12 @@ export function createHandler({ redis, apiKey, fetcher = fetch, clock = Date.now
       }
       return await pending;
     } catch (error) {
-      logError("Country middleware failure", operation, error instanceof Error ? error.name : "UnknownError");
+      logError(
+        "Country middleware failure",
+        operation,
+        error instanceof Error ? error.name : "UnknownError",
+        operation === "upstream admission" ? admissionErrorReason(error) : null
+      );
       return jsonResponse({ error: "Country service unavailable" }, 503);
     }
   };

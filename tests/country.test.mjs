@@ -57,7 +57,25 @@ test("reports failing Redis operation without exposing the error to clients", as
   const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "Country service unavailable" });
-  assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "Error"]]);
+  assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "Error", null]]);
+});
+
+test("classifies Upstash admission failures without logging command arguments", async () => {
+  const failures = [];
+  const redis = {
+    ...fakeRedis(),
+    async eval() {
+      const error = new Error('ERR unknown command `EVAL`, command was: ["EVAL","secret"]');
+      error.name = "UpstashError";
+      throw error;
+    }
+  };
+  const handler = createHandler({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
+  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), { error: "Country service unavailable" });
+  assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "UpstashError", "unsupported command"]]);
+  assert.doesNotMatch(JSON.stringify(failures), /secret/);
 });
 
 test("reports failing upstream operation without exposing the error to clients", async () => {
@@ -70,5 +88,5 @@ test("reports failing upstream operation without exposing the error to clients",
   const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "Country service unavailable" });
-  assert.deepEqual(failures, [["Country middleware failure", "upstream request", "Error"]]);
+  assert.deepEqual(failures, [["Country middleware failure", "upstream request", "Error", null]]);
 });
