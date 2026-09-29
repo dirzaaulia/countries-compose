@@ -1,4 +1,4 @@
-# 🌍 8. Country Dossier, Sub-National ADM & Global Search
+# 🌍 8. Country Dossier & Global Search
 
 ## 8.1 Country Dossier Material 3 Sheet
 **Status: ✅ DONE**
@@ -6,10 +6,9 @@
 - Decoupled network fetch from camera flight: 650ms `FastOutSlowInEasing` glide centers country first, sheet presents with skeleton loaders while live data streams in background.
 
 ## 8.2 Sub-National Administrative Divisions (ADM1 & ADM2)
-**Status: ✅ DONE**
-- `GlobeRepository.fetchAdministrativeDivisions(iso3, level)` discovers GeoBoundaries `gbOpen/{ISO3}/ADM1` or `ADM2` layers.
-- ADM1 loads on country selection; ADM2 streams on demand.
-- Dossier supports every loaded country, advances from ADM1 to ADM2, attributes CC BY 4.0 license, and draws selected ADM1/ADM2 boundary outlines.
+**Status: RETIRED**
+- The ADM explorer and GeoBoundaries integration were removed by product choice because the source did not provide a reliable parent-child administrative hierarchy.
+- Country borders, selection, and the Country Dossier remain available.
 
 ## 8.3 Global Search & Instant Teleportation HUD
 **Status: ✅ DONE**

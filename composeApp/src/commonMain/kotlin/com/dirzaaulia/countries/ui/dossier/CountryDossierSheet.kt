@@ -62,7 +62,7 @@ fun CountryDossierSheet(
     onOpenMeteorology: (() -> Unit)? = null,
     onOpenWorldBank: (() -> Unit)? = null,
     onOpenNasaCrisis: (() -> Unit)? = null,
-    onOpenAdministrativeDivisions: (() -> Unit)? = null,
+    onCompareCountry: (() -> Unit)? = null,
     sunPos: SunPosition? = null,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -149,7 +149,6 @@ fun CountryDossierSheet(
                     DossierCultureSection(
                         currencies = rest?.currencies?.mapNotNull { it.name }?.ifEmpty { null } ?: country.currencies,
                         languages = rest?.languages?.mapNotNull { it.name }?.ifEmpty { null } ?: country.languages,
-                        onOpenAdministrativeDivisions = onOpenAdministrativeDivisions,
                     )
                 }
                 item(key = "borders") {
@@ -160,7 +159,13 @@ fun CountryDossierSheet(
                     )
                 }
                 rest?.let { response -> DossierRestCountrySections(response, onOpenLink = { url -> browserUrl = url }) }
-                item(key = "actions") { DossierActionButtons(onClose = onClose, onNextCountry = onNextCountry) }
+                item(key = "actions") {
+                    DossierActionButtons(
+                        onClose = onClose,
+                        onNextCountry = onNextCountry,
+                        onCompare = onCompareCountry,
+                    )
+                }
             }
             if (showFloatingClose) {
                 Surface(

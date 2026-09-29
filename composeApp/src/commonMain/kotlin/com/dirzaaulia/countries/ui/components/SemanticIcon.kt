@@ -1,6 +1,7 @@
 package com.dirzaaulia.countries.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.CompareArrows
 import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.Air
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.outlined.SatelliteAlt
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material.icons.outlined.Thunderstorm
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.Volcano
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 enum class UiSymbol {
     Earth,
     Moon,
+    Mars,
     Info,
     Layers,
     Search,
@@ -64,6 +67,8 @@ enum class UiSymbol {
     Time,
     Wind,
     Pressure,
+    Swap,
+    Compare,
 }
 
 fun uiSymbolFor(marker: String): UiSymbol =
@@ -72,6 +77,7 @@ fun uiSymbolFor(marker: String): UiSymbol =
         "[APOLLO]" -> UiSymbol.Apollo
         "[EARTH]" -> UiSymbol.Earth
         "[MOON]", "[NEW]", "[WAX-C]", "[Q1]", "[WAX-G]", "[FULL]", "[WAN-G]", "[Q3]", "[WAN-C]" -> UiSymbol.Moon
+        "[MARS]" -> UiSymbol.Mars
         "[INFO]" -> UiSymbol.Info
         "[LAYERS]" -> UiSymbol.Layers
         "[SEARCH]" -> UiSymbol.Search
@@ -102,6 +108,7 @@ private val UiSymbol.imageVector: ImageVector
         when (this) {
             UiSymbol.Earth -> Icons.Outlined.Public
             UiSymbol.Moon -> Icons.Outlined.Brightness3
+            UiSymbol.Mars -> Icons.Outlined.Public
             UiSymbol.Info -> Icons.Outlined.Info
             UiSymbol.Layers -> Icons.Outlined.Layers
             UiSymbol.Search -> Icons.Outlined.Search
@@ -128,4 +135,6 @@ private val UiSymbol.imageVector: ImageVector
             UiSymbol.Time -> Icons.Outlined.Schedule
             UiSymbol.Wind -> Icons.Outlined.Air
             UiSymbol.Pressure -> Icons.Outlined.Speed
+            UiSymbol.Swap -> Icons.Outlined.SwapHoriz
+            UiSymbol.Compare -> Icons.AutoMirrored.Outlined.CompareArrows
         }

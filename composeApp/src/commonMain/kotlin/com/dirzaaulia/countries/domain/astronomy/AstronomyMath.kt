@@ -24,10 +24,17 @@ data class MoonInfo(
     val lat: Double,
     val lng: Double,
     val phaseAngle: Double, // 0 to 360 deg
+    val subsolarLatitude: Double,
+    val librationLatitude: Double,
+    val librationLongitude: Double,
     val illuminatedFraction: Double, // 0.0 to 1.0
     val phaseName: String,
     val phaseEmoji: String,
     val distanceKm: Double,
+    val moonAgeDays: Double,
+    val lightTravelSec: Double,
+    val isSupermoon: Boolean,
+    val distancePercent: Float,
 )
 
 object AstronomyMath {
@@ -112,6 +119,7 @@ object AstronomyMath {
         var elongation = (eclipticLng - sunEclipticLng) % 360.0
         if (elongation < 0.0) elongation += 360.0
 
+        val orientation = calculateLunarOrientation(d, eclipticLng, eclipticLat, argLatitude, sunEclipticLng)
         val phaseAngleRad = (180.0 - elongation).toRadians
         val illuminatedFraction = (1.0 + cos(phaseAngleRad)) / 2.0
 
@@ -135,15 +143,27 @@ object AstronomyMath {
         if (moonLng < -180.0) moonLng += 360.0
 
         val distanceKm = 384400.0 - 20000.0 * cos(meanAnomaly.toRadians)
+        
+        val moonAgeDays = calculateMoonAge(epochMillis)
+        val lightTravelSec = calculateLightTravelTime(distanceKm)
+        val isSupermoon = isSupermoon(distanceKm, illuminatedFraction)
+        val distancePercent = calculatePerigeeApogeeRatio(distanceKm).toFloat()
 
         return MoonInfo(
             lat = eclipticLat,
             lng = moonLng,
             phaseAngle = elongation,
+            subsolarLatitude = orientation.subsolarLatitude,
+            librationLatitude = orientation.librationLatitude,
+            librationLongitude = orientation.librationLongitude,
             illuminatedFraction = illuminatedFraction,
             phaseName = name,
             phaseEmoji = emoji,
             distanceKm = distanceKm,
+            moonAgeDays = moonAgeDays,
+            lightTravelSec = lightTravelSec,
+            isSupermoon = isSupermoon,
+            distancePercent = distancePercent,
         )
     }
 
@@ -216,5 +236,87 @@ object AstronomyMath {
         val norm = latLngToCartesian(point.lat, point.lng, 1.0)
         val dot = norm.x * sunVector.x + norm.y * sunVector.y + norm.z * sunVector.z
         return dot > -0.06
+    }
+
+    /**
+     * Calculates the current Martian Sol Date (MSD) from Unix epoch millis.
+     */
+    fun calculateMartianSol(epochMillis: Long = currentEpochMillis()): Double {
+        val jdUt = 2440587.5 + (epochMillis / 86400000.0)
+        val jdTt = jdUt + (69.184 / 86400.0)
+        return (jdTt - 2405522.59270) / 1.02749125170 + 44796.0 - 0.00096
+    }
+
+    /**
+     * Returns current day in the 29.53059 synodic month (0.0 to 29.53 days).
+     */
+    fun calculateMoonAge(epochMillis: Long): Double {
+        val d = (epochMillis - 946728000000L) / 86400000.0
+        val meanLng = (218.316 + 13.176396 * d) % 360.0
+        val meanAnomaly = (134.963 + 13.064993 * d) % 360.0
+        val eclipticLng = (meanLng + 6.289 * sin(meanAnomaly.toRadians)) % 360.0
+        val sunMeanAnomaly = (357.529 + 0.98560028 * d).toRadians
+        val sunEclipticLng = ((280.459 + 0.98564736 * d) + 1.915 * sin(sunMeanAnomaly)) % 360.0
+        var elongation = (eclipticLng - sunEclipticLng) % 360.0
+        if (elongation < 0.0) elongation += 360.0
+        return (elongation / 360.0) * 29.53059
+    }
+
+    /**
+     * Normalizes distance between perigee (363,300 km) and apogee (405,500 km) from 0.0 to 1.0.
+     */
+    fun calculatePerigeeApogeeRatio(distanceKm: Double): Double {
+        val perigee = 363300.0
+        val apogee = 405500.0
+        return ((distanceKm - perigee) / (apogee - perigee)).coerceIn(0.0, 1.0)
+    }
+
+    /**
+     * True if illuminatedFraction > 0.95 and distanceKm < 365,000 km.
+     */
+    fun isSupermoon(distanceKm: Double, illuminatedFraction: Double): Boolean {
+        return illuminatedFraction > 0.95 && distanceKm < 365000.0
+    }
+
+    /**
+     * Exact one-way communication delay in seconds.
+     */
+    fun calculateLightTravelTime(distanceKm: Double): Double {
+        return distanceKm / 299792.458
+    }
+
+    /**
+     * Subsolar coordinates on lunar surface.
+     */
+    fun calculateLunarSubsolarPoint(epochMillis: Long): LatLng {
+        val d = (epochMillis - 946728000000L) / 86400000.0
+        val meanLng = (218.316 + 13.176396 * d) % 360.0
+        val meanAnomaly = (134.963 + 13.064993 * d) % 360.0
+        val argLatitude = (93.272 + 13.229350 * d) % 360.0
+        val eclipticLng = (meanLng + 6.289 * sin(meanAnomaly.toRadians)) % 360.0
+        val eclipticLat = 5.128 * sin(argLatitude.toRadians)
+        
+        val sunMeanAnomaly = (357.529 + 0.98560028 * d).toRadians
+        val sunEclipticLng = ((280.459 + 0.98564736 * d) + 1.915 * sin(sunMeanAnomaly)) % 360.0
+        var elongation = (eclipticLng - sunEclipticLng) % 360.0
+        if (elongation < 0.0) elongation += 360.0
+
+        var subsolarLng = 180.0 - elongation
+        if (subsolarLng < -180.0) subsolarLng += 360.0
+        if (subsolarLng > 180.0) subsolarLng -= 360.0
+
+        val orientation = calculateLunarOrientation(d, eclipticLng, eclipticLat, argLatitude, sunEclipticLng)
+        return LatLng(orientation.subsolarLatitude, subsolarLng)
+    }
+
+    /**
+     * Returns surface temperature in Celsius and Kelvin.
+     */
+    fun estimateLunarSurfaceTemperature(isIlluminated: Boolean, isPolar: Boolean): Pair<Double, Double> {
+        return when {
+            isPolar && !isIlluminated -> -246.0 to 27.0
+            isIlluminated -> 120.0 to 393.0
+            else -> -130.0 to 143.0
+        }
     }
 }

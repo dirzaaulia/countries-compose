@@ -12,9 +12,10 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.dirzaaulia.countries"
+        namespace = "com.dirzaaulia.countries.composeapp"
         compileSdk = 37
         minSdk = 29
+        androidResources.enable = true
     }
 
     @OptIn(ExperimentalWasmDsl::class)
@@ -38,6 +39,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

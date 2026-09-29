@@ -63,6 +63,7 @@ object PlanetWebGLRenderer {
     private var uSunDirectionLoc: WebGLUniformLocation? = null
     private var uCloudOffsetLoc: WebGLUniformLocation? = null
     private var uIsMoonLoc: WebGLUniformLocation? = null
+    private var uIsMarsLoc: WebGLUniformLocation? = null
 
     // VBO & IBO buffers
     private var positionBuffer: WebGLBuffer? = null
@@ -76,10 +77,15 @@ object PlanetWebGLRenderer {
     private var nightTexture: WebGLTexture? = null
     private var cloudTexture: WebGLTexture? = null
     private var moonTexture: WebGLTexture? = null
+    private var marsTexture: WebGLTexture? = null
 
     // Current state
     private var isMoonMode = false
+    private var isMarsMode = false
     private var moonPhaseAngle = 0.0
+    private var moonSubsolarLatitude = 0.0
+    private var moonLibrationLatitude = 0.0
+    private var moonLibrationLongitude = 0.0
     private var currentRotX = 0f
     private var currentRotY = 0f
     private var currentZoom = 1.0f
@@ -161,6 +167,7 @@ object PlanetWebGLRenderer {
         uSunDirectionLoc = context.getUniformLocation(prog, "u_SunDirection")
         uCloudOffsetLoc = context.getUniformLocation(prog, "u_CloudOffset")
         uIsMoonLoc = context.getUniformLocation(prog, "u_IsMoon")
+        uIsMarsLoc = context.getUniformLocation(prog, "u_IsMars")
 
         setIdentity(viewMatrix)
 
@@ -202,17 +209,21 @@ object PlanetWebGLRenderer {
 
         scope.launch(Dispatchers.Default) {
             try {
-                val dayBytes = Res.readBytes("files/earth_day.jpg")
-                loadTextureFromBytes(dayBytes) { tex -> dayTexture = tex }
+                val dayBytes = runCatching { Res.readBytes("files/earth_day.jpg") }.getOrNull()
+                if (dayBytes != null) loadTextureFromBytes(dayBytes) { tex -> dayTexture = tex }
 
-                val nightBytes = Res.readBytes("files/earth_night.jpg")
-                loadTextureFromBytes(nightBytes) { tex -> nightTexture = tex }
+                val nightBytes = runCatching { Res.readBytes("files/earth_night.jpg") }.getOrNull()
+                if (nightBytes != null) loadTextureFromBytes(nightBytes) { tex -> nightTexture = tex }
 
-                val cloudBytes = Res.readBytes("files/earth_clouds.jpg")
-                loadTextureFromBytes(cloudBytes) { tex -> cloudTexture = tex }
+                val cloudBytes = runCatching { Res.readBytes("files/earth_clouds.jpg") }.getOrNull()
+                if (cloudBytes != null) loadTextureFromBytes(cloudBytes) { tex -> cloudTexture = tex }
 
-                val moonBytes = Res.readBytes("files/moon.jpg")
-                loadTextureFromBytes(moonBytes) { tex -> moonTexture = tex }
+                val moonBytes = runCatching { Res.readBytes("files/moon.jpg") }.getOrNull()
+                if (moonBytes != null) loadTextureFromBytes(moonBytes) { tex -> moonTexture = tex }
+
+                val marsBytes = runCatching { Res.readBytes("files/mars_2k.jpg") }.getOrNull()
+                    ?: moonBytes
+                if (marsBytes != null) loadTextureFromBytes(marsBytes) { tex -> marsTexture = tex }
             } catch (e: Exception) {
                 println("PlanetWebGLRenderer: Error loading textures: ${e.message}")
             }
@@ -267,10 +278,18 @@ object PlanetWebGLRenderer {
 
     fun setPlanetMode(
         isMoon: Boolean,
+        isMars: Boolean = false,
         phaseAngle: Double = 0.0,
+        subsolarLatitude: Double = 0.0,
+        librationLatitude: Double = 0.0,
+        librationLongitude: Double = 0.0,
     ) {
         isMoonMode = isMoon
+        isMarsMode = isMars
         moonPhaseAngle = phaseAngle
+        moonSubsolarLatitude = subsolarLatitude
+        moonLibrationLatitude = librationLatitude
+        moonLibrationLongitude = librationLongitude
     }
 
     fun updateCamera(
@@ -308,7 +327,7 @@ object PlanetWebGLRenderer {
 
         context.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
-        val activeDayTex = if (isMoonMode) (moonTexture ?: dayTexture) else dayTexture
+        val activeDayTex = if (isMoonMode) (moonTexture ?: dayTexture) else if (isMarsMode) (marsTexture ?: dayTexture) else dayTexture
         if (activeDayTex == null) return // Texture still streaming
 
         context.useProgram(prog)
@@ -323,8 +342,10 @@ object PlanetWebGLRenderer {
         val baseRadius = minOf(targetWidth, targetHeight) * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        rotateX(modelMatrix, currentRotX)
-        rotateY(modelMatrix, currentRotY)
+        val modelPitch = currentRotX + if (isMoonMode) moonLibrationLatitude.toFloat() else 0f
+        val modelYaw = currentRotY + if (isMoonMode) moonLibrationLongitude.toFloat() else 0f
+        rotateX(modelMatrix, modelPitch)
+        rotateY(modelMatrix, modelYaw)
         scale(modelMatrix, currentRadius, currentRadius, currentRadius)
 
         multiply(mvMatrix, viewMatrix, modelMatrix)
@@ -340,10 +361,11 @@ object PlanetWebGLRenderer {
 
         context.uniform1f(uCloudOffsetLoc, 0f)
         context.uniform1f(uIsMoonLoc, if (isMoonMode) 1.0f else 0.0f)
+        context.uniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
 
         // 3. Sun Direction calculation
-        val radX = (currentRotX.toDouble() * PI / 180.0)
-        val radY = (currentRotY.toDouble() * PI / 180.0)
+        val radX = modelPitch.toDouble() * PI / 180.0
+        val radY = modelYaw.toDouble() * PI / 180.0
         val cosX = cos(radX)
         val sinX = sin(radX)
         val cosY = cos(radY)
@@ -352,7 +374,13 @@ object PlanetWebGLRenderer {
         val sunEye =
             if (isMoonMode) {
                 val phaseRad = moonPhaseAngle * PI / 180.0
-                var p = Point3D(sin(phaseRad), 0.0, -cos(phaseRad))
+                val latitudeRad = moonSubsolarLatitude * PI / 180.0
+                var p =
+                    Point3D(
+                        sin(phaseRad) * cos(latitudeRad),
+                        sin(latitudeRad),
+                        -cos(phaseRad) * cos(latitudeRad),
+                    )
                 p = rotateY(p, cosY, sinY)
                 p = rotateX(p, cosX, sinX)
                 p

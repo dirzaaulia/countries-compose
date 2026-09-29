@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mars UI -->
+    <string name="mars_title">Mars operations</string>
+    <string name="mars_status">MARS ROVER LINK</string>
+    <string name="mars_subtitle">DSN LINK ESTABLISHED</string>
+    <string name="mars_sol">SOL</string>
+    <string name="mars_mission_site">MISSION SITE</string>
+    <string name="mars_landmark">GEOLOGICAL LANDMARK</string>
+    <string name="mars_lat">LAT</string>
+    <string name="mars_lng">LNG</string>
+    <string name="mars_year">YEAR</string>
+    <string name="mars_elevation">ELEVATION</string>
+    <string name="mars_agency">AGENCY</string>
+    <string name="mars_historical">HISTORICAL</string>
+    <string name="mars_elevation_format">%1$s km</string>
+    <string name="mars_lat_format">%1$s°</string>
+
+    <!-- Moon UI -->
+    <string name="moon_title">Moon operations</string>
+    <string name="moon_status">LUNAR RANGE</string>
+    <string name="moon_distance_format">%1$sK KM FROM EARTH</string>
+    <string name="moon_celestial_body">ASTRONOMICAL CELESTIAL BODY</string>
+    <string name="moon_luna_title">Earth\'s Moon (Luna)</string>
+    <string name="moon_illumination_format">%1$s • %2$s%% Illuminated</string>
+    <string name="moon_supermoon">SUPERMOON</string>
+
+    <string name="moon_orbital_distance">ORBITAL DISTANCE</string>
+    <string name="moon_light_seconds_format">~%1$s light-seconds</string>
+    <string name="moon_perigee_apogee">PERIGEE/APOGEE</string>
+    <string name="moon_apogee_format">%1$s%% to Apogee</string>
+    <string name="moon_lunation_cycle">LUNATION CYCLE</string>
+    <string name="moon_lunation_format">Day %1$s of 29.5</string>
+
+    <string name="moon_surface_temp">SURFACE TEMP</string>
+    <string name="moon_temp_value">+120°C / -130°C</string>
+    <string name="moon_polar_temp">Polar crater: -246°C</string>
+
+    <string name="moon_physical_overview">PHYSICAL OVERVIEW</string>
+    <string name="moon_gravity">GRAVITY</string>
+    <string name="moon_gravity_value">1.62 m/s²</string>
+    <string name="moon_gravity_subtitle">16.6%% of Earth</string>
+
+    <string name="moon_radius">RADIUS</string>
+    <string name="moon_radius_value">1,737.4 km</string>
+    <string name="moon_radius_subtitle">27.3%% of Earth</string>
+
+    <string name="moon_atmosphere">ATMOSPHERE</string>
+    <string name="moon_atmosphere_value">Surface Boundary Exosphere</string>
+    <string name="moon_atmosphere_subtitle">Helium, Neon, Hydrogen traces</string>
+
+    <!-- Shared labels -->
+    <string name="label_agency_nation">AGENCY / NATION</string>
+    <string name="label_diameter">DIAMETER</string>
+
+</resources>

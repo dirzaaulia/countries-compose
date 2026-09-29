@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createHandler } from "../netlify/functions/country.mjs";
+import { createCountryApp } from "../serverless/country-middleware/src/index.ts";
 
 function fakeRedis() {
   const entries = new Map();
@@ -13,48 +13,51 @@ function fakeRedis() {
 }
 
 test("validates ISO codes before reaching storage", async () => {
-  const handler = createHandler({ redis: fakeRedis(), apiKey: "test" });
-  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "../../../etc" } });
+  const app = createCountryApp({ redis: fakeRedis(), apiKey: "test" });
+  const response = await app.request("https://example.net/api/countries/INVALID_CODE");
   assert.equal(response.status, 400);
 });
 
 test("ignores platform query parameters while validating the country code", async () => {
-  const handler = createHandler({
+  const app = createCountryApp({
     redis: fakeRedis(),
     apiKey: "test",
     fetcher: async () => Response.json({ data: { objects: [{ names: { common: "Canada" } }] } })
   });
-  const response = await handler(new Request("https://example.net/api/countries/CA?site=netlify"), { params: { code: "CA" } });
+  const response = await app.request("https://example.net/api/countries/CA?site=cloudflare");
   assert.equal(response.status, 200);
 });
 
 test("shares upstream result across repeated requests", async () => {
   const redis = fakeRedis();
   let calls = 0;
-  const handler = createHandler({ redis, apiKey: "test", fetcher: async () => {
-    calls++;
-    return Response.json({ data: { objects: [{ names: { common: "Canada" } }] } });
-  } });
+  const app = createCountryApp({
+    redis,
+    apiKey: "test",
+    fetcher: async () => {
+      calls++;
+      return Response.json({ data: { objects: [{ names: { common: "Canada" } }] } });
+    }
+  });
   const url = "https://example.net/api/countries/CA";
-  const context = { params: { code: "CA" } };
-  assert.equal((await handler(new Request(url), context)).status, 200);
-  assert.equal((await handler(new Request(url), context)).status, 200);
+  assert.equal((await app.request(url)).status, 200);
+  assert.equal((await app.request(url)).status, 200);
   assert.equal(calls, 1);
   assert.equal(redis.entries.size, 1);
 });
 
 test("does not cache upstream failures", async () => {
   const redis = fakeRedis();
-  const handler = createHandler({ redis, apiKey: "test", fetcher: async () => new Response("", { status: 429 }) });
-  assert.equal((await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } })).status, 503);
+  const app = createCountryApp({ redis, apiKey: "test", fetcher: async () => new Response("", { status: 429 }) });
+  assert.equal((await app.request("https://example.net/api/countries/CA")).status, 503);
   assert.equal(redis.entries.size, 0);
 });
 
 test("reports failing Redis operation without exposing the error to clients", async () => {
   const failures = [];
   const redis = { ...fakeRedis(), async eval() { throw new Error("private Redis detail"); } };
-  const handler = createHandler({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
-  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  const app = createCountryApp({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
+  const response = await app.request("https://example.net/api/countries/CA");
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "Country service unavailable" });
   assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "Error", null]]);
@@ -70,8 +73,8 @@ test("classifies Upstash admission failures without logging command arguments", 
       throw error;
     }
   };
-  const handler = createHandler({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
-  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  const app = createCountryApp({ redis, apiKey: "test", logError: (...args) => failures.push(args) });
+  const response = await app.request("https://example.net/api/countries/CA");
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "Country service unavailable" });
   assert.deepEqual(failures, [["Country middleware failure", "upstream admission", "UpstashError", "unsupported command"]]);
@@ -80,12 +83,13 @@ test("classifies Upstash admission failures without logging command arguments", 
 
 test("reports failing upstream operation without exposing the error to clients", async () => {
   const failures = [];
-  const handler = createHandler({
-    redis: fakeRedis(), apiKey: "test",
+  const app = createCountryApp({
+    redis: fakeRedis(),
+    apiKey: "test",
     fetcher: async () => { throw new Error("private upstream detail"); },
     logError: (...args) => failures.push(args)
   });
-  const response = await handler(new Request("https://example.net/api/countries/CA"), { params: { code: "CA" } });
+  const response = await app.request("https://example.net/api/countries/CA");
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "Country service unavailable" });
   assert.deepEqual(failures, [["Country middleware failure", "upstream request", "Error", null]]);

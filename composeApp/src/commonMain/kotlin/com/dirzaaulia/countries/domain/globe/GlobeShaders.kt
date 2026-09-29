@@ -28,6 +28,7 @@ object GlobeShaders {
         uniform vec3 u_SunDirection;
         uniform float u_CloudOffset;
         uniform float u_IsMoon;
+        uniform float u_IsMars;
         
         varying vec2 v_TexCoordinate;
         varying vec3 v_Normal;
@@ -55,6 +56,34 @@ object GlobeShaders {
                 // Subtle contrast enhancement to retain deep crater shadows and geological topography
                 litMoon = pow(litMoon, vec3(1.10));
                 gl_FragColor = vec4(litMoon, 1.0);
+            } else if (u_IsMars > 0.5) {
+                // -------------------------------------------------------------
+                // Mars Renderer (Procedural Rust Red Surface & Thin Atmosphere)
+                // -------------------------------------------------------------
+                float NdotL = dot(N, L);
+                float sunFactor = smoothstep(-0.05, 0.05, NdotL);
+                float diffuse = clamp(NdotL, 0.0, 1.0);
+
+                // Base Iron-Oxide Rust Red (#C1440E) tinted with terrain topography
+                vec3 rustRed = vec3(0.78, 0.32, 0.16);
+                vec3 darkCanyon = vec3(0.42, 0.16, 0.09);
+
+                float texLum = dot(dayColor.rgb, vec3(0.299, 0.587, 0.114));
+                vec3 marsSurface = mix(darkCanyon, rustRed, smoothstep(0.1, 0.8, texLum));
+
+                // Properly lit Mars surface with night-side dimming
+                float marsLight = mix(0.08, 1.0, diffuse);
+                vec3 litMars = marsSurface * (marsLight * sunFactor + 0.02 * (1.0 - sunFactor));
+
+                // Rayleigh atmospheric dust limb scattering
+                float NdotV = clamp(dot(N, V), 0.0, 1.0);
+                float limb = smoothstep(0.40, 0.98, 1.0 - NdotV);
+                float atmoGlow = limb * limb * 0.55;
+                vec3 atmoColor = vec3(0.85, 0.48, 0.25);
+                float atmoSun = smoothstep(-0.15, 0.35, NdotL);
+                vec3 finalColor = litMars + (atmoColor * atmoGlow * (atmoSun * 0.85 + 0.15));
+
+                gl_FragColor = vec4(finalColor, 1.0);
             } else {
                 // -------------------------------------------------------------
                 // Photorealistic Earth Renderer

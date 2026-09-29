@@ -83,6 +83,7 @@ class EarthGLRenderer(
     private var uSunDirectionLoc = 0
     private var uCloudOffsetLoc = 0
     private var uIsMoonLoc = 0
+    private var uIsMarsLoc = 0
 
     private var aPositionLoc = 0
     private var aTexCoordinateLoc = 0
@@ -94,6 +95,9 @@ class EarthGLRenderer(
 
     @Volatile
     private var isMoonMode = false
+
+    @Volatile
+    private var isMarsMode = false
 
     @Volatile
     private var pendingDayBytes: ByteArray? = null
@@ -136,13 +140,36 @@ class EarthGLRenderer(
 
     fun setIsMoon(isMoon: Boolean) {
         isMoonMode = isMoon
+        if (isMoon) isMarsMode = false
+    }
+
+    fun setIsMars(isMars: Boolean) {
+        isMarsMode = isMars
+        if (isMars) isMoonMode = false
     }
 
     @Volatile
     private var moonPhaseAngle = 0.0
 
-    fun setMoonPhaseAngle(phaseAngle: Double) {
+    @Volatile
+    private var moonSubsolarLatitude = 0.0
+
+    @Volatile
+    private var moonLibrationLatitude = 0.0
+
+    @Volatile
+    private var moonLibrationLongitude = 0.0
+
+    fun setMoonOrientation(
+        phaseAngle: Double,
+        subsolarLatitude: Double,
+        librationLatitude: Double,
+        librationLongitude: Double,
+    ) {
         moonPhaseAngle = phaseAngle
+        moonSubsolarLatitude = subsolarLatitude
+        moonLibrationLatitude = librationLatitude
+        moonLibrationLongitude = librationLongitude
     }
 
     fun setTextures(
@@ -178,6 +205,7 @@ class EarthGLRenderer(
         uSunDirectionLoc = GLES20.glGetUniformLocation(programId, "u_SunDirection")
         uCloudOffsetLoc = GLES20.glGetUniformLocation(programId, "u_CloudOffset")
         uIsMoonLoc = GLES20.glGetUniformLocation(programId, "u_IsMoon")
+        uIsMarsLoc = GLES20.glGetUniformLocation(programId, "u_IsMars")
 
         aPositionLoc = GLES20.glGetAttribLocation(programId, "a_Position")
         aTexCoordinateLoc = GLES20.glGetAttribLocation(programId, "a_TexCoordinate")
@@ -219,8 +247,10 @@ class EarthGLRenderer(
         val baseRadius = minOf(viewportWidth, viewportHeight).toFloat() * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        Matrix.rotateM(modelMatrix, 0, currentRotationX, 1f, 0f, 0f)
-        Matrix.rotateM(modelMatrix, 0, currentRotationY, 0f, 1f, 0f)
+        val modelPitch = currentRotationX + if (isMoonMode) moonLibrationLatitude.toFloat() else 0f
+        val modelYaw = currentRotationY + if (isMoonMode) moonLibrationLongitude.toFloat() else 0f
+        Matrix.rotateM(modelMatrix, 0, modelPitch, 1f, 0f, 0f)
+        Matrix.rotateM(modelMatrix, 0, modelYaw, 0f, 1f, 0f)
         Matrix.scaleM(modelMatrix, 0, currentRadius, currentRadius, currentRadius)
 
         Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0)
@@ -230,10 +260,11 @@ class EarthGLRenderer(
         GLES20.glUniformMatrix4fv(uMVMatrixLoc, 1, false, mvMatrix, 0)
         GLES20.glUniform1f(uCloudOffsetLoc, cloudOffset)
         GLES20.glUniform1f(uIsMoonLoc, if (isMoonMode) 1.0f else 0.0f)
+        GLES20.glUniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
 
         // Real-time astronomical Sun direction
-        val radX = currentRotationX.toDouble().toRadians
-        val radY = currentRotationY.toDouble().toRadians
+        val radX = modelPitch.toDouble().toRadians
+        val radY = modelYaw.toDouble().toRadians
         val cosX = cos(radX)
         val sinX = sin(radX)
         val cosY = cos(radY)
@@ -246,7 +277,13 @@ class EarthGLRenderer(
                 // At phase 0 (New Moon), Sun is at -Z (behind Moon)
                 // At phase 90 (First Quarter), Sun is at +X (right)
                 // At phase 270 (Last Quarter), Sun is at -X (left)
-                var p = Point3D(sin(phaseRad), 0.0, -cos(phaseRad))
+                val latitudeRad = moonSubsolarLatitude.toRadians
+                var p =
+                    Point3D(
+                        sin(phaseRad) * cos(latitudeRad),
+                        sin(latitudeRad),
+                        -cos(phaseRad) * cos(latitudeRad),
+                    )
                 p = rotateY(p, cosY, sinY)
                 p = rotateX(p, cosX, sinX)
                 p

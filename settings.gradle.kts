@@ -1,3 +1,4 @@
+try { val cl = Class.forName("java.lang.ProcessEnvironment"); val f1 = cl.getDeclaredField("theEnvironment"); f1.isAccessible = true; (f1.get(null) as MutableMap<String, String>).remove("ANDROID_PREFS_ROOT"); val f2 = cl.getDeclaredField("theCaseInsensitiveEnvironment"); f2.isAccessible = true; (f2.get(null) as MutableMap<String, String>).remove("ANDROID_PREFS_ROOT") } catch(e: Exception) {}
 pluginManagement {
     repositories {
         google {

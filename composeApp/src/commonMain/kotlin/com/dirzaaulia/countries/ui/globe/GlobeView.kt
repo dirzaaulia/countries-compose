@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -52,8 +51,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.astronomy.AstronomyMath
+import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
-import com.dirzaaulia.countries.domain.country.AdministrativeDivision
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.LatLng
@@ -69,12 +68,23 @@ import com.dirzaaulia.countries.platform.Globe3DPlatformView
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.ui.overlay.CELESTIAL_STARS
+import androidx.compose.ui.text.rememberTextMeasurer
+import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
+import com.dirzaaulia.countries.domain.tectonic.Earthquake
+import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
+import com.dirzaaulia.countries.ui.overlay.drawAuroralOval
 import com.dirzaaulia.countries.ui.overlay.drawCartographicBorders
 import com.dirzaaulia.countries.ui.overlay.drawCountryHighlights
 import com.dirzaaulia.countries.ui.overlay.drawDeepSpaceStarfield
 import com.dirzaaulia.countries.ui.overlay.drawFlightPathSimulator
 import com.dirzaaulia.countries.ui.overlay.drawISSTracker
 import com.dirzaaulia.countries.ui.overlay.drawNasaHazards
+import com.dirzaaulia.countries.ui.overlay.drawSatelliteFleet
+import com.dirzaaulia.countries.ui.overlay.drawStockExchangesLayer
+import com.dirzaaulia.countries.ui.overlay.drawTectonicLayer
+import com.dirzaaulia.countries.ui.overlay.drawTimezoneMeridians
+import com.dirzaaulia.countries.ui.overlay.drawTrueSizeComparisonOverlay
+import com.dirzaaulia.countries.ui.overlay.drawTwilightBands
 import kotlinx.coroutines.launch
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -87,15 +97,20 @@ import kotlin.math.sqrt
 fun GlobeView(
     countries: List<Country>,
     selectedCountryId: String?,
-    selectedAdministrativeDivision: AdministrativeDivision? = null,
     onCountrySelected: (String?) -> Unit,
     state: GlobeState,
+    modifier: Modifier = Modifier,
     isPageActive: Boolean = true,
     isSheetOpen: Boolean = false,
     isSupersonic: Boolean = false,
     showBorders: Boolean = true,
     showSatellites: Boolean = true,
     showHazards: Boolean = true,
+    showAurora: Boolean = true,
+    kpIndex: Double = 3.6,
+    satelliteFleet: List<SatelliteTelemetry> = emptyList(),
+    selectedSatellite: SatelliteTelemetry? = null,
+    onSatelliteSelected: ((SatelliteTelemetry?) -> Unit)? = null,
     issTelemetry: ISSTelemetry? = null,
     hazards: List<NasaNaturalEvent> = emptyList(),
     flightRoute: List<LatLng>? = null,
@@ -105,9 +120,26 @@ fun GlobeView(
     onIssSelected: ((ISSTelemetry) -> Unit)? = null,
     sunPos: SunPosition = AstronomyMath.calculateSunPosition(),
     showTimeMachine: Boolean = false,
-    modifier: Modifier = Modifier,
+    comparisonCountryA: Country? = null,
+    comparisonCountryB: Country? = null,
+    isComparing: Boolean = false,
+    isTimezoneLayerActive: Boolean = false,
+    selectedMeridianOffset: Int? = null,
+    isTectonicLayerActive: Boolean = false,
+    tectonicPlates: List<TectonicPlate> = emptyList(),
+    earthquakes: List<Earthquake> = emptyList(),
+    selectedPlateId: String? = null,
+    selectedEarthquakeId: String? = null,
+    minMagnitudeFilter: Double = 4.5,
+    onEarthquakeSelected: ((Earthquake?) -> Unit)? = null,
+    isMarketLayerActive: Boolean = false,
+    markets: List<FinancialMarket> = emptyList(),
+    selectedMarketId: String? = null,
+    currentUtcTimeMillis: Long = 0L,
+    onMarketSelected: ((FinancialMarket?) -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
+    val textMeasurer = rememberTextMeasurer()
 
     val infiniteTransition = rememberInfiniteTransition(label = "globeTransitions")
     val strobeAlpha by if (!isSheetOpen && isPageActive) {
@@ -160,11 +192,13 @@ fun GlobeView(
     val currentCountries by rememberUpdatedState(countries)
     val currentHazards by rememberUpdatedState(hazards)
     val currentIssTelemetry by rememberUpdatedState(issTelemetry)
+    val currentSatelliteFleet by rememberUpdatedState(satelliteFleet)
     val currentShowSatellites by rememberUpdatedState(showSatellites)
     val currentShowHazards by rememberUpdatedState(showHazards)
     val currentOnCountrySelected by rememberUpdatedState(onCountrySelected)
     val currentOnHazardSelected by rememberUpdatedState(onHazardSelected)
     val currentOnIssSelected by rememberUpdatedState(onIssSelected)
+    val currentOnSatelliteSelected by rememberUpdatedState(onSatelliteSelected)
 
     val daylightBordersPath = remember { Path() }
     val nightBordersPath = remember { Path() }
@@ -228,6 +262,9 @@ fun GlobeView(
         }
 
         val currentSunPos by rememberUpdatedState(sunPos)
+        val currentIsMarketLayerActive by rememberUpdatedState(isMarketLayerActive)
+        val currentMarkets by rememberUpdatedState(markets)
+        val currentOnMarketSelected by rememberUpdatedState(onMarketSelected)
 
         // 2. 3D Platform Globe (OpenGL ES on Android, WebGL/Canvas on WASM)
         Globe3DPlatformView(
@@ -316,6 +353,18 @@ fun GlobeView(
                                     val lng = atan2(p.x, p.z).toDegrees
                                     val tappedLatLng = LatLng(lat, lng)
 
+                                    // Check Fleet Satellites Tap
+                                    val fleetList = currentSatelliteFleet
+                                    if (currentShowSatellites && fleetList.isNotEmpty()) {
+                                        val nearbySat = fleetList.find { sat ->
+                                            AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(sat.lat, sat.lng)) < 800.0
+                                        }
+                                        if (nearbySat != null) {
+                                            currentOnSatelliteSelected?.invoke(nearbySat)
+                                            return@detectTapGestures
+                                        }
+                                    }
+
                                     // Check ISS Proximity Tap (orbital ground radius)
                                     if (currentShowSatellites && telemetry != null) {
                                         val issDistance =
@@ -338,6 +387,18 @@ fun GlobeView(
                                             }
                                         if (nearbyHazard != null) {
                                             currentOnHazardSelected?.invoke(nearbyHazard)
+                                            return@detectTapGestures
+                                        }
+                                    }
+
+                                    // Check Stock Exchanges Tap
+                                    val marketsList = currentMarkets
+                                    if (currentIsMarketLayerActive && marketsList.isNotEmpty()) {
+                                        val nearbyMarket = marketsList.find { m ->
+                                            AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(m.lat, m.lng)) < 500.0
+                                        }
+                                        if (nearbyMarket != null) {
+                                            currentOnMarketSelected?.invoke(nearbyMarket)
                                             return@detectTapGestures
                                         }
                                     }
@@ -382,6 +443,67 @@ fun GlobeView(
             val earthR2 = currentRadius * currentRadius
             drawDeepSpaceStarfield(starTwinkle, earthR2, canvasCenter, size)
 
+            // 0b. Photographic Twilight Bands (Golden Hour & Blue Hour)
+            drawTwilightBands(
+                sunVector = sunVector,
+                currentRadius = currentRadius,
+                canvasCenter = canvasCenter,
+                cosX = cosX,
+                sinX = sinX,
+                cosY = cosY,
+                sinY = sinY,
+            )
+
+            // 0c. Global 24-Meridian Timezone Grid
+            if (isTimezoneLayerActive) {
+                drawTimezoneMeridians(
+                    selectedMeridianOffset = selectedMeridianOffset,
+                    currentRadius = currentRadius,
+                    canvasCenter = canvasCenter,
+                    cosX = cosX,
+                    sinX = sinX,
+                    cosY = cosY,
+                    sinY = sinY,
+                    textMeasurer = textMeasurer,
+                )
+            }
+
+            // 0d. Tectonic Plates & Fault Lines & Live Earthquakes
+            if (isTectonicLayerActive) {
+                drawTectonicLayer(
+                    plates = tectonicPlates,
+                    earthquakes = earthquakes,
+                    selectedPlateId = selectedPlateId,
+                    selectedEarthquakeId = selectedEarthquakeId,
+                    minMagnitudeFilter = minMagnitudeFilter,
+                    currentRadius = currentRadius,
+                    canvasCenter = canvasCenter,
+                    cosX = cosX,
+                    sinX = sinX,
+                    cosY = cosY,
+                    sinY = sinY,
+                    strobeAlpha = strobeAlpha,
+                    beaconPulse = beaconPulse,
+                )
+            }
+
+            // 0e. Global Stock Exchanges Layer
+            if (isMarketLayerActive && markets.isNotEmpty()) {
+                drawStockExchangesLayer(
+                    markets = markets,
+                    selectedMarketId = selectedMarketId,
+                    currentUtcMillis = currentUtcTimeMillis,
+                    currentRadius = currentRadius,
+                    canvasCenter = canvasCenter,
+                    cosX = cosX,
+                    sinX = sinX,
+                    cosY = cosY,
+                    sinY = sinY,
+                    strobeAlpha = strobeAlpha,
+                    beaconPulse = beaconPulse,
+                )
+            }
+
             // A. Dynamic Day/Night Adaptive Cartographic Borders
             if (showBorders) {
                 drawCartographicBorders(
@@ -412,7 +534,6 @@ fun GlobeView(
             drawCountryHighlights(
                 countries = countries,
                 highlightCountryId = highlightCountryId,
-                selectedAdministrativeDivision = selectedAdministrativeDivision,
                 currentRadius = currentRadius,
                 canvasCenter = canvasCenter,
                 cosX = cosX,
@@ -423,6 +544,21 @@ fun GlobeView(
                 isQuizSuccess = isQuizSuccess,
                 isQuizTarget = isQuizTarget,
             )
+
+            // C2. Head-to-Head True Size Overlay
+            if (isComparing && comparisonCountryA != null && comparisonCountryB != null) {
+                drawTrueSizeComparisonOverlay(
+                    countryA = comparisonCountryA,
+                    countryB = comparisonCountryB,
+                    currentRadius = currentRadius,
+                    canvasCenter = canvasCenter,
+                    cosX = cosX,
+                    sinX = sinX,
+                    cosY = cosY,
+                    sinY = sinY,
+                    strobeAlpha = strobeAlpha,
+                )
+            }
 
             // D. Geodesic Flight Path Simulator
             drawFlightPathSimulator(
@@ -452,21 +588,49 @@ fun GlobeView(
                 )
             }
 
-            // F. Live International Space Station (ISS) Tracker & Orbit
+            // F. Live Multi-Satellite Fleet & Space Stations Tracker
             if (showSatellites) {
-                drawISSTracker(
-                    issTelemetry = issTelemetry,
+                if (satelliteFleet.isNotEmpty()) {
+                    drawSatelliteFleet(
+                        fleet = satelliteFleet,
+                        selectedSatellite = selectedSatellite,
+                        currentRadius = currentRadius,
+                        canvasCenter = canvasCenter,
+                        cosX = cosX,
+                        sinX = sinX,
+                        cosY = cosY,
+                        sinY = sinY,
+                        strobeAlpha = strobeAlpha,
+                        onSatPosCalculated = { _, _ -> },
+                    )
+                } else {
+                    drawISSTracker(
+                        issTelemetry = issTelemetry,
+                        currentRadius = currentRadius,
+                        canvasCenter = canvasCenter,
+                        cosX = cosX,
+                        sinX = sinX,
+                        cosY = cosY,
+                        sinY = sinY,
+                        strobeAlpha = strobeAlpha,
+                        onIssPosCalculated = { issScreenPos = it },
+                    )
+                }
+            } else {
+                issScreenPos = null
+            }
+
+            // G. Space Weather Auroral Oval (Northern & Southern Lights)
+            if (showAurora) {
+                drawAuroralOval(
+                    kpIndex = kpIndex,
                     currentRadius = currentRadius,
                     canvasCenter = canvasCenter,
                     cosX = cosX,
                     sinX = sinX,
                     cosY = cosY,
                     sinY = sinY,
-                    strobeAlpha = strobeAlpha,
-                    onIssPosCalculated = { issScreenPos = it },
                 )
-            } else {
-                issScreenPos = null
             }
         }
 

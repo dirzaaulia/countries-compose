@@ -1,17 +1,26 @@
 package com.dirzaaulia.countries.ui.app
 
 import androidx.compose.runtime.Composable
-import com.dirzaaulia.countries.domain.country.AdministrativeDivision
+import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
+import com.dirzaaulia.countries.domain.tectonic.Earthquake
+import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
+import com.dirzaaulia.countries.ui.comparison.ComparisonUiState
+import com.dirzaaulia.countries.ui.comparison.CountryComparisonSheet
+import com.dirzaaulia.countries.ui.tectonic.EarthquakeDetailSheet
+import com.dirzaaulia.countries.ui.tectonic.TectonicPlateSheet
+import com.dirzaaulia.countries.ui.timezone.GlobalMarketSheet
+import com.dirzaaulia.countries.ui.timezone.GlobalTimezoneSheet
 import com.dirzaaulia.countries.ui.dossier.MeteorologyStationSheet
 import com.dirzaaulia.countries.ui.dossier.NasaCrisisMonitorSheet
 import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
-import com.dirzaaulia.countries.ui.dossier.administration.AdministrativeDivisionSheetHost
 import com.dirzaaulia.countries.ui.hud.CountrySearchSheet
 import com.dirzaaulia.countries.ui.hud.MissionLegendSheet
 import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineSheet
+import com.dirzaaulia.countries.ui.globe.SpaceWeatherHudCard
+import com.dirzaaulia.countries.ui.globe.SpaceWeatherUiState
 
 @Composable
 fun AppSheetsOverlay(
@@ -27,9 +36,10 @@ fun AppSheetsOverlay(
     showSearchSheet: Boolean,
     onCloseSearch: () -> Unit,
     onSelectSearchCountry: (Country) -> Unit,
-    showAdministrativeSheet: Boolean,
-    onCloseAdministrative: () -> Unit,
-    onCenterDivision: (AdministrativeDivision) -> Unit,
+    showSpaceWeatherSheet: Boolean = false,
+    onCloseSpaceWeather: () -> Unit = {},
+    spaceWeatherState: SpaceWeatherUiState = SpaceWeatherUiState(),
+    onFlyToAuroralCountry: (Double, Double) -> Unit = { _, _ -> },
     showTimeMachine: Boolean,
     currentPage: Int,
     isSheetOpen: Boolean,
@@ -43,15 +53,28 @@ fun AppSheetsOverlay(
     liveDetails: LiveCountryDetails?,
     globalHazards: List<NasaNaturalEvent>,
     countries: List<Country>,
+    showComparisonSheet: Boolean = false,
+    comparisonUiState: ComparisonUiState = ComparisonUiState(),
+    onCloseComparison: () -> Unit = {},
+    onSwapComparison: () -> Unit = {},
+    onSelectSlotForPicker: (Int) -> Unit = {},
+    showCountrySelectorForSlot: Int? = null,
+    onSelectPickerCountry: (Country) -> Unit = {},
+    onCloseCountryPicker: () -> Unit = {},
+    showTimezoneSheet: Boolean = false,
+    selectedMeridianOffset: Int? = null,
+    onCloseTimezoneSheet: () -> Unit = {},
+    onSelectTimezoneCountry: (Country) -> Unit = {},
+    showMarketSheet: Boolean = false,
+    activeMarkets: List<FinancialMarket> = emptyList(),
+    onCloseMarketSheet: () -> Unit = {},
+    onFlyToMarket: ((FinancialMarket) -> Unit)? = null,
+    selectedPlate: TectonicPlate? = null,
+    onClosePlateSheet: () -> Unit = {},
+    selectedEarthquake: Earthquake? = null,
+    onCloseEarthquakeSheet: () -> Unit = {},
+    onFlyToEarthquake: (Earthquake) -> Unit = {},
 ) {
-    if (showAdministrativeSheet && selectedCountry != null && isSheetOpen) {
-        AdministrativeDivisionSheetHost(
-            country = selectedCountry,
-            onClose = onCloseAdministrative,
-            onCenterDivision = onCenterDivision,
-        )
-    }
-
     if (showLegendSheet && isSheetOpen) {
         MissionLegendSheet(onClose = onCloseLegend)
     }
@@ -89,6 +112,14 @@ fun AppSheetsOverlay(
         )
     }
 
+    if (showSpaceWeatherSheet && isSheetOpen) {
+        SpaceWeatherHudCard(
+            uiState = spaceWeatherState,
+            onClose = onCloseSpaceWeather,
+            onFlyToCountry = onFlyToAuroralCountry,
+        )
+    }
+
     if (showTimeMachine && currentPage == 0 && isSheetOpen) {
         PlanetaryTimeMachineSheet(
             epochMillis = currentTimeMillis,
@@ -97,6 +128,58 @@ fun AppSheetsOverlay(
             onEpochSelected = onEpochSelected,
             onResetLive = onResetTimeLive,
             onClose = onCloseTimeMachine,
+        )
+    }
+
+    if (showComparisonSheet && isSheetOpen) {
+        CountryComparisonSheet(
+            uiState = comparisonUiState,
+            onClose = onCloseComparison,
+            onSwap = onSwapComparison,
+            onSelectSlotForPicker = onSelectSlotForPicker,
+        )
+    }
+
+    if (showCountrySelectorForSlot != null && isSheetOpen) {
+        CountrySearchSheet(
+            countries = countries,
+            onClose = onCloseCountryPicker,
+            onSelectCountry = onSelectPickerCountry,
+        )
+    }
+
+    if (showTimezoneSheet && selectedMeridianOffset != null && isSheetOpen) {
+        GlobalTimezoneSheet(
+            utcOffset = selectedMeridianOffset,
+            allCountries = countries,
+            onClose = onCloseTimezoneSheet,
+            onSelectCountry = onSelectTimezoneCountry,
+        )
+    }
+
+    if (showMarketSheet && isSheetOpen) {
+        GlobalMarketSheet(
+            activeMarkets = activeMarkets,
+            currentUtcMillis = currentTimeMillis,
+            onClose = onCloseMarketSheet,
+            onFlyToMarket = onFlyToMarket,
+        )
+    }
+
+    if (selectedPlate != null && isSheetOpen) {
+        TectonicPlateSheet(
+            plate = selectedPlate,
+            onClose = onClosePlateSheet,
+        )
+    }
+
+    if (selectedEarthquake != null && isSheetOpen) {
+        EarthquakeDetailSheet(
+            earthquake = selectedEarthquake,
+            onClose = onCloseEarthquakeSheet,
+            onFlyToEpicenter = { _, _ ->
+                onFlyToEarthquake(selectedEarthquake)
+            },
         )
     }
 }

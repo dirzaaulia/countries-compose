@@ -6,119 +6,55 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dirzaaulia.countries.data.restcountries.capitalName
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
 import com.dirzaaulia.countries.domain.country.Country
+import com.dirzaaulia.countries.domain.country.ISSTelemetry
+import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.ui.dossier.CountryDossierSheet
-import com.dirzaaulia.countries.ui.dossier.DossierViewModel
 import com.dirzaaulia.countries.ui.globe.CountryPeekBar
-import com.dirzaaulia.countries.ui.globe.FlightViewModel
 import com.dirzaaulia.countries.ui.globe.FloatingExplorerBar
-import com.dirzaaulia.countries.ui.globe.HazardViewModel
-import com.dirzaaulia.countries.ui.globe.IssViewModel
-import com.dirzaaulia.countries.ui.globe.QuizViewModel
 import com.dirzaaulia.countries.ui.hud.FlightRouteHudCard
 import com.dirzaaulia.countries.ui.hud.HazardDetailSheet
 import com.dirzaaulia.countries.ui.hud.ISSTelemetryCard
+import androidx.compose.runtime.LaunchedEffect
+import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
 import com.dirzaaulia.countries.ui.hud.QuizHudCard
+import com.dirzaaulia.countries.ui.satellite.SatelliteTelemetrySheet
 
-/** Owns the Earth feature HUD/sheet composition; camera movement remains coordinated by App. */
 @Composable
 fun BoxScope.FeatureHudHost(
-    countries: List<Country>,
-    selectedCountry: Country?,
-    showCountryDossier: Boolean,
+    features: ExplorerFeatures,
+    controls: ExplorerControls,
     sunPos: SunPosition,
-    showTimeMachine: Boolean,
-    onShowCountryDossier: (Boolean) -> Unit,
-    onSelectCountry: (String?) -> Unit,
-    onOpenMeteorology: () -> Unit,
-    onOpenWorldBank: () -> Unit,
-    onOpenAdministrative: () -> Unit,
-    onOpenSearch: () -> Unit,
-    onToggleTimeMachine: () -> Unit,
-    onOpenNasaCrisis: () -> Unit,
-    dossierVm: DossierViewModel,
-    hazardVm: HazardViewModel,
-    issVm: IssViewModel,
-    flightVm: FlightViewModel,
-    quizVm: QuizViewModel,
-    onFlyTo: (Double, Double, Float) -> Unit,
-    isSupersonic: Boolean,
-    onToggleSupersonic: () -> Unit,
+    actions: ExplorerActions,
 ) {
-    val dossierState by dossierVm.uiState.collectAsState()
-    val hazardState by hazardVm.uiState.collectAsState()
-    val issState by issVm.uiState.collectAsState()
-    val flightState by flightVm.uiState.collectAsState()
-    val quizState by quizVm.uiState.collectAsState()
-
-    val selectedHazard = hazardState.selectedHazard
-    val selectedIss = issState.selectedIss
-    val flightMode = flightState.isFlightMode
-    val origin = flightState.flightOrigin
-    val destination = flightState.flightDestination
-    val distance = flightState.flightDistanceKm
-    val quizMode = quizState.isQuizMode
-    val target = quizState.quizTargetCountry
-    val score = quizState.quizScore
-    val streak = quizState.quizStreak
-    val feedback = quizState.quizFeedback
-    val correct = quizState.quizIsCorrect
-
-    if (selectedCountry != null && showCountryDossier && !quizMode && !flightMode && selectedHazard == null && selectedIss == null) {
-        CountryDossierSheet(
-            country = selectedCountry,
-            liveDetails = dossierState.liveDetails,
-            isFetchingLive = dossierState.isFetchingLive,
-            allCountries = countries,
-            onClose = {
-                onShowCountryDossier(false)
-                onSelectCountry(null)
-            },
-            onNextCountry = { countries.filterNot { it.id == selectedCountry.id }.randomOrNull()?.let { onSelectCountry(it.id) } },
-            onSelectCountry = { onSelectCountry(it.id) },
-            onOpenMeteorology = onOpenMeteorology,
-            onOpenWorldBank = onOpenWorldBank,
-            onOpenAdministrativeDivisions = onOpenAdministrative,
-            sunPos = sunPos,
-        )
+    val country = features.selectedCountry
+    val hazard = features.hazards.selectedHazard
+    val iss = features.iss.selectedIss
+    val satellite = features.satellite.selectedSatellite
+    if (country != null &&
+        features.globe.showCountryDossier &&
+        !features.quiz.isQuizMode &&
+        !features.flight.isFlightMode &&
+        hazard == null &&
+        iss == null &&
+        satellite == null
+    ) {
+        DossierHud(features, country, sunPos, actions)
     }
-    selectedHazard?.let { hazard ->
-        HazardDetailSheet(hazard, onClose = { hazardVm.selectHazard(null) }, onCenterView = {
-            hazardVm.selectHazard(null)
-            onFlyTo(hazard.lat, hazard.lng, 2.2f)
-        })
+    hazard?.let { HazardHud(it, actions) }
+    iss?.let { IssHud(it, actions) }
+    satellite?.let { SatelliteHud(it, features.satellite.nextPassOverSelectedCountry, actions, country) }
+    if (features.flight.isFlightMode &&
+        features.flight.flightOrigin != null &&
+        features.flight.flightDestination != null
+    ) {
+        FlightHud(features, controls, actions)
     }
-    selectedIss?.let { telemetry ->
-        ISSTelemetryCard(telemetry, onClose = { issVm.selectIss(null) }, onCenterView = {
-            issVm.selectIss(null)
-            onFlyTo(telemetry.latitude, telemetry.longitude, 1.6f)
-        })
-    }
-    if (flightMode && origin != null && destination != null) {
-        FlightRouteHudCard(
-            origin = origin,
-            destination = destination,
-            distanceKm = distance,
-            onRandomRoute = {
-                flightVm.generateRandomFlightRoute(countries)
-                origin.let { onFlyTo(it.center.lat, it.center.lng, 1.3f) }
-            },
-            onClose = { flightVm.toggleFlightMode(countries) },
-            allCountries = countries,
-            isSupersonic = isSupersonic,
-            onToggleSupersonic = onToggleSupersonic,
-            onSelectOrigin = flightVm::setFlightOrigin,
-            onSelectDestination = flightVm::setFlightDestination,
-        )
-    }
-
     Box(
         Modifier
             .align(Alignment.BottomCenter)
@@ -126,44 +62,192 @@ fun BoxScope.FeatureHudHost(
             .navigationBarsPadding()
             .padding(16.dp),
     ) {
-        when {
-            selectedCountry != null && !showCountryDossier && selectedHazard == null && selectedIss == null && !flightMode ->
-                CountryPeekBar(
-                    country = selectedCountry,
-                    capital =
-                        dossierState.liveDetails
-                            ?.restCountry
-                            ?.capitalName
-                            ?.takeIf { dossierState.selectedCountry?.id == selectedCountry.id && it.isNotBlank() && it != "N/A" }
-                            ?: selectedCountry.capital.takeIf { it.isNotBlank() && it != "N/A" },
-                    isLoading = dossierState.isFetchingLive,
-                    onExpandDossier = { onShowCountryDossier(true) },
-                )
-            quizMode && target != null ->
-                QuizHudCard(
-                    targetCountry = target,
-                    score = score,
-                    streak = streak,
-                    feedback = feedback,
-                    isCorrect = correct,
-                    onNextQuestion = { quizVm.generateNextQuizQuestion(countries) },
-                    onEndQuiz = { quizVm.toggleQuizMode(countries) },
-                )
-            selectedCountry == null && selectedHazard == null && selectedIss == null && !flightMode && !showTimeMachine ->
-                FloatingExplorerBar(
-                    onOpenSearch = onOpenSearch,
-                    onExploreRandom = { countries.randomOrNull()?.let { onSelectCountry(it.id) } },
-                    showTimeMachine = showTimeMachine,
-                    onToggleTimeMachine = onToggleTimeMachine,
-                    onOpenNasaCrisis = onOpenNasaCrisis,
-                    isFlightMode = flightMode,
-                    onToggleFlightMode = {
-                        flightVm.toggleFlightMode(countries)
-                        origin?.let { onFlyTo(it.center.lat, it.center.lng, 1.3f) }
-                    },
-                    isQuizMode = quizMode,
-                    onToggleQuizMode = { quizVm.toggleQuizMode(countries) },
-                )
+        ExplorerBottomHud(features, controls, actions)
+    }
+}
+
+@Composable
+private fun DossierHud(
+    features: ExplorerFeatures,
+    country: Country,
+    sunPos: SunPosition,
+    actions: ExplorerActions,
+) {
+    CountryDossierSheet(
+        country = country,
+        liveDetails = features.dossier.liveDetails,
+        isFetchingLive = features.dossier.isFetchingLive,
+        allCountries = features.globe.countries,
+        onClose = {
+            actions.setDossierOpen(false)
+            actions.selectCountry(null)
+        },
+        onNextCountry = { actions.nextCountry(country) },
+        onSelectCountry = { actions.selectCountry(it.id) },
+        onOpenMeteorology = { actions.setOverlay(ExplorerOverlay.METEOROLOGY) },
+        onOpenWorldBank = { actions.setOverlay(ExplorerOverlay.WORLD_BANK) },
+        onCompareCountry = { actions.startComparison(country) },
+        sunPos = sunPos,
+    )
+}
+
+@Composable
+private fun HazardHud(
+    hazard: NasaNaturalEvent,
+    actions: ExplorerActions,
+) {
+    HazardDetailSheet(hazard, onClose = { actions.selectHazard(null) }, onCenterView = {
+        actions.selectHazard(null)
+        actions.flyTo(hazard.lat, hazard.lng, 2.2f)
+    })
+}
+
+@Composable
+private fun IssHud(
+    iss: ISSTelemetry,
+    actions: ExplorerActions,
+) {
+    ISSTelemetryCard(iss, onClose = { actions.clearIss() }, onCenterView = {
+        actions.clearIss()
+        actions.flyTo(iss.latitude, iss.longitude, 1.6f)
+    })
+}
+
+@Composable
+private fun SatelliteHud(
+    satellite: SatelliteTelemetry,
+    nextPassOverhead: String?,
+    actions: ExplorerActions,
+    selectedCountry: Country?,
+) {
+    LaunchedEffect(satellite.id, selectedCountry?.id) {
+        if (selectedCountry != null) {
+            actions.calculateNextPassForCountry(selectedCountry.center.lat, selectedCountry.center.lng)
         }
     }
+
+    SatelliteTelemetrySheet(
+        satellite = satellite,
+        nextPassOverhead = if (selectedCountry != null) nextPassOverhead else null,
+        onClose = { actions.selectSatellite(null) },
+        onCenterView = {
+            actions.selectSatellite(null)
+            actions.flyTo(satellite.lat, satellite.lng, 1.6f)
+        },
+    )
+}
+
+@Composable
+private fun FlightHud(
+    features: ExplorerFeatures,
+    controls: ExplorerControls,
+    actions: ExplorerActions,
+) {
+    val origin = features.flight.flightOrigin ?: return
+    val destination = features.flight.flightDestination ?: return
+    FlightRouteHudCard(
+        origin = origin,
+        destination = destination,
+        distanceKm = features.flight.flightDistanceKm,
+        onRandomRoute = {
+            actions.randomFlightRoute()
+            actions.flyTo(origin.center.lat, origin.center.lng, 1.3f)
+        },
+        onClose = actions::toggleFlightMode,
+        allCountries = features.globe.countries,
+        isSupersonic = controls.isSupersonicFlight,
+        onToggleSupersonic = actions::toggleSupersonic,
+        onSelectOrigin = actions::setFlightOrigin,
+        onSelectDestination = actions::setFlightDestination,
+    )
+}
+
+@Composable
+private fun ExplorerBottomHud(
+    features: ExplorerFeatures,
+    controls: ExplorerControls,
+    actions: ExplorerActions,
+) {
+    val country = features.selectedCountry
+    val hazard = features.hazards.selectedHazard
+    val iss = features.iss.selectedIss
+    val flight = features.flight
+    val quiz = features.quiz
+    when {
+        country != null &&
+            !features.globe.showCountryDossier &&
+            hazard == null &&
+            iss == null &&
+            !flight.isFlightMode -> CountryPeekHud(features, country, actions)
+        quiz.isQuizMode && quiz.quizTargetCountry != null -> QuizHud(features, actions)
+        country == null &&
+            hazard == null &&
+            iss == null &&
+            !flight.isFlightMode &&
+            controls.overlay != ExplorerOverlay.TIME_MACHINE -> ExplorerControlsHud(features, controls, actions)
+    }
+}
+
+@Composable
+private fun CountryPeekHud(
+    features: ExplorerFeatures,
+    country: Country,
+    actions: ExplorerActions,
+) {
+    val details = features.dossier
+    CountryPeekBar(
+        country = country,
+        capital =
+            details.liveDetails
+                ?.restCountry
+                ?.capitalName
+                ?.takeIf { details.selectedCountry?.id == country.id && it.isNotBlank() && it != "N/A" }
+                ?: country.capital.takeIf { it.isNotBlank() && it != "N/A" },
+        isLoading = details.isFetchingLive,
+        onExpandDossier = { actions.setDossierOpen(true) },
+    )
+}
+
+@Composable
+private fun QuizHud(
+    features: ExplorerFeatures,
+    actions: ExplorerActions,
+) {
+    val quiz = features.quiz
+    val target = quiz.quizTargetCountry ?: return
+    QuizHudCard(
+        targetCountry = target,
+        score = quiz.quizScore,
+        streak = quiz.quizStreak,
+        feedback = quiz.quizFeedback,
+        isCorrect = quiz.quizIsCorrect,
+        onNextQuestion = actions::nextQuizQuestion,
+        onEndQuiz = actions::toggleQuizMode,
+    )
+}
+
+@Composable
+private fun ExplorerControlsHud(
+    features: ExplorerFeatures,
+    controls: ExplorerControls,
+    actions: ExplorerActions,
+) {
+    FloatingExplorerBar(
+        onOpenSearch = { actions.setOverlay(ExplorerOverlay.SEARCH) },
+        onExploreRandom = actions::randomCountry,
+        showTimeMachine = controls.overlay == ExplorerOverlay.TIME_MACHINE,
+        onToggleTimeMachine = actions::toggleTimeMachine,
+        onOpenNasaCrisis = { actions.setOverlay(ExplorerOverlay.NASA_CRISIS) },
+        isFlightMode = features.flight.isFlightMode,
+        onToggleFlightMode = {
+            actions.toggleFlightMode()
+            features.flight.flightOrigin?.let { actions.flyTo(it.center.lat, it.center.lng, 1.3f) }
+        },
+        isQuizMode = features.quiz.isQuizMode,
+        onToggleQuizMode = actions::toggleQuizMode,
+        onOpenSpaceWeather = { actions.setOverlay(ExplorerOverlay.SPACE_WEATHER) },
+        showTectonic = features.tectonic.isTectonicLayerActive,
+        onToggleTectonic = actions::toggleTectonicLayer,
+        onToggleMarketCard = actions::toggleMarketCard,
+    )
 }

@@ -3,8 +3,6 @@ package com.dirzaaulia.countries.ui.dossier.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +30,6 @@ import com.dirzaaulia.countries.data.restcountries.responses.RestCountryResponse
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.LatLng
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
-import com.dirzaaulia.countries.ui.components.ChipPill
 import com.dirzaaulia.countries.ui.components.InfoCard
 import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.util.formatArea
@@ -185,98 +181,8 @@ fun DossierWorldBankSection(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DossierCultureSection(
-    currencies: List<String>,
-    languages: List<String>,
-    onOpenAdministrativeDivisions: (() -> Unit)?,
-) {
-    Spacer(Modifier.height(14.dp))
-    DossierSectionTitle("CULTURE & ADMINISTRATION")
-    if (currencies.isNotEmpty()) {
-        DossierPillGroup(
-            label = "Official Currencies:",
-            values = currencies,
-            symbol = UiSymbol.Currency,
-            background = Color(0x2210B981),
-            border = Color(0x4410B981),
-            text = Color(0xFFA7F3D0),
-        )
-    }
-    if (languages.isNotEmpty()) {
-        DossierPillGroup(
-            label = "Official Languages:",
-            values = languages,
-            symbol = UiSymbol.Language,
-            background = Color(0x228B5CF6),
-            border = Color(0x448B5CF6),
-            text = Color(0xFFDDD6FE),
-        )
-    }
-    if (onOpenAdministrativeDivisions != null) {
-        Spacer(Modifier.height(4.dp))
-        DossierLinkButton(
-            text = "Explore Sub-National Divisions (ADM1 & ADM2) ↗",
-            color = Color(0xFF8B5CF6),
-            textColor = Color(0xFFDDD6FE),
-            onClick = onOpenAdministrativeDivisions,
-        )
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun DossierPillGroup(
-    label: String,
-    values: List<String>,
-    symbol: UiSymbol,
-    background: Color,
-    border: Color,
-    text: Color,
-) {
-    Text(label, color = Color(0xFF94A3B8), fontSize = 11.sp)
-    Spacer(Modifier.height(4.dp))
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        values.forEach { value ->
-            ChipPill(text = value, symbol = symbol, backgroundColor = background, borderColor = border, textColor = text)
-        }
-    }
-    Spacer(Modifier.height(8.dp))
-}
-
-@Composable
-fun DossierActionButtons(
-    onClose: () -> Unit,
-    onNextCountry: () -> Unit,
-) {
-    Spacer(Modifier.height(18.dp))
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(
-            onClick = onClose,
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, Color(0x44EF4444)),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFF87171)),
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        ) {
-            Text("Dismiss", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
-        }
-        Button(
-            onClick = onNextCountry,
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0284C7), contentColor = Color.White),
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        ) {
-            Text("Next Country", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
-        }
-    }
-    Spacer(Modifier.height(24.dp))
-}
-
-@Composable
-private fun DossierSectionTitle(text: String) {
+internal fun DossierSectionTitle(text: String) {
     Text(text, color = Color(0xFF64748B), fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
     Spacer(Modifier.height(6.dp))
 }

@@ -96,6 +96,9 @@ actual fun Globe3DPlatformView(
 actual fun Moon3DPlatformView(
     state: GlobeState,
     phaseAngle: Double,
+    subsolarLatitude: Double,
+    librationLatitude: Double,
+    librationLongitude: Double,
     isPageActive: Boolean,
     modifier: Modifier,
 ) {
@@ -105,9 +108,24 @@ actual fun Moon3DPlatformView(
         PlanetWebGLRenderer.ensureInitialized(scope)
     }
 
-    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, phaseAngle, isPageActive) {
+    LaunchedEffect(
+        state.rotationX,
+        state.rotationY,
+        state.zoom,
+        phaseAngle,
+        subsolarLatitude,
+        librationLatitude,
+        librationLongitude,
+        isPageActive,
+    ) {
         if (isPageActive) {
-            PlanetWebGLRenderer.setPlanetMode(isMoon = true, phaseAngle = phaseAngle)
+            PlanetWebGLRenderer.setPlanetMode(
+                isMoon = true,
+                phaseAngle = phaseAngle,
+                subsolarLatitude = subsolarLatitude,
+                librationLatitude = librationLatitude,
+                librationLongitude = librationLongitude,
+            )
             PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
         }
     }
@@ -118,7 +136,13 @@ actual fun Moon3DPlatformView(
         val currentRadius = baseRadius * state.zoom
 
         if (isPageActive) {
-            PlanetWebGLRenderer.setPlanetMode(isMoon = true, phaseAngle = phaseAngle)
+            PlanetWebGLRenderer.setPlanetMode(
+                isMoon = true,
+                phaseAngle = phaseAngle,
+                subsolarLatitude = subsolarLatitude,
+                librationLatitude = librationLatitude,
+                librationLongitude = librationLongitude,
+            )
             PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
             PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
         }
@@ -152,6 +176,91 @@ actual fun Moon3DPlatformView(
         // 3. Subtle lunar limb contour
         drawCircle(
             color = Color(0x55E2E8F0),
+            radius = currentRadius,
+            center = canvasCenter,
+            style = Stroke(width = 1.2f),
+        )
+    }
+}
+
+/**
+ * Web/WASM implementation of Mars3DPlatformView.
+ * Renders full photorealistic 3D Mars using WebGL 1.0/2.0 shaders and 2K texture,
+ * with real-time astronomical phase terminator shading.
+ */
+@Composable
+actual fun Mars3DPlatformView(
+    state: GlobeState,
+    sunPosition: SunPosition,
+    isPageActive: Boolean,
+    modifier: Modifier,
+) {
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        PlanetWebGLRenderer.ensureInitialized(scope)
+    }
+
+    LaunchedEffect(
+        state.rotationX,
+        state.rotationY,
+        state.zoom,
+        sunPosition,
+        isPageActive,
+    ) {
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(
+                isMoon = false,
+                isMars = true,
+            )
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.setSunPosition(sunPosition)
+        }
+    }
+
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val canvasCenter = center
+        val baseRadius = minOf(size.width, size.height) * 0.38f
+        val currentRadius = baseRadius * state.zoom
+
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(
+                isMoon = false,
+                isMars = true,
+            )
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.setSunPosition(sunPosition)
+            PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
+        }
+
+        drawCircle(
+            color = Color.Transparent,
+            radius = currentRadius,
+            center = canvasCenter,
+            blendMode = BlendMode.Clear,
+        )
+
+        // Soft Martian outer atmosphere glow
+        drawCircle(
+            brush =
+                Brush.radialGradient(
+                    colors =
+                        listOf(
+                            Color(0x30E67E22), // Orange glow
+                            Color(0x15D35400),
+                            Color(0x04873600),
+                            Color.Transparent,
+                        ),
+                    center = canvasCenter,
+                    radius = currentRadius * 1.25f,
+                ),
+            radius = currentRadius * 1.25f,
+            center = canvasCenter,
+        )
+
+        // Subtle Martian limb contour
+        drawCircle(
+            color = Color(0x66E67E22),
             radius = currentRadius,
             center = canvasCenter,
             style = Stroke(width = 1.2f),

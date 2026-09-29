@@ -6,8 +6,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,26 +52,26 @@ fun FloatingExplorerBar(
     isQuizMode: Boolean,
     onToggleQuizMode: () -> Unit,
     modifier: Modifier = Modifier,
+    onOpenSpaceWeather: () -> Unit = {},
+    showTectonic: Boolean = false,
+    onToggleTectonic: () -> Unit = {},
+    onToggleMarketCard: () -> Unit = {},
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        // Initial Screen: Clean Standalone Search Bar + Expand/Widgets Button
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            // Search Bar Input Trigger
             Surface(
+                onClick = onOpenSearch,
                 shape = RoundedCornerShape(18.dp),
                 color = Color(0xF209111E),
                 border = BorderStroke(1.dp, Color(0x5538BDF8)),
                 shadowElevation = 10.dp,
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .clickable { onOpenSearch() },
+                modifier = Modifier.weight(1f),
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 11.dp),
@@ -89,16 +88,16 @@ fun FloatingExplorerBar(
                 }
             }
 
-            // Expand / Collapse Menu Toggle Button
             Surface(
+                onClick = { isExpanded = !isExpanded },
                 shape = CircleShape,
                 color = if (isExpanded) Color(0xEE0284C7) else Color(0xF209111E),
                 border = BorderStroke(1.dp, Color(0x5538BDF8)),
                 shadowElevation = 10.dp,
                 modifier = Modifier.size(46.dp),
             ) {
-                IconButton(
-                    onClick = { isExpanded = !isExpanded },
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     Icon(
@@ -111,7 +110,6 @@ fun FloatingExplorerBar(
             }
         }
 
-        // Expanded Full Actions Menu
         AnimatedVisibility(
             visible = isExpanded,
             enter = fadeIn() + expandVertically(),
@@ -135,7 +133,6 @@ fun FloatingExplorerBar(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    // 1. Explore Random
                     MenuActionButton(
                         label = "Random",
                         symbol = UiSymbol.Quiz,
@@ -146,7 +143,6 @@ fun FloatingExplorerBar(
                         },
                     )
 
-                    // 2. Planetary Time
                     MenuActionButton(
                         label = "Planetary Time",
                         symbol = UiSymbol.Time,
@@ -155,7 +151,6 @@ fun FloatingExplorerBar(
                         onClick = { onToggleTimeMachine() },
                     )
 
-                    // 3. Crisis Monitor
                     MenuActionButton(
                         label = "Crisis Monitor",
                         symbol = UiSymbol.Hazard,
@@ -166,7 +161,6 @@ fun FloatingExplorerBar(
                         },
                     )
 
-                    // 4. Flight Route
                     MenuActionButton(
                         label = "Flight Route",
                         symbol = UiSymbol.Flight,
@@ -175,13 +169,40 @@ fun FloatingExplorerBar(
                         onClick = { onToggleFlightMode() },
                     )
 
-                    // 5. World Quiz
                     MenuActionButton(
                         label = "World Quiz",
                         symbol = UiSymbol.Quiz,
                         color = if (isQuizMode) Color(0xFF10B981) else Color(0xFF64748B),
                         isActive = isQuizMode,
                         onClick = { onToggleQuizMode() },
+                    )
+
+                    MenuActionButton(
+                        label = "Space Weather",
+                        symbol = UiSymbol.Clear,
+                        color = Color(0xFF10B981),
+                        onClick = {
+                            isExpanded = false
+                            onOpenSpaceWeather()
+                        },
+                    )
+
+                    MenuActionButton(
+                        label = "Tectonic Plates",
+                        symbol = UiSymbol.Landscape,
+                        color = if (showTectonic) Color(0xFFEF4444) else Color(0xFF64748B),
+                        isActive = showTectonic,
+                        onClick = { onToggleTectonic() },
+                    )
+
+                    MenuActionButton(
+                        label = "Financial Markets",
+                        symbol = UiSymbol.Economy,
+                        color = Color(0xFFF59E0B),
+                        onClick = {
+                            isExpanded = false
+                            onToggleMarketCard()
+                        },
                     )
                 }
             }

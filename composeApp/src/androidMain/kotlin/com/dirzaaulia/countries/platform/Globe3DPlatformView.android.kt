@@ -46,12 +46,14 @@ actual fun Globe3DPlatformView(
     LaunchedEffect(renderer) {
         val r = renderer ?: return@LaunchedEffect
         withContext(Dispatchers.Default) {
-            val dayBytes = Res.readBytes("files/earth_day.jpg")
-            val nightBytes = Res.readBytes("files/earth_night.jpg")
-            val cloudBytes = Res.readBytes("files/earth_clouds.jpg")
-            r.setIsMoon(false)
-            r.setTextures(dayBytes, nightBytes, cloudBytes)
-            surfaceView?.requestRender()
+            val dayBytes = runCatching { Res.readBytes("files/earth_day.jpg") }.getOrNull()
+            val nightBytes = runCatching { Res.readBytes("files/earth_night.jpg") }.getOrNull()
+            val cloudBytes = runCatching { Res.readBytes("files/earth_clouds.jpg") }.getOrNull()
+            if (dayBytes != null) {
+                r.setIsMoon(false)
+                r.setTextures(dayBytes, nightBytes ?: dayBytes, cloudBytes ?: dayBytes)
+                surfaceView?.requestRender()
+            }
         }
     }
 
@@ -87,6 +89,9 @@ actual fun Globe3DPlatformView(
 actual fun Moon3DPlatformView(
     state: GlobeState,
     phaseAngle: Double,
+    subsolarLatitude: Double,
+    librationLatitude: Double,
+    librationLongitude: Double,
     isPageActive: Boolean,
     modifier: Modifier,
 ) {
@@ -98,8 +103,8 @@ actual fun Moon3DPlatformView(
         surfaceView?.requestRender()
     }
 
-    LaunchedEffect(phaseAngle, renderer) {
-        renderer?.setMoonPhaseAngle(phaseAngle)
+    LaunchedEffect(phaseAngle, subsolarLatitude, librationLatitude, librationLongitude, renderer) {
+        renderer?.setMoonOrientation(phaseAngle, subsolarLatitude, librationLatitude, librationLongitude)
         surfaceView?.requestRender()
     }
 
@@ -117,10 +122,12 @@ actual fun Moon3DPlatformView(
     LaunchedEffect(renderer) {
         val r = renderer ?: return@LaunchedEffect
         withContext(Dispatchers.Default) {
-            val moonBytes = Res.readBytes("files/moon.jpg")
-            r.setIsMoon(true)
-            r.setTextures(moonBytes)
-            surfaceView?.requestRender()
+            val moonBytes = runCatching { Res.readBytes("files/moon.jpg") }.getOrNull()
+            if (moonBytes != null) {
+                r.setIsMoon(true)
+                r.setTextures(moonBytes)
+                surfaceView?.requestRender()
+            }
         }
     }
 
@@ -135,11 +142,77 @@ actual fun Moon3DPlatformView(
                 val moonRenderer =
                     EarthGLRenderer(ctx).apply {
                         setIsMoon(true)
-                        setMoonPhaseAngle(phaseAngle)
+                        setMoonOrientation(phaseAngle, subsolarLatitude, librationLatitude, librationLongitude)
                     }
                 setRenderer(moonRenderer)
                 renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
                 renderer = moonRenderer
+                surfaceView = this
+            }
+        },
+        update = { sv ->
+            sv.requestRender()
+        },
+        modifier = modifier,
+    )
+}
+
+@Composable
+actual fun Mars3DPlatformView(
+    state: GlobeState,
+    sunPosition: SunPosition,
+    isPageActive: Boolean,
+    modifier: Modifier,
+) {
+    var renderer by remember { mutableStateOf<EarthGLRenderer?>(null) }
+    var surfaceView by remember { mutableStateOf<GLSurfaceView?>(null) }
+
+    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, sunPosition) {
+        renderer?.updateCamera(state.rotationX, state.rotationY, state.zoom)
+        renderer?.setSunPosition(sunPosition)
+        surfaceView?.requestRender()
+    }
+
+    LaunchedEffect(isPageActive) {
+        val sv = surfaceView ?: return@LaunchedEffect
+        if (isPageActive) {
+            sv.onResume()
+            sv.requestRender()
+        } else {
+            sv.onPause()
+        }
+    }
+
+    LaunchedEffect(renderer) {
+        val r = renderer ?: return@LaunchedEffect
+        withContext(Dispatchers.Default) {
+            val marsBytes =
+                runCatching { Res.readBytes("files/mars_2k.jpg") }.getOrNull()
+                    ?: runCatching { Res.readBytes("files/moon.jpg") }.getOrNull()
+            if (marsBytes != null) {
+                r.setIsMars(true)
+                r.setTextures(marsBytes)
+                surfaceView?.requestRender()
+            }
+        }
+    }
+
+    AndroidView(
+        factory = { ctx ->
+            GLSurfaceView(ctx).apply {
+                setEGLContextClientVersion(2)
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                holder.setFormat(PixelFormat.TRANSLUCENT)
+                setZOrderMediaOverlay(true)
+                preserveEGLContextOnPause = true
+                val marsRenderer =
+                    EarthGLRenderer(ctx).apply {
+                        setIsMars(true)
+                        setSunPosition(sunPosition)
+                    }
+                setRenderer(marsRenderer)
+                renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+                renderer = marsRenderer
                 surfaceView = this
             }
         },

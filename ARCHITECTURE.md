@@ -11,7 +11,8 @@ Countries Compose is an interactive 3D planetary exploration and geopolitical in
 
 ```mermaid
 graph TD
-    UI[App.kt / Mission Control HUD] --> Page[HorizontalPager]
+    Entry[App.kt / DI and theme] --> UI[PlanetaryExplorerRoute / PlanetaryExplorerScreen]
+    UI --> Page[HorizontalPager]
     Page --> Page0[Page 0: GlobeView - Earth]
     Page --> Page1[Page 1: MoonView - Moon]
 
@@ -78,7 +79,6 @@ countries-compose/
     ├── commonMain/kotlin/com/dirzaaulia/countries/
     │   ├── data/                               # Data layer: API clients, DTOs, repository & in-memory caches
     │   │   ├── eclipse/                        # Cloudflare Workers free NASA eclipse feed
-    │   │   ├── geoboundaries/                  # GeoBoundaries API for ADM1 & ADM2 polygons
     │   │   ├── iss/                            # WhereTheISS.at live orbital telemetry API
     │   │   ├── nasa/                           # NASA EONET live planetary hazard client
     │   │   ├── openmeteo/                      # Open-Meteo weather forecast & atmospheric API
@@ -87,15 +87,15 @@ countries-compose/
     │   │   └── worldbank/                      # World Bank macroeconomic indicators API
     │   ├── domain/                             # Pure business logic, math, entities (Zero JVM/Android deps)
     │   │   ├── astronomy/                      # AstronomyMath, SunPosition, MoonInfo, EclipseFeed
-    │   │   ├── country/                        # Country, AdministrativeDivision, LiveCountryDetails, ApolloSite
+    │   │   ├── country/                        # Country, LiveCountryDetails
+│   │   ├── moon/                           # MoonLandmark, MoonLandmarkCategory
     │   │   └── globe/                          # SphericalMath, GlobeShaders, SphereMesh, GlobeState
     │   ├── di/                                 # Koin dependency injection modules (appModules, ViewModels)
     │   ├── platform/                           # Cross-platform expect declarations (Globe3DPlatformView, etc.)
     │   ├── ui/                                 # Compose Multiplatform UI layer
-    │   │   ├── app/                            # App entrypoint, AppSheetsOverlay, FeatureHudHost
+    │   │   ├── app/                            # App bootstrap, PlanetaryExplorer route/screen, HUD and sheets
     │   │   ├── components/                     # Reusable design system (AdaptiveInfoSheet, MinimalistCloseButton, SemanticIcon)
     │   │   ├── dossier/                        # Country Dossier, MeteorologyStation, WorldBank, NasaCrisis sheets
-    │   │   │   ├── administration/             # Sub-national administrative division sheet host
     │   │   │   ├── components/                 # Dossier card sections & metadata rows
     │   │   │   └── weather/                    # Particle weather overlays (rain, snow, clouds)
     │   │   ├── globe/                          # 2D Canvas vector globe & feature ViewModels
@@ -120,7 +120,6 @@ Repositories are strictly separated into focused, single-responsibility domain c
 - **`CountryDetailRepository`**: Coordinates live country dossier aggregation (REST Countries, World Bank, Open-Meteo, nearby NASA events) with an in-memory 15-minute TTL Stale-While-Revalidate cache and safe fallback data.
 - **`HazardRepository`**: Manages NASA EONET natural disaster event fetching and distance filtering with a 30-minute in-memory cache.
 - **`IssRepository`**: Fetches real-time International Space Station telemetry coordinates and velocity.
-- **`AdministrativeRepository`**: Fetches and caches GeoBoundaries administrative divisions (ADM1 and ADM2).
 - **`EclipseRepository`**: Retrieves lunar and solar eclipse feeds.
 - **`GlobeRepository`**: Lightweight composite delegating facade retained for backward compatibility.
 

@@ -1,5 +1,6 @@
 package com.dirzaaulia.countries.ui.overlay
 
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -13,22 +14,34 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
-import com.dirzaaulia.countries.domain.country.AdministrativeDivision
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
+import com.dirzaaulia.countries.domain.astronomy.MarketStatus
+import com.dirzaaulia.countries.domain.astronomy.calculateMarketStatus
+import com.dirzaaulia.countries.domain.comparison.projectTransposedPolygon
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.LatLng
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.domain.globe.Point3D
+import com.dirzaaulia.countries.domain.tectonic.Earthquake
+import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.domain.globe.latLngToCartesian
 import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toDegrees
 import com.dirzaaulia.countries.domain.globe.toRadians
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 // Deterministic celestial starfield positions in deep space
@@ -164,7 +177,6 @@ internal fun DrawScope.drawCartographicBorders(
 internal fun DrawScope.drawCountryHighlights(
     countries: List<Country>,
     highlightCountryId: String?,
-    selectedAdministrativeDivision: AdministrativeDivision?,
     currentRadius: Float,
     canvasCenter: Offset,
     cosX: Double,
@@ -236,34 +248,6 @@ internal fun DrawScope.drawCountryHighlights(
                 color = auraCoreStroke,
                 style = Stroke(width = 2.6f, cap = StrokeCap.Round, join = StrokeJoin.Round),
             )
-        }
-    }
-
-    selectedAdministrativeDivision?.let { division ->
-        division.boundaryPolygons.forEach { polygon ->
-            val divisionPath = Path()
-            var inPath = false
-            polygon.forEach { latLng ->
-                var p = latLngToCartesian(latLng.lat, latLng.lng, currentRadius.toDouble())
-                p = rotateY(p, cosY, sinY)
-                p = rotateX(p, cosX, sinX)
-                if (p.z > 0.0) {
-                    val sx = canvasCenter.x + p.x.toFloat()
-                    val sy = canvasCenter.y - p.y.toFloat()
-                    if (!inPath) {
-                        divisionPath.moveTo(sx, sy)
-                        inPath = true
-                    } else {
-                        divisionPath.lineTo(sx, sy)
-                    }
-                } else {
-                    inPath = false
-                }
-            }
-            if (inPath) divisionPath.close()
-            drawPath(divisionPath, Color(0x44A855F7), style = Fill)
-            drawPath(divisionPath, Color(0x80A855F7), style = Stroke(width = 6f, cap = StrokeCap.Round, join = StrokeJoin.Round))
-            drawPath(divisionPath, Color(0xFFF0ABFC), style = Stroke(width = 2.4f, cap = StrokeCap.Round, join = StrokeJoin.Round))
         }
     }
 }
@@ -617,3 +601,513 @@ internal fun DrawScope.drawISSTracker(
         onIssPosCalculated(null)
     }
 }
+
+internal fun DrawScope.drawTrueSizeComparisonOverlay(
+    countryA: Country,
+    countryB: Country,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+    strobeAlpha: Float = 1.0f,
+) {
+    var centerB = latLngToCartesian(countryB.center.lat, countryB.center.lng, 1.0)
+    centerB = rotateY(centerB, cosY, sinY)
+    centerB = rotateX(centerB, cosX, sinX)
+    if (centerB.z <= -0.1) return
+
+    val transposedPolygons = projectTransposedPolygon(countryA, countryB.center)
+    val overlayFillColor = Color(0x2638BDF8)
+    val overlayGlowColor = Color(0x6638BDF8)
+    val overlayStrokeColor = Color(0xFF38BDF8)
+    val dashEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f), 0f)
+
+    transposedPolygons.forEach { polygon ->
+        val overlayPath = Path()
+        var inPath = false
+
+        for (i in polygon.indices) {
+            val point = polygon[i]
+            var p = latLngToCartesian(point.lat, point.lng, currentRadius.toDouble())
+            p = rotateY(p, cosY, sinY)
+            p = rotateX(p, cosX, sinX)
+
+            if (p.z > 0.0) {
+                val sx = canvasCenter.x + p.x.toFloat()
+                val sy = canvasCenter.y - p.y.toFloat()
+                if (!inPath) {
+                    overlayPath.moveTo(sx, sy)
+                    inPath = true
+                } else {
+                    overlayPath.lineTo(sx, sy)
+                }
+            } else {
+                inPath = false
+            }
+        }
+
+        if (inPath) {
+            overlayPath.close()
+            drawPath(
+                path = overlayPath,
+                color = overlayFillColor.copy(alpha = 0.25f * strobeAlpha),
+                style = Fill,
+            )
+            drawPath(
+                path = overlayPath,
+                color = overlayGlowColor,
+                style = Stroke(width = 5.0f, cap = StrokeCap.Round, join = StrokeJoin.Round),
+            )
+            drawPath(
+                path = overlayPath,
+                color = overlayStrokeColor,
+                style =
+                    Stroke(
+                        width = 2.5f,
+                        pathEffect = dashEffect,
+                        cap = StrokeCap.Round,
+                        join = StrokeJoin.Round,
+                    ),
+            )
+        }
+    }
+}
+
+internal fun DrawScope.drawTimezoneMeridians(
+    selectedMeridianOffset: Int?,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+    textMeasurer: TextMeasurer,
+) {
+    val primeColor = Color(0xFF38BDF8)
+    val dateLineColor = Color(0xFFF59E0B)
+    val standardColor = Color(0x4438BDF8)
+    val selectedColor = Color(0xFF10B981)
+    val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 6f), 0f)
+
+    for (m in -12..11) {
+        val lng = m * 15.0
+        val isPrime = m == 0
+        val isDateLine = m == -12 || m == 12
+        val isSelected = selectedMeridianOffset == m
+
+        val path = Path()
+        var inPath = false
+
+        for (latDeg in -85..85 step 5) {
+            var p = latLngToCartesian(latDeg.toDouble(), lng, currentRadius.toDouble())
+            p = rotateY(p, cosY, sinY)
+            p = rotateX(p, cosX, sinX)
+
+            if (p.z > 0.0) {
+                val sx = canvasCenter.x + p.x.toFloat()
+                val sy = canvasCenter.y - p.y.toFloat()
+                if (!inPath) {
+                    path.moveTo(sx, sy)
+                    inPath = true
+                } else {
+                    path.lineTo(sx, sy)
+                }
+            } else {
+                inPath = false
+            }
+        }
+
+        if (inPath) {
+            val strokeColor =
+                when {
+                    isSelected -> selectedColor
+                    isPrime -> primeColor
+                    isDateLine -> dateLineColor
+                    else -> standardColor
+                }
+            val strokeWidth =
+                when {
+                    isSelected -> 3.0f
+                    isPrime || isDateLine -> 2.2f
+                    else -> 1.0f
+                }
+            val effect = if (isPrime || isDateLine || isSelected) dashEffect else null
+
+            drawPath(
+                path = path,
+                color = strokeColor,
+                style = Stroke(width = strokeWidth, pathEffect = effect, cap = StrokeCap.Round),
+            )
+        }
+
+        var pEq = latLngToCartesian(0.0, lng, currentRadius.toDouble())
+        pEq = rotateY(pEq, cosY, sinY)
+        pEq = rotateX(pEq, cosX, sinX)
+
+        if (pEq.z > 0.15) {
+            val sx = canvasCenter.x + pEq.x.toFloat()
+            val sy = canvasCenter.y - pEq.y.toFloat()
+            val label = if (m == 0) "UTC+0" else if (m > 0) "UTC+$m" else "UTC$m"
+
+            val textResult =
+                textMeasurer.measure(
+                    text = label,
+                    style =
+                        TextStyle(
+                            color = if (isSelected) selectedColor else Color.White,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                )
+            val badgeWidth = textResult.size.width + 12f
+            val badgeHeight = textResult.size.height + 6f
+            val badgeOffset = Offset(sx - badgeWidth / 2f, sy - badgeHeight / 2f)
+
+            drawRoundRect(
+                color = if (isSelected) Color(0xDD0F172A) else Color(0xAA09111E),
+                topLeft = badgeOffset,
+                size = Size(badgeWidth, badgeHeight),
+                cornerRadius = CornerRadius(4f, 4f),
+            )
+            drawRoundRect(
+                color = if (isSelected) selectedColor else Color(0x6638BDF8),
+                topLeft = badgeOffset,
+                size = Size(badgeWidth, badgeHeight),
+                cornerRadius = CornerRadius(4f, 4f),
+                style = Stroke(width = 1f),
+            )
+            drawText(
+                textLayoutResult = textResult,
+                topLeft = Offset(badgeOffset.x + 6f, badgeOffset.y + 3f),
+            )
+        }
+    }
+}
+
+internal fun DrawScope.drawTwilightBands(
+    sunVector: Point3D,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+) {
+    val normS = sqrt(sunVector.x * sunVector.x + sunVector.y * sunVector.y + sunVector.z * sunVector.z)
+    if (normS < 0.001) return
+    val s = Point3D(sunVector.x / normS, sunVector.y / normS, sunVector.z / normS)
+
+    val a = if (abs(s.y) < 0.9) Point3D(0.0, 1.0, 0.0) else Point3D(1.0, 0.0, 0.0)
+    val uX = a.y * s.z - a.z * s.y
+    val uY = a.z * s.x - a.x * s.z
+    val uZ = a.x * s.y - a.y * s.x
+    val normU = sqrt(uX * uX + uY * uY + uZ * uZ)
+    val u = Point3D(uX / normU, uY / normU, uZ / normU)
+
+    val v =
+        Point3D(
+            s.y * u.z - s.z * u.y,
+            s.z * u.x - s.x * u.z,
+            s.x * u.y - s.y * u.x,
+        )
+
+    val goldenTopRad = 6.0.toRadians
+    val goldenBottomRad = (-4.0).toRadians
+    val blueBottomRad = (-6.0).toRadians
+
+    drawTwilightRibbon(
+        alphaTop = goldenTopRad,
+        alphaBottom = goldenBottomRad,
+        color = Color(0x33F59E0B),
+        u = u,
+        v = v,
+        s = s,
+        currentRadius = currentRadius,
+        canvasCenter = canvasCenter,
+        cosX = cosX,
+        sinX = sinX,
+        cosY = cosY,
+        sinY = sinY,
+    )
+
+    drawTwilightRibbon(
+        alphaTop = goldenBottomRad,
+        alphaBottom = blueBottomRad,
+        color = Color(0x442563EB),
+        u = u,
+        v = v,
+        s = s,
+        currentRadius = currentRadius,
+        canvasCenter = canvasCenter,
+        cosX = cosX,
+        sinX = sinX,
+        cosY = cosY,
+        sinY = sinY,
+    )
+}
+
+private fun DrawScope.drawTwilightRibbon(
+    alphaTop: Double,
+    alphaBottom: Double,
+    color: Color,
+    u: Point3D,
+    v: Point3D,
+    s: Point3D,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+) {
+    val cosTop = cos(alphaTop)
+    val sinTop = sin(alphaTop)
+    val cosBot = cos(alphaBottom)
+    val sinBot = sin(alphaBottom)
+
+    val steps = 90
+    val stepAngle = 2.0 * PI / steps
+
+    for (i in 0 until steps) {
+        val t1 = i * stepAngle
+        val t2 = (i + 1) * stepAngle
+
+        val p1Top = computeRibbonPoint(t1, cosTop, sinTop, u, v, s, currentRadius, cosY, sinY, cosX, sinX)
+        val p2Top = computeRibbonPoint(t2, cosTop, sinTop, u, v, s, currentRadius, cosY, sinY, cosX, sinX)
+        val p2Bot = computeRibbonPoint(t2, cosBot, sinBot, u, v, s, currentRadius, cosY, sinY, cosX, sinX)
+        val p1Bot = computeRibbonPoint(t1, cosBot, sinBot, u, v, s, currentRadius, cosY, sinY, cosX, sinX)
+
+        if (p1Top != null && p2Top != null && p2Bot != null && p1Bot != null) {
+            val quadPath =
+                Path().apply {
+                    moveTo(canvasCenter.x + p1Top.x.toFloat(), canvasCenter.y - p1Top.y.toFloat())
+                    lineTo(canvasCenter.x + p2Top.x.toFloat(), canvasCenter.y - p2Top.y.toFloat())
+                    lineTo(canvasCenter.x + p2Bot.x.toFloat(), canvasCenter.y - p2Bot.y.toFloat())
+                    lineTo(canvasCenter.x + p1Bot.x.toFloat(), canvasCenter.y - p1Bot.y.toFloat())
+                    close()
+                }
+            drawPath(path = quadPath, color = color, style = Fill)
+        }
+    }
+}
+
+private fun computeRibbonPoint(
+    theta: Double,
+    cosAlpha: Double,
+    sinAlpha: Double,
+    u: Point3D,
+    v: Point3D,
+    s: Point3D,
+    radius: Float,
+    cosY: Double,
+    sinY: Double,
+    cosX: Double,
+    sinX: Double,
+): Point3D? {
+    val cosT = cos(theta)
+    val sinT = sin(theta)
+
+    val x = cosAlpha * (cosT * u.x + sinT * v.x) + sinAlpha * s.x
+    val y = cosAlpha * (cosT * u.y + sinT * v.y) + sinAlpha * s.y
+    val z = cosAlpha * (cosT * u.z + sinT * v.z) + sinAlpha * s.z
+
+    var p = Point3D(x * radius, y * radius, z * radius)
+    p = rotateY(p, cosY, sinY)
+    p = rotateX(p, cosX, sinX)
+
+    return if (p.z > 0.0) p else null
+}
+
+internal fun DrawScope.drawTectonicLayer(
+    plates: List<TectonicPlate>,
+    earthquakes: List<Earthquake>,
+    selectedPlateId: String?,
+    selectedEarthquakeId: String?,
+    minMagnitudeFilter: Double,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+    strobeAlpha: Float = 1.0f,
+    beaconPulse: Float = 8.0f,
+) {
+    val dashEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f), 0f)
+
+    plates.forEach { plate ->
+        val isSelected = plate.id == selectedPlateId
+        val strokeColor =
+            when (plate.id) {
+                "pacific" -> Color(0xFFEF4444)
+                "nazca", "cocos", "philippine_sea" -> Color(0xFFF97316)
+                else -> Color(0xFFEAB308)
+            }
+
+        plate.boundaries.forEach { boundary ->
+            val path = Path()
+            var inPath = false
+
+            for (i in boundary.indices) {
+                val point = boundary[i]
+                var p = latLngToCartesian(point.lat, point.lng, currentRadius.toDouble())
+                p = rotateY(p, cosY, sinY)
+                p = rotateX(p, cosX, sinX)
+
+                if (p.z > 0.0) {
+                    val sx = canvasCenter.x + p.x.toFloat()
+                    val sy = canvasCenter.y - p.y.toFloat()
+                    if (!inPath) {
+                        path.moveTo(sx, sy)
+                        inPath = true
+                    } else {
+                        path.lineTo(sx, sy)
+                    }
+                } else {
+                    inPath = false
+                }
+            }
+
+            if (!path.isEmpty) {
+                if (isSelected || plate.id == "pacific") {
+                    drawPath(
+                        path = path,
+                        color = Color(0x44EF4444),
+                        style = Stroke(width = 16f, cap = StrokeCap.Round, join = StrokeJoin.Round),
+                    )
+                }
+                drawPath(
+                    path = path,
+                    color = if (isSelected) Color.White else strokeColor,
+                    style =
+                        Stroke(
+                            width = if (isSelected) 3.5f else 2.2f,
+                            pathEffect = dashEffect,
+                            cap = StrokeCap.Round,
+                            join = StrokeJoin.Round,
+                        ),
+                )
+            }
+        }
+    }
+
+    earthquakes.forEach { quake ->
+        if (quake.magnitude < minMagnitudeFilter) return@forEach
+
+        var p = latLngToCartesian(quake.lat, quake.lng, currentRadius.toDouble())
+        p = rotateY(p, cosY, sinY)
+        p = rotateX(p, cosX, sinX)
+
+        if (p.z > 0.0) {
+            val sx = canvasCenter.x + p.x.toFloat()
+            val sy = canvasCenter.y - p.y.toFloat()
+            val pos = Offset(sx, sy)
+
+            val isSelected = quake.id == selectedEarthquakeId
+
+            val depthColor =
+                when {
+                    quake.depthKm < 70.0 -> Color(0xFFEF4444)
+                    quake.depthKm <= 300.0 -> Color(0xFFF59E0B)
+                    else -> Color(0xFF6366F1)
+                }
+
+            val baseRadius = (8.0f + (quake.magnitude.toFloat() - 4.5f) * 4.0f).coerceIn(8.0f, 30.0f)
+
+            if (quake.tsunamiAlert) {
+                drawCircle(
+                    color = Color(0x66EF4444),
+                    radius = baseRadius + beaconPulse,
+                    center = pos,
+                    style = Stroke(width = 2.0f),
+                )
+            }
+
+            drawCircle(
+                color = depthColor.copy(alpha = 0.25f * strobeAlpha),
+                radius = if (isSelected) baseRadius * 2.2f else baseRadius * 1.5f,
+                center = pos,
+            )
+            drawCircle(
+                color = if (isSelected) Color.White else depthColor,
+                radius = if (isSelected) baseRadius * 1.2f else baseRadius,
+                center = pos,
+                style = Stroke(width = 2.0f),
+            )
+            drawCircle(
+                color = Color.White,
+                radius = 3.5f,
+                center = pos,
+            )
+        }
+    }
+}
+
+internal fun DrawScope.drawStockExchangesLayer(
+    markets: List<FinancialMarket>,
+    selectedMarketId: String?,
+    currentUtcMillis: Long,
+    currentRadius: Float,
+    canvasCenter: Offset,
+    cosX: Double,
+    sinX: Double,
+    cosY: Double,
+    sinY: Double,
+    strobeAlpha: Float = 1.0f,
+    beaconPulse: Float = 8.0f,
+) {
+    val utcMillis = ((currentUtcMillis % 86_400_000L) + 86_400_000L) % 86_400_000L
+    val utcHour = utcMillis / 3_600_000.0
+
+    markets.forEach { market ->
+        var p = latLngToCartesian(market.lat, market.lng, currentRadius.toDouble())
+        p = rotateY(p, cosY, sinY)
+        p = rotateX(p, cosX, sinX)
+
+        if (p.z > 0.0) {
+            val sx = canvasCenter.x + p.x.toFloat()
+            val sy = canvasCenter.y - p.y.toFloat()
+            val pos = Offset(sx, sy)
+
+            val isSelected = market.id == selectedMarketId
+            val status = calculateMarketStatus(market, utcHour)
+
+            val (statusColor, baseRadius) =
+                when (status) {
+                    MarketStatus.OPEN -> Color(0xFF10B981) to 12.0f
+                    MarketStatus.OPENING_SOON -> Color(0xFFF59E0B) to 9.0f
+                    MarketStatus.CLOSED -> Color(0xFF64748B) to 7.0f
+                }
+
+            if (status == MarketStatus.OPEN) {
+                drawCircle(
+                    color = statusColor.copy(alpha = 0.35f * strobeAlpha),
+                    radius = baseRadius + beaconPulse,
+                    center = pos,
+                )
+            }
+
+            drawCircle(
+                color = statusColor.copy(alpha = if (isSelected) 0.5f else 0.3f),
+                radius = if (isSelected) baseRadius * 1.8f else baseRadius * 1.3f,
+                center = pos,
+            )
+            drawCircle(
+                color = if (isSelected) Color.White else statusColor,
+                radius = if (isSelected) baseRadius * 1.1f else baseRadius,
+                center = pos,
+                style = Stroke(width = 2.0f),
+            )
+            drawCircle(
+                color = Color.White,
+                radius = 3.0f,
+                center = pos,
+            )
+        }
+    }
+}
+
+
+

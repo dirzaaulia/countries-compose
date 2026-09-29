@@ -30,8 +30,9 @@
 - Phase angle passed to `Moon3DPlatformView(phaseAngle = displayedMoonInfo.phaseAngle)`.
 
 ## 1.4 Moon Terminator Real-Time Accuracy
-**Status: ✅ DONE**
-- Elongation-based sun vector direction is astronomically correct.
+**Status: ✅ IMPLEMENTED (runtime performance unmeasured)**
+- Elongation-based phase angle drives the Moon terminator on Android and WebGL.
 - Real-time phase refresh loop in `MoonView.kt` via hourly `LaunchedEffect` timer.
-- *Backlog*: Subsolar latitude Y-component (currently `y = 0.0`, real Moon has $\pm 1.5^\circ$ tilt).
-- *Backlog*: Libration $\pm 7^\circ$ wobble.
+- The approximately 1.54° lunar equatorial inclination supplies a nonzero subsolar latitude to both renderers.
+- Approximate optical libration in latitude and longitude adjusts the Moon model on both targets; Apollo beacons and hit testing use the same yaw-first effective rotation.
+- Orientation is calculated when lunar date/position changes, not in a new continuous GL loop. Device and browser visual alignment, absolute astronomical accuracy, and measured frame cost remain unverified.

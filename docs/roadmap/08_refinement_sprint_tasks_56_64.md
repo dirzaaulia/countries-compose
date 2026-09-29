@@ -8,7 +8,7 @@
 **Status: ✅ DONE**
 - **Delivered**:
   - Removed redundant "Center View" buttons from `CountryDossierSheet.kt` and `AdministrativeDivisionSheet.kt`.
-  - Configured ADM2 fly-to flow: sheet hides first $\to$ camera glides to ADM2 centroid $\to$ sheet re-opens post-flight.
+  - Historical: configured an ADM2 fly-to flow; the ADM explorer was subsequently retired (task 28).
   - Converted "Fly to Epicenter" / "Center Camera" buttons in `HazardDetailSheet.kt` and `NasaCrisisMonitorSheet.kt` to glassmorphic M3 buttons with `UiSymbol.Location` icons.
   - Re-laid out category chips in `NasaCrisisMonitorSheet.kt` into a compact horizontal `LazyRow`.
   - Removed Planetary Crisis Monitor from `CountryDossierSheet.kt` and promoted it to a global HUD event monitor in `MissionControlTopBar.kt`.
@@ -42,7 +42,7 @@
 - **Delivered**: Refactored in-memory caches in `GlobeRepository.kt` with per-domain TTL expiration:
   - Live Weather & Details: **15-minute TTL** (`liveDetailsCache`)
   - NASA EONET Natural Hazards: **30-minute TTL** (`cachedNasaEvents`)
-  - Sub-National ADM1 & ADM2 Boundaries: **Session-long TTL** (`cachedAdministrativeDivisions`)
+  - Historical: ADM1/ADM2 data used a session-long cache; the ADM explorer was subsequently retired (task 28).
 
 ## 14.9 Lottie Library Cleanup & 1:1 Weather Animation Strategy (Task 64 — 🎬 Motion / P3)
 **Status: ⚠️ IN PROGRESS**

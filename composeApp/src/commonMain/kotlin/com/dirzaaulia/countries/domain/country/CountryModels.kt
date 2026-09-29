@@ -29,45 +29,12 @@ data class Geometry(
     val coordinates: JsonElement,
 )
 
-data class ApolloSite(
-    val name: String = "",
-    val mission: String = "",
-    val date: String = "",
-    val astronaut: String = "",
-    val lat: Double = 0.0,
-    val lng: Double = 0.0,
-    val significance: String = "",
-)
+
 
 data class LatLng(
     val lat: Double,
     val lng: Double,
 )
-
-data class AdministrativeDivision(
-    val id: String,
-    val code: String,
-    val name: String,
-    val level: AdminLevel,
-    val center: LatLng,
-    val boundaryPolygons: List<List<LatLng>>,
-    val attribution: String,
-    val shapeType: String = "",
-    val parentName: String? = null,
-    val parentCode: String = "",
-    val areaSqKm: Double = 0.0,
-    val zoomLevel: Float = 2.0f,
-    val population: Long? = null,
-    val weatherTempC: Double? = null,
-    val weatherDescription: String? = null,
-    val weatherIcon: String? = null,
-    val boundingBox: BoundingBox = BoundingBox(-90.0, 90.0, -180.0, 180.0),
-)
-
-enum class AdminLevel {
-    ADM1,
-    ADM2,
-}
 
 data class BoundingBox(
     val minLat: Double,

@@ -119,7 +119,7 @@ Enforce strict boundaries across architectural layers:
 1. **Three Distinct Model Types**:
    - **DTOs (`*Response`)**: `@Serializable` API payloads.
    - **Database Entities (`*Entity`)**: Room `@Entity` tables.
-   - **Domain Models**: Pure Kotlin data classes (e.g., `Country`, `ApolloSite`).
+   - **Domain Models**: Pure Kotlin data classes (e.g., `Country`, `MoonLandmark`).
 2. **Explicit Mappers**:
    - Keep mappers as `internal` extension functions or direct domain mappings (`Country.enrich(...)`).
    - Never leak DTOs past repository boundaries.
@@ -226,12 +226,12 @@ Enforce strict boundaries across architectural layers:
 
 ### 8. Live Data Loading & Session Cache
 - Network calls must not block UI rendering or camera flight transitions. Show loading/skeleton state while live data loads, then show available values or an unavailable/empty state when no value exists.
-- `GlobeRepository.kt` reuses in-memory session caches for live country details and administrative divisions. Failed fetches are not cached as successful results.
+- Live country details use an in-memory session cache in the country-detail repository. Failed fetches are not cached as successful results.
 
 ### 9. Clean Architecture Package Hierarchy & Expect/Actual Parity
 - **Package Hierarchy**:
   - `com.dirzaaulia.countries.data.*`: External data sources, Ktor client, and repository implementations.
-  - `com.dirzaaulia.countries.domain.*`: Pure multiplatform business logic, astronomy math (`AstronomyMath.kt`), domain models (`Country.kt`, `ApolloSite.kt`), shaders (`GlobeShaders.kt`), mesh generation (`SphereMesh.kt`), and spherical coordinates (`SphericalMath.kt`, `GlobeState.kt`).
+  - `com.dirzaaulia.countries.domain.*`: Pure multiplatform business logic, astronomy math (`AstronomyMath.kt`), domain models (`Country.kt`, `MoonLandmark.kt`), shaders (`GlobeShaders.kt`), mesh generation (`SphereMesh.kt`), and spherical coordinates (`SphericalMath.kt`, `GlobeState.kt`).
   - `com.dirzaaulia.countries.platform.*`: Cross-platform abstractions (`Globe3DPlatformView`, `PlatformSymbols`, `PlatformStartup`, `PlatformTime`, `PlatformHttpClient`).
   - `com.dirzaaulia.countries.di.*`: Dependency injection (Koin `AppModule.kt`).
   - `com.dirzaaulia.countries.ui.*`: UI screens, HUD overlays, M3 sheets, and ViewModels.
