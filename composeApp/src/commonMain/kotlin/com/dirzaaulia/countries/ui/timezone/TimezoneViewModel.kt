@@ -45,11 +45,19 @@ class TimezoneViewModel : ViewModel() {
 
     fun toggleMarketCard() {
         val nextState = !_uiState.value.showMarketCard
-        _uiState.value = _uiState.value.copy(showMarketCard = nextState)
+        _uiState.value =
+            _uiState.value.copy(
+                showMarketCard = nextState,
+                isMarketLayerActive = nextState,
+            )
     }
 
     fun setShowMarketCard(show: Boolean) {
-        _uiState.value = _uiState.value.copy(showMarketCard = show)
+        _uiState.value =
+            _uiState.value.copy(
+                showMarketCard = show,
+                isMarketLayerActive = show,
+            )
     }
 
     fun selectMeridian(utcOffset: Int?) {
@@ -67,6 +75,7 @@ class TimezoneViewModel : ViewModel() {
     fun updateMarketsFromRemote(remoteList: List<FinancialMarket>) {
         if (remoteList.isNotEmpty()) {
             _uiState.value = _uiState.value.copy(markets = remoteList)
+            updateTime(_uiState.value.currentUtcTimeMillis)
         }
     }
 
@@ -77,7 +86,7 @@ class TimezoneViewModel : ViewModel() {
     fun updateTime(epochMillis: Long) {
         val utcMillis = ((epochMillis % 86_400_000L) + 86_400_000L) % 86_400_000L
         val utcHour = utcMillis / 3_600_000.0
-        val active = calculateActiveMarketOverlap(utcHour)
+        val active = calculateActiveMarketOverlap(utcHour, _uiState.value.markets)
 
         _uiState.value =
             _uiState.value.copy(

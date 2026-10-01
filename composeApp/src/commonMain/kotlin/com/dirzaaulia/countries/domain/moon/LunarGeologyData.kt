@@ -58,7 +58,6 @@ val LUNAR_GEOLOGY_FORMATIONS: List<LunarLandmark> =
             geologicPeriod = LunarGeologicPeriod.NECTARIAN,
             significance = "Isolated circular mare basin surrounded by a multi-ringed mountain wall.",
         ),
-
         // Prominent Impact Craters
         LunarLandmark(
             id = "tycho",

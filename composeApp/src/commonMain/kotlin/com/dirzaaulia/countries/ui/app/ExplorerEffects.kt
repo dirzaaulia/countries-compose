@@ -29,7 +29,7 @@ internal fun ExplorerEffects(
         (features.selectedCountry != null && features.globe.showCountryDossier) ||
             (
                 controls.overlay != null &&
-                    (controls.overlay != ExplorerOverlay.TIME_MACHINE || currentPage == 0)
+                    (controls.overlay != ExplorerOverlay.TIME_MACHINE || currentPage == 1)
             ) ||
             features.hazards.selectedHazard != null
     LaunchedEffect(isOtherSheetOpen) { if (isOtherSheetOpen) models.iss.selectIss(null) }
@@ -50,6 +50,20 @@ private fun ExplorerCameraEffect(
             } else {
                 camera.flyTo(country.center.lat.toFloat(), -country.center.lng.toFloat(), country.zoomLevel, 650)
             }
+        }
+    }
+
+    val selectedIss = features.iss.selectedIss
+    LaunchedEffect(selectedIss?.latitude, selectedIss?.longitude) {
+        if (selectedIss != null) {
+            camera.snapTo(selectedIss.latitude.toFloat(), -selectedIss.longitude.toFloat(), camera.zoom.coerceAtLeast(1.8f))
+        }
+    }
+
+    val selectedSat = features.satellite.selectedSatellite
+    LaunchedEffect(selectedSat?.lat, selectedSat?.lng) {
+        if (selectedSat != null) {
+            camera.snapTo(selectedSat.lat.toFloat(), -selectedSat.lng.toFloat(), camera.zoom.coerceAtLeast(1.8f))
         }
     }
 }

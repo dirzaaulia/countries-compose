@@ -3,29 +3,27 @@ package com.dirzaaulia.countries.ui.mars
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
-import com.dirzaaulia.countries.domain.globe.GlobeState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.dp
+import com.dirzaaulia.countries.domain.globe.GlobeState
 import com.dirzaaulia.countries.domain.globe.latLngToCartesian
 import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
-import androidx.compose.material3.MaterialTheme
-import com.dirzaaulia.countries.ui.theme.extendedColors
 import com.dirzaaulia.countries.domain.globe.toRadians
 import com.dirzaaulia.countries.domain.mars.MarsLandmark
 import com.dirzaaulia.countries.ui.mars.MARS_LANDMARKS
 import com.dirzaaulia.countries.ui.overlay.CELESTIAL_STARS
+import com.dirzaaulia.countries.ui.theme.extendedColors
 import kotlinx.coroutines.launch
 import kotlin.math.cos
 import kotlin.math.pow
@@ -44,38 +42,38 @@ fun MarsOverlayCanvas(
     val currentOnLandmarkSelected = rememberUpdatedState(onLandmarkSelected)
     val currentSensitivity = rememberUpdatedState(sensitivity)
     val density = LocalDensity.current
-    
+
     val roboticColor = MaterialTheme.extendedColors.categoryRobotic
     val geologicalColor = MaterialTheme.extendedColors.categoryGeological
     val polarColor = MaterialTheme.extendedColors.categoryPolar
     val defaultColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     Canvas(
-        modifier = modifier
-            .pointerInput(Unit) {
-                val hitRadiusPx = with(density) { 32.dp.toPx() }
-                detectTapGestures { tapOffset ->
-                    handleMarsTap(
-                        offset = tapOffset,
-                        canvasSize = size,
-                        state = state,
-                        hitRadiusPx = hitRadiusPx,
-                        onLandmarkSelected = currentOnLandmarkSelected.value
-                    )
-                }
-            }
-            .pointerInput(Unit) {
-                detectTransformGestures { _, pan, zoomChange, _ ->
-                    scope.launch {
-                        state.stopAnimations()
-                        val dragFactor = currentSensitivity.value / state.zoom
-                        val newY = state.rotationY + pan.x * dragFactor
-                        val newX = state.rotationX + pan.y * dragFactor
-                        val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
-                        state.snapTo(newX, newY, newZoom)
+        modifier =
+            modifier
+                .pointerInput(Unit) {
+                    val hitRadiusPx = with(density) { 32.dp.toPx() }
+                    detectTapGestures { tapOffset ->
+                        handleMarsTap(
+                            offset = tapOffset,
+                            canvasSize = size,
+                            state = state,
+                            hitRadiusPx = hitRadiusPx,
+                            onLandmarkSelected = currentOnLandmarkSelected.value,
+                        )
                     }
-                }
-            }
+                }.pointerInput(Unit) {
+                    detectTransformGestures { _, pan, zoomChange, _ ->
+                        scope.launch {
+                            state.stopAnimations()
+                            val dragFactor = currentSensitivity.value / state.zoom
+                            val newY = state.rotationY + pan.x * dragFactor
+                            val newX = state.rotationX + pan.y * dragFactor
+                            val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
+                            state.snapTo(newX, newY, newZoom)
+                        }
+                    }
+                },
     ) {
         val canvasCenter = center
         val baseRadius = minOf(size.width, size.height) * 0.38f
@@ -86,7 +84,6 @@ fun MarsOverlayCanvas(
             planetRadius = currentRadius,
         )
 
-        
         MARS_LANDMARKS.forEach { landmark ->
             val isSelected = landmark.id == selectedLandmark?.id
             drawLandmarkBeacon(
@@ -99,7 +96,7 @@ fun MarsOverlayCanvas(
                 roboticColor = roboticColor,
                 geologicalColor = geologicalColor,
                 polarColor = polarColor,
-                defaultColor = defaultColor
+                defaultColor = defaultColor,
             )
         }
     }
@@ -198,7 +195,7 @@ private fun DrawScope.drawLandmarkBeacon(
     roboticColor: Color,
     geologicalColor: Color,
     polarColor: Color,
-    defaultColor: Color
+    defaultColor: Color,
 ) {
     val effectiveRotX = state.rotationX.toDouble()
     val effectiveRotY = state.rotationY.toDouble()
@@ -210,18 +207,19 @@ private fun DrawScope.drawLandmarkBeacon(
     var p = latLngToCartesian(landmark.lat, landmark.lng, radius.toDouble())
     p = rotateY(p, cosY, sinY)
     p = rotateX(p, cosX, sinX)
-    
+
     if (p.z > 0.0) {
         val ax = canvasCenter.x + p.x.toFloat()
         val ay = canvasCenter.y - p.y.toFloat()
         val center = Offset(ax, ay)
-        
-        val color = when (landmark.category) {
-            "ROVER", "LANDER" -> roboticColor
-            "MOUNTAIN", "CANYON", "BASIN" -> geologicalColor
-            "POLAR_CAP" -> polarColor
-            else -> defaultColor
-        }
+
+        val color =
+            when (landmark.category) {
+                "ROVER", "LANDER" -> roboticColor
+                "MOUNTAIN", "CANYON", "BASIN" -> geologicalColor
+                "POLAR_CAP" -> polarColor
+                else -> defaultColor
+            }
 
         val isFeature = landmark.category != "ROVER" && landmark.category != "LANDER"
 
@@ -232,14 +230,23 @@ private fun DrawScope.drawLandmarkBeacon(
                 center = center,
             )
         }
-        
+
         drawCircle(
             color = color.copy(alpha = if (isSelected) 0.9f else 0.65f),
-            radius = if (isSelected) 16f else if (isFeature) 9f else 11f,
+            radius =
+                if (isSelected) {
+                    16f
+                } else if (isFeature) {
+                    9f
+                } else {
+                    11f
+                },
             center = center,
-            style = androidx.compose.ui.graphics.drawscope.Stroke(width = if (isSelected) 2.5f else 1.8f),
+            style =
+                androidx.compose.ui.graphics.drawscope
+                    .Stroke(width = if (isSelected) 2.5f else 1.8f),
         )
-        
+
         if (!isFeature) {
             drawCircle(
                 color = color,
@@ -248,7 +255,7 @@ private fun DrawScope.drawLandmarkBeacon(
                 style = androidx.compose.ui.graphics.drawscope.Fill,
             )
         }
-        
+
         drawCircle(
             color = Color.White.copy(alpha = if (isFeature) 0.5f else 1.0f),
             radius = if (isSelected) 4f else 2.5f,

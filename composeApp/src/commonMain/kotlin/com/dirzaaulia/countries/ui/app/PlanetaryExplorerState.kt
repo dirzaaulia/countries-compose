@@ -14,7 +14,7 @@ import com.dirzaaulia.countries.ui.globe.SpaceWeatherUiState
 import com.dirzaaulia.countries.ui.satellite.SatelliteUiState
 import com.dirzaaulia.countries.ui.timezone.TimezoneUiState
 
-enum class ExplorerOverlay { LEGEND, METEOROLOGY, WORLD_BANK, NASA_CRISIS, SEARCH, TIME_MACHINE, SPACE_WEATHER }
+enum class ExplorerOverlay { LEGEND, METEOROLOGY, WORLD_BANK, NASA_CRISIS, SEARCH, TIME_MACHINE, SPACE_WEATHER, SOLAR_SYSTEM, MISSION_CONTROL }
 
 data class ExplorerControls(
     val showBorders: Boolean = true,
@@ -38,7 +38,9 @@ data class ExplorerFeatures(
     val satellite: SatelliteUiState,
     val comparison: ComparisonUiState = ComparisonUiState(),
     val timezone: TimezoneUiState = TimezoneUiState(),
-    val tectonic: com.dirzaaulia.countries.ui.tectonic.TectonicUiState = com.dirzaaulia.countries.ui.tectonic.TectonicUiState(),
+    val tectonic: com.dirzaaulia.countries.ui.tectonic.TectonicUiState =
+        com.dirzaaulia.countries.ui.tectonic
+            .TectonicUiState(),
 ) {
     val selectedCountry: Country?
         get() = globe.countries.find { it.id == globe.selectedCountryId }

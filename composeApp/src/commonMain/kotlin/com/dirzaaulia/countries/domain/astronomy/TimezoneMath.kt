@@ -34,11 +34,13 @@ fun calculateMarketStatus(
     }
 }
 
-fun calculateActiveMarketOverlap(utcHour: Double): List<FinancialMarket> {
-    return MAJOR_FINANCIAL_MARKETS.filter { market ->
+fun calculateActiveMarketOverlap(
+    utcHour: Double,
+    markets: List<FinancialMarket> = MAJOR_FINANCIAL_MARKETS,
+): List<FinancialMarket> =
+    markets.filter { market ->
         calculateMarketStatus(market, utcHour) == MarketStatus.OPEN
     }
-}
 
 fun calculateActiveOverlapName(activeMarkets: List<FinancialMarket>): String {
     val cities = activeMarkets.map { it.city.split(" ").first() }

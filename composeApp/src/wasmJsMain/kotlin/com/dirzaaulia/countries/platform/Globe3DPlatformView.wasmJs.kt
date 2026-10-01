@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
 import com.dirzaaulia.countries.domain.globe.GlobeState
+import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 
 /**
  * Web/WASM implementation of Globe3DPlatformView.
@@ -33,7 +34,7 @@ actual fun Globe3DPlatformView(
 
     LaunchedEffect(state.rotationX, state.rotationY, state.zoom, sunPosition, isPageActive) {
         if (isPageActive) {
-            PlanetWebGLRenderer.setPlanetMode(isMoon = false)
+            PlanetWebGLRenderer.setPlanetMode(planetType = 0.0f, isMoon = false)
             PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
             PlanetWebGLRenderer.setSunPosition(sunPosition)
         }
@@ -45,7 +46,7 @@ actual fun Globe3DPlatformView(
         val currentRadius = baseRadius * state.zoom
 
         if (isPageActive) {
-            PlanetWebGLRenderer.setPlanetMode(isMoon = false)
+            PlanetWebGLRenderer.setPlanetMode(planetType = 0.0f, isMoon = false)
             PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
             PlanetWebGLRenderer.setSunPosition(sunPosition)
             PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
@@ -120,6 +121,7 @@ actual fun Moon3DPlatformView(
     ) {
         if (isPageActive) {
             PlanetWebGLRenderer.setPlanetMode(
+                planetType = 1.0f,
                 isMoon = true,
                 phaseAngle = phaseAngle,
                 subsolarLatitude = subsolarLatitude,
@@ -137,6 +139,7 @@ actual fun Moon3DPlatformView(
 
         if (isPageActive) {
             PlanetWebGLRenderer.setPlanetMode(
+                planetType = 1.0f,
                 isMoon = true,
                 phaseAngle = phaseAngle,
                 subsolarLatitude = subsolarLatitude,
@@ -210,6 +213,7 @@ actual fun Mars3DPlatformView(
     ) {
         if (isPageActive) {
             PlanetWebGLRenderer.setPlanetMode(
+                planetType = 2.0f,
                 isMoon = false,
                 isMars = true,
             )
@@ -225,6 +229,7 @@ actual fun Mars3DPlatformView(
 
         if (isPageActive) {
             PlanetWebGLRenderer.setPlanetMode(
+                planetType = 2.0f,
                 isMoon = false,
                 isMars = true,
             )
@@ -264,6 +269,122 @@ actual fun Mars3DPlatformView(
             radius = currentRadius,
             center = canvasCenter,
             style = Stroke(width = 1.2f),
+        )
+    }
+}
+
+@Composable
+actual fun Planet3DPlatformView(
+    planetId: PlanetId,
+    state: GlobeState,
+    sunPosition: SunPosition,
+    isPageActive: Boolean,
+    modifier: Modifier,
+) {
+    if (planetId == PlanetId.EARTH) {
+        Globe3DPlatformView(state, sunPosition, isPageActive, modifier)
+        return
+    }
+    if (planetId == PlanetId.MOON) {
+        val planetTypeFloat =
+            when (planetId) {
+                PlanetId.EARTH -> 0f
+                PlanetId.MOON -> 1f
+                PlanetId.MARS -> 2f
+                PlanetId.MERCURY -> 3f
+                PlanetId.VENUS -> 4f
+                PlanetId.JUPITER -> 5f
+                PlanetId.SATURN -> 6f
+                PlanetId.URANUS -> 7f
+                PlanetId.NEPTUNE -> 8f
+                else -> 0f
+            }
+
+        val scope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            PlanetWebGLRenderer.ensureInitialized(scope)
+        }
+
+        LaunchedEffect(state.rotationX, state.rotationY, state.zoom, sunPosition, isPageActive, planetTypeFloat) {
+            if (isPageActive) {
+                PlanetWebGLRenderer.setPlanetMode(planetType = planetTypeFloat, isMoon = true)
+                PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+                PlanetWebGLRenderer.setSunPosition(sunPosition)
+            }
+        }
+
+        Canvas(modifier = modifier.fillMaxSize()) {
+            val canvasCenter = center
+            val baseRadius = minOf(size.width, size.height) * 0.38f
+            val currentRadius = baseRadius * state.zoom
+
+            if (isPageActive) {
+                PlanetWebGLRenderer.setPlanetMode(planetType = planetTypeFloat, isMoon = true)
+                PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+                PlanetWebGLRenderer.setSunPosition(sunPosition)
+                PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
+            }
+
+            drawCircle(
+                color = Color.Transparent,
+                radius = currentRadius,
+                center = canvasCenter,
+                blendMode = BlendMode.Clear,
+            )
+        }
+        return
+    }
+    if (planetId == PlanetId.MARS) {
+        Mars3DPlatformView(state, sunPosition, isPageActive, modifier)
+        return
+    }
+
+    val planetTypeFloat =
+        when (planetId) {
+            PlanetId.EARTH -> 0f
+            PlanetId.MOON -> 1f
+            PlanetId.MARS -> 2f
+            PlanetId.MERCURY -> 3f
+            PlanetId.VENUS -> 4f
+            PlanetId.JUPITER -> 5f
+            PlanetId.SATURN -> 6f
+            PlanetId.URANUS -> 7f
+            PlanetId.NEPTUNE -> 8f
+            else -> 0f
+        }
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        PlanetWebGLRenderer.ensureInitialized(scope)
+    }
+
+    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, sunPosition, isPageActive, planetTypeFloat) {
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(planetType = planetTypeFloat, isMoon = true)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.setSunPosition(sunPosition)
+        }
+    }
+
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val canvasCenter = center
+        val baseRadius = minOf(size.width, size.height) * 0.38f
+        val currentRadius = baseRadius * state.zoom
+
+        if (isPageActive) {
+            PlanetWebGLRenderer.setPlanetMode(planetType = planetTypeFloat, isMoon = true)
+            PlanetWebGLRenderer.updateCamera(state.rotationX, state.rotationY, state.zoom)
+            PlanetWebGLRenderer.setSunPosition(sunPosition)
+            PlanetWebGLRenderer.render(size.width.toInt(), size.height.toInt())
+        }
+
+        drawCircle(
+            color = Color.Transparent,
+            radius = currentRadius,
+            center = canvasCenter,
+            blendMode = BlendMode.Clear,
         )
     }
 }

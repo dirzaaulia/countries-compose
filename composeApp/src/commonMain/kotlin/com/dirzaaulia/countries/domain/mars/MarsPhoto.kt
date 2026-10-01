@@ -7,5 +7,5 @@ data class MarsPhoto(
     val cameraFullName: String,
     val imgSrc: String,
     val earthDate: String,
-    val roverName: String
+    val roverName: String,
 )

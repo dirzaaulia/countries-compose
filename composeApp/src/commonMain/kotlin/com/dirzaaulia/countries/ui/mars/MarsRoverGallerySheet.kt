@@ -17,9 +17,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,7 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MarsRoverGallerySheet(
     onClose: () -> Unit,
-    viewModel: MarsRoverGalleryViewModel = koinViewModel()
+    viewModel: MarsRoverGalleryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -57,14 +57,14 @@ fun MarsRoverGallerySheet(
         if (uiState.selectedPhoto != null) {
             FullScreenPhotoPreview(
                 photo = uiState.selectedPhoto!!,
-                onClose = { viewModel.selectPhoto(null) }
+                onClose = { viewModel.selectPhoto(null) },
             )
         } else {
             GalleryContent(
                 uiState = uiState,
                 onSelectRover = viewModel::selectRover,
                 onSelectPhoto = viewModel::selectPhoto,
-                onClose = onClose
+                onClose = onClose,
             )
         }
     }
@@ -75,14 +75,15 @@ private fun GalleryContent(
     uiState: MarsRoverUiState,
     onSelectRover: (String) -> Unit,
     onSelectPhoto: (MarsPhoto) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Spacing.medium)
-            .padding(bottom = Spacing.extraLarge),
-        verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.medium)
+                .padding(bottom = Spacing.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
     ) {
         HeaderRow(uiState.rover, onSelectRover, onClose)
         if (uiState.isLoading) {
@@ -103,12 +104,12 @@ private fun GalleryContent(
 private fun HeaderRow(
     currentRover: String,
     onSelectRover: (String) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         RoverSegmentedControl(currentRover, onSelectRover)
         MinimalistCloseButton(onClick = onClose)
@@ -118,13 +119,14 @@ private fun HeaderRow(
 @Composable
 private fun RoverSegmentedControl(
     currentRover: String,
-    onSelectRover: (String) -> Unit
+    onSelectRover: (String) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(Spacing.small))
-            .background(MaterialTheme.extendedColors.telemetryBackground)
-            .padding(4.dp)
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(Spacing.small))
+                .background(MaterialTheme.extendedColors.telemetryBackground)
+                .padding(4.dp),
     ) {
         RoverTab("Perseverance", currentRover == "perseverance") { onSelectRover("perseverance") }
         Spacer(modifier = Modifier.width(4.dp))
@@ -136,22 +138,23 @@ private fun RoverSegmentedControl(
 private fun RoverTab(
     label: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
-            .clickable(onClick = onClick)
-            .padding(horizontal = Spacing.medium, vertical = Spacing.small),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                .clickable(onClick = onClick)
+                .padding(horizontal = Spacing.medium, vertical = Spacing.small),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label.uppercase(),
             color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
+            letterSpacing = 1.sp,
         )
     }
 }
@@ -159,23 +162,24 @@ private fun RoverTab(
 @Composable
 private fun PhotoGrid(
     photos: List<MarsPhoto>,
-    onSelectPhoto: (MarsPhoto) -> Unit
+    onSelectPhoto: (MarsPhoto) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 120.dp),
         horizontalArrangement = Arrangement.spacedBy(Spacing.small),
         verticalArrangement = Arrangement.spacedBy(Spacing.small),
-        modifier = Modifier.height(400.dp) // Bound height inside sheet
+        modifier = Modifier.height(400.dp), // Bound height inside sheet
     ) {
         items(photos) { photo ->
             AsyncImage(
                 model = photo.imgSrc,
                 contentDescription = "Mars Photo",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(Spacing.small))
-                    .clickable { onSelectPhoto(photo) },
-                contentScale = ContentScale.Crop
+                modifier =
+                    Modifier
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(Spacing.small))
+                        .clickable { onSelectPhoto(photo) },
+                contentScale = ContentScale.Crop,
             )
         }
     }
@@ -184,16 +188,16 @@ private fun PhotoGrid(
 @Composable
 private fun FullScreenPhotoPreview(
     photo: MarsPhoto,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(Spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
                 Text(
@@ -201,12 +205,12 @@ private fun FullScreenPhotoPreview(
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
+                    letterSpacing = 1.sp,
                 )
                 Text(
                     text = "Earth Date: ${photo.earthDate}",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
             MinimalistCloseButton(onClick = onClose)
@@ -214,10 +218,11 @@ private fun FullScreenPhotoPreview(
         AsyncImage(
             model = photo.imgSrc,
             contentDescription = "Full Screen Mars Photo",
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(Spacing.medium)),
-            contentScale = ContentScale.Fit
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(Spacing.medium)),
+            contentScale = ContentScale.Fit,
         )
     }
 }

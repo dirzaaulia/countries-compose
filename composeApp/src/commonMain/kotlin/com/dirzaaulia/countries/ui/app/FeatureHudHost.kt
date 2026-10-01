@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,14 +15,14 @@ import com.dirzaaulia.countries.domain.astronomy.SunPosition
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
+import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
 import com.dirzaaulia.countries.ui.dossier.CountryDossierSheet
 import com.dirzaaulia.countries.ui.globe.CountryPeekBar
 import com.dirzaaulia.countries.ui.globe.FloatingExplorerBar
 import com.dirzaaulia.countries.ui.hud.FlightRouteHudCard
 import com.dirzaaulia.countries.ui.hud.HazardDetailSheet
 import com.dirzaaulia.countries.ui.hud.ISSTelemetryCard
-import androidx.compose.runtime.LaunchedEffect
-import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
+import com.dirzaaulia.countries.ui.hud.MissionControlTopBar
 import com.dirzaaulia.countries.ui.hud.QuizHudCard
 import com.dirzaaulia.countries.ui.satellite.SatelliteTelemetrySheet
 
@@ -29,9 +30,43 @@ import com.dirzaaulia.countries.ui.satellite.SatelliteTelemetrySheet
 fun BoxScope.FeatureHudHost(
     features: ExplorerFeatures,
     controls: ExplorerControls,
-    sunPos: SunPosition,
+    astronomy: ExplorerAstronomy,
+    activePage: Int,
     actions: ExplorerActions,
 ) {
+    if (activePage != 1) return
+
+    MissionControlTopBar(
+        currentPage = activePage,
+        onSelectPage = actions::selectPage,
+        showBorders = controls.showBorders,
+        onToggleBorders = actions::toggleBorders,
+        showSatellites = controls.showSatellites,
+        onToggleSatellites = actions::toggleSatellites,
+        showHazards = controls.showHazards,
+        onToggleHazards = actions::toggleHazards,
+        showAurora = controls.showAurora,
+        onToggleAurora = actions::toggleAurora,
+        showTimezones = features.timezone.isTimezoneLayerActive,
+        onToggleTimezones = actions::toggleTimezoneLayer,
+        showTectonic = features.tectonic.isTectonicLayerActive,
+        onToggleTectonic = actions::toggleTectonicLayer,
+        showTimeMachine = controls.overlay == ExplorerOverlay.TIME_MACHINE,
+        onToggleTimeMachine = actions::toggleTimeMachine,
+        showMissionControl = controls.overlay == ExplorerOverlay.MISSION_CONTROL,
+        onOpenMissionControl = { actions.setOverlay(ExplorerOverlay.MISSION_CONTROL) },
+        onCloseMissionControl = { actions.setOverlay(null) },
+        localTime = astronomy.localTime,
+        utcTime = astronomy.utcTime,
+        satelliteFleet = features.satellite.fleet,
+        selectedSatellite = features.satellite.selectedSatellite,
+        onSelectSatellite = actions::selectSatellite,
+        onOpenLegend = { actions.setOverlay(ExplorerOverlay.LEGEND) },
+        onOpenSearch = { actions.setOverlay(ExplorerOverlay.SEARCH) },
+        onOpenSpaceWeather = { actions.setOverlay(ExplorerOverlay.SPACE_WEATHER) },
+        modifier = Modifier.align(Alignment.TopCenter),
+    )
+
     val country = features.selectedCountry
     val hazard = features.hazards.selectedHazard
     val iss = features.iss.selectedIss
@@ -44,7 +79,7 @@ fun BoxScope.FeatureHudHost(
         iss == null &&
         satellite == null
     ) {
-        DossierHud(features, country, sunPos, actions)
+        DossierHud(features, country, astronomy.sun, actions)
     }
     hazard?.let { HazardHud(it, actions) }
     iss?.let { IssHud(it, actions) }
@@ -246,8 +281,7 @@ private fun ExplorerControlsHud(
         isQuizMode = features.quiz.isQuizMode,
         onToggleQuizMode = actions::toggleQuizMode,
         onOpenSpaceWeather = { actions.setOverlay(ExplorerOverlay.SPACE_WEATHER) },
-        showTectonic = features.tectonic.isTectonicLayerActive,
-        onToggleTectonic = actions::toggleTectonicLayer,
         onToggleMarketCard = actions::toggleMarketCard,
+        onOpenSolarSystem = { actions.setOverlay(ExplorerOverlay.SOLAR_SYSTEM) },
     )
 }

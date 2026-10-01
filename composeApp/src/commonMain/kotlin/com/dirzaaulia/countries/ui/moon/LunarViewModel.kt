@@ -37,7 +37,10 @@ class LunarViewModel : ViewModel() {
 
     fun getFilteredLandmarks(): List<LunarLandmark> {
         val cat = _uiState.value.selectedCategory
-        val query = _uiState.value.searchQuery.trim().lowercase()
+        val query =
+            _uiState.value.searchQuery
+                .trim()
+                .lowercase()
 
         return ALL_LUNAR_LANDMARKS.filter { landmark ->
             val matchCat = (cat == null || landmark.type == cat)

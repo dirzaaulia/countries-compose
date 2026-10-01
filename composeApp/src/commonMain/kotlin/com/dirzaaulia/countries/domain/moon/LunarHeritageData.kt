@@ -63,7 +63,6 @@ val LUNAR_HERITAGE_MISSIONS: List<LunarLandmark> =
             mission = LunarMissionMetadata("NASA", "US", "1972-12-11", 110.52, "LRV-003"),
             significance = "Final crewed Apollo mission featuring geologist Harrison Schmitt; discovered orange volcanic glass.",
         ),
-
         // Historic Soviet Luna (USSR)
         LunarLandmark(
             id = "luna-2",
@@ -105,7 +104,6 @@ val LUNAR_HERITAGE_MISSIONS: List<LunarLandmark> =
             mission = LunarMissionMetadata("USSR", "RU", "1976-08-18", 0.17, null),
             significance = "Final Soviet robotic sample return mission, extracting a 2-meter core sample proving lunar water trace presence.",
         ),
-
         // Modern International Fleet (China, India, Japan)
         LunarLandmark(
             id = "change-3",
@@ -169,7 +167,6 @@ val LUNAR_HERITAGE_MISSIONS: List<LunarLandmark> =
             mission = LunarMissionMetadata("JAXA", "JP", "2024-01-19", null, "LEV-1 / LEV-2"),
             significance = "Japan's precision 'Moon Sniper' lander achieving unprecedented 55-meter landing accuracy.",
         ),
-
         // Commercial CLPS & Artemis South Pole
         LunarLandmark(
             id = "im-1",

@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import com.dirzaaulia.countries.domain.globe.Point3D
 import com.dirzaaulia.countries.domain.globe.latLngToCartesian
 import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
@@ -52,10 +51,11 @@ fun DrawScope.drawSatelliteFleet(
                 drawPath(
                     path = trackPath,
                     color = Color(0xFF38BDF8).copy(alpha = 0.65f),
-                    style = Stroke(
-                        width = 4f,
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 12f), 0f)
-                    )
+                    style =
+                        Stroke(
+                            width = 4f,
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 12f), 0f),
+                        ),
                 )
             }
         }
@@ -74,12 +74,13 @@ fun DrawScope.drawSatelliteFleet(
             onSatPosCalculated(sat.id, pos)
 
             val isSelected = selectedSatellite?.id == sat.id
-            val mainColor = when (sat.id) {
-                "ISS" -> Color(0xFF38BDF8)       // Cyan
-                "CSS" -> Color(0xFFF59E0B)       // Golden Amber
-                "HST" -> Color(0xFFA855F7)       // Electric Violet
-                else -> Color(0xFF10B981)        // Emerald Green (JWST)
-            }
+            val mainColor =
+                when (sat.id) {
+                    "ISS" -> Color(0xFF38BDF8) // Cyan
+                    "CSS" -> Color(0xFFF59E0B) // Golden Amber
+                    "HST" -> Color(0xFFA855F7) // Electric Violet
+                    else -> Color(0xFF10B981) // Emerald Green (JWST)
+                }
 
             if (isJwst) {
                 // JWST Deep-Space Directional Reticle
@@ -87,19 +88,19 @@ fun DrawScope.drawSatelliteFleet(
                     color = mainColor.copy(alpha = strobeAlpha * 0.8f),
                     radius = if (isSelected) 18f else 12f,
                     center = pos,
-                    style = Stroke(width = 2.5f)
+                    style = Stroke(width = 2.5f),
                 )
                 drawLine(
                     color = mainColor,
                     start = Offset(pos.x - 16f, pos.y),
                     end = Offset(pos.x + 16f, pos.y),
-                    strokeWidth = 2f
+                    strokeWidth = 2f,
                 )
                 drawLine(
                     color = mainColor,
                     start = Offset(pos.x, pos.y - 16f),
                     end = Offset(pos.x, pos.y + 16f),
-                    strokeWidth = 2f
+                    strokeWidth = 2f,
                 )
             } else {
                 // 3-Ring Beacon for LEO Space Stations & Telescopes
@@ -112,12 +113,12 @@ fun DrawScope.drawSatelliteFleet(
                     color = mainColor.copy(alpha = if (isSelected) 0.9f else 0.6f),
                     radius = if (isSelected) 14f else 9f,
                     center = pos,
-                    style = Stroke(width = 2f)
+                    style = Stroke(width = 2f),
                 )
                 drawCircle(
                     color = Color.White,
                     radius = 4f,
-                    center = pos
+                    center = pos,
                 )
             }
         }

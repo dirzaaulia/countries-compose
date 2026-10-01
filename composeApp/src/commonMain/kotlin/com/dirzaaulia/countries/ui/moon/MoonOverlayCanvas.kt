@@ -257,7 +257,14 @@ private fun DrawScope.drawLandmarkBeacon(
 
     drawCircle(
         color = beaconColor.copy(alpha = if (isSelected) 0.9f else 0.65f),
-        radius = if (isSelected) 16f else if (isGeology) 9f else 11f,
+        radius =
+            if (isSelected) {
+                16f
+            } else if (isGeology) {
+                9f
+            } else {
+                11f
+            },
         center = center,
         style = Stroke(width = if (isSelected) 2.5f else 1.8f),
     )

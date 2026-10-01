@@ -28,13 +28,13 @@ import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.LatLng
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.domain.globe.Point3D
-import com.dirzaaulia.countries.domain.tectonic.Earthquake
-import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.domain.globe.latLngToCartesian
 import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toDegrees
 import com.dirzaaulia.countries.domain.globe.toRadians
+import com.dirzaaulia.countries.domain.tectonic.Earthquake
+import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.asin
@@ -749,7 +749,14 @@ internal fun DrawScope.drawTimezoneMeridians(
         if (pEq.z > 0.15) {
             val sx = canvasCenter.x + pEq.x.toFloat()
             val sy = canvasCenter.y - pEq.y.toFloat()
-            val label = if (m == 0) "UTC+0" else if (m > 0) "UTC+$m" else "UTC$m"
+            val label =
+                if (m == 0) {
+                    "UTC+0"
+                } else if (m > 0) {
+                    "UTC+$m"
+                } else {
+                    "UTC$m"
+                }
 
             val textResult =
                 textMeasurer.measure(
@@ -1108,6 +1115,3 @@ internal fun DrawScope.drawStockExchangesLayer(
         }
     }
 }
-
-
-

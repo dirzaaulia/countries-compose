@@ -40,7 +40,7 @@ data class MoonInfo(
 object AstronomyMath {
     /**
      * Calculates the real-time subsolar point (lat, lng) on Earth for a given epoch millis.
-     * At this point, the Sun is directly overhead (zenith).
+     * At this point, the Sun Sis directly overhead (zenith).
      */
     fun calculateSunPosition(epochMillis: Long = currentEpochMillis()): SunPosition {
         // Days since J2000.0 (January 1, 2000, 12:00 UTC)
@@ -143,7 +143,7 @@ object AstronomyMath {
         if (moonLng < -180.0) moonLng += 360.0
 
         val distanceKm = 384400.0 - 20000.0 * cos(meanAnomaly.toRadians)
-        
+
         val moonAgeDays = calculateMoonAge(epochMillis)
         val lightTravelSec = calculateLightTravelTime(distanceKm)
         val isSupermoon = isSupermoon(distanceKm, illuminatedFraction)
@@ -274,16 +274,15 @@ object AstronomyMath {
     /**
      * True if illuminatedFraction > 0.95 and distanceKm < 365,000 km.
      */
-    fun isSupermoon(distanceKm: Double, illuminatedFraction: Double): Boolean {
-        return illuminatedFraction > 0.95 && distanceKm < 365000.0
-    }
+    fun isSupermoon(
+        distanceKm: Double,
+        illuminatedFraction: Double,
+    ): Boolean = illuminatedFraction > 0.95 && distanceKm < 365000.0
 
     /**
      * Exact one-way communication delay in seconds.
      */
-    fun calculateLightTravelTime(distanceKm: Double): Double {
-        return distanceKm / 299792.458
-    }
+    fun calculateLightTravelTime(distanceKm: Double): Double = distanceKm / 299792.458
 
     /**
      * Subsolar coordinates on lunar surface.
@@ -295,7 +294,7 @@ object AstronomyMath {
         val argLatitude = (93.272 + 13.229350 * d) % 360.0
         val eclipticLng = (meanLng + 6.289 * sin(meanAnomaly.toRadians)) % 360.0
         val eclipticLat = 5.128 * sin(argLatitude.toRadians)
-        
+
         val sunMeanAnomaly = (357.529 + 0.98560028 * d).toRadians
         val sunEclipticLng = ((280.459 + 0.98564736 * d) + 1.915 * sin(sunMeanAnomaly)) % 360.0
         var elongation = (eclipticLng - sunEclipticLng) % 360.0
@@ -312,11 +311,13 @@ object AstronomyMath {
     /**
      * Returns surface temperature in Celsius and Kelvin.
      */
-    fun estimateLunarSurfaceTemperature(isIlluminated: Boolean, isPolar: Boolean): Pair<Double, Double> {
-        return when {
+    fun estimateLunarSurfaceTemperature(
+        isIlluminated: Boolean,
+        isPolar: Boolean,
+    ): Pair<Double, Double> =
+        when {
             isPolar && !isIlluminated -> -246.0 to 27.0
             isIlluminated -> 120.0 to 393.0
             else -> -130.0 to 143.0
         }
-    }
 }

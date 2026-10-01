@@ -88,9 +88,10 @@ internal fun CelestialSwitcher(
         modifier = modifier.heightIn(min = 38.dp),
     ) {
         Row(modifier = Modifier.padding(2.dp), verticalAlignment = Alignment.CenterVertically) {
-            CelestialTabPill("Earth", UiSymbol.Earth, currentPage == 0, Color(0xFF38BDF8), { onSelectPage(0) }, Modifier.weight(1f).fillMaxHeight())
-            CelestialTabPill("Moon", UiSymbol.Moon, currentPage == 1, Color(0xFFFFD54F), { onSelectPage(1) }, Modifier.weight(1f).fillMaxHeight())
-            CelestialTabPill("Mars", UiSymbol.Mars, currentPage == 2, Color(0xFFE67E22), { onSelectPage(2) }, Modifier.weight(1f).fillMaxHeight())
+            CelestialTabPill("Solar", UiSymbol.Solar, currentPage == 0, Color(0xFFFBBF24), { onSelectPage(0) }, Modifier.weight(1f).fillMaxHeight())
+            CelestialTabPill("Earth", UiSymbol.Earth, currentPage == 1, Color(0xFF38BDF8), { onSelectPage(1) }, Modifier.weight(1f).fillMaxHeight())
+            CelestialTabPill("Moon", UiSymbol.Moon, currentPage == 2, Color(0xFFFFD54F), { onSelectPage(2) }, Modifier.weight(1f).fillMaxHeight())
+            CelestialTabPill("Mars", UiSymbol.Mars, currentPage == 3, Color(0xFFE67E22), { onSelectPage(3) }, Modifier.weight(1f).fillMaxHeight())
         }
     }
 }
@@ -151,29 +152,35 @@ internal fun MissionStatusCard(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            val statusColor = when (currentPage) {
-                0 -> Color(0xFF10B981)
-                1 -> Color(0xFFFFD54F)
-                else -> Color(0xFFE67E22)
-            }
+            val statusColor =
+                when (currentPage) {
+                    0 -> Color(0xFFFBBF24)
+                    1 -> Color(0xFF10B981)
+                    2 -> Color(0xFFFFD54F)
+                    else -> Color(0xFFE67E22)
+                }
             Box(modifier = Modifier.size(8.dp).background(statusColor, CircleShape))
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text(
-                    text = when (currentPage) {
-                        0 -> "EARTH ORBITAL TRACKING"
-                        1 -> "LUNAR RANGE"
-                        else -> "MARS ROVER LINK"
-                    },
+                    text =
+                        when (currentPage) {
+                            0 -> "HELIOCENTRIC SOLAR SYSTEM"
+                            1 -> "EARTH ORBITAL TRACKING"
+                            2 -> "LUNAR RANGE"
+                            else -> "MARS ROVER LINK"
+                        },
                     color = Color.White,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = when (currentPage) {
-                        0 -> "OPERATIONAL · LIVE TELEMETRY"
-                        1 -> "${(moonDistanceKm / 1000.0).toInt()}K KM FROM EARTH"
-                        else -> "DSN LINK ESTABLISHED"
-                    },
+                    text =
+                        when (currentPage) {
+                            0 -> "REAL-TIME KEPLERIAN EPHEMERIS"
+                            1 -> "OPERATIONAL · LIVE TELEMETRY"
+                            2 -> "${(moonDistanceKm / 1000.0).toInt()}K KM FROM EARTH"
+                            else -> "DSN LINK ESTABLISHED"
+                        },
                     color = Color(0xFF94A3B8),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,

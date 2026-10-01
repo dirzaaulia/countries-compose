@@ -1,6 +1,15 @@
 package com.dirzaaulia.countries.ui.app
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.LiveCountryDetails
@@ -9,18 +18,20 @@ import com.dirzaaulia.countries.domain.tectonic.Earthquake
 import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.ui.comparison.ComparisonUiState
 import com.dirzaaulia.countries.ui.comparison.CountryComparisonSheet
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
+import com.dirzaaulia.countries.ui.dossier.MeteorologyStationSheet
+import com.dirzaaulia.countries.ui.dossier.NasaCrisisMonitorSheet
+import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
+import com.dirzaaulia.countries.ui.globe.SpaceWeatherHudCard
+import com.dirzaaulia.countries.ui.globe.SpaceWeatherUiState
+import com.dirzaaulia.countries.ui.hud.CountrySearchSheet
+import com.dirzaaulia.countries.ui.hud.MissionLegendSheet
+import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineSheet
+import com.dirzaaulia.countries.ui.solarsystem.SolarSystemView
 import com.dirzaaulia.countries.ui.tectonic.EarthquakeDetailSheet
 import com.dirzaaulia.countries.ui.tectonic.TectonicPlateSheet
 import com.dirzaaulia.countries.ui.timezone.GlobalMarketSheet
 import com.dirzaaulia.countries.ui.timezone.GlobalTimezoneSheet
-import com.dirzaaulia.countries.ui.dossier.MeteorologyStationSheet
-import com.dirzaaulia.countries.ui.dossier.NasaCrisisMonitorSheet
-import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
-import com.dirzaaulia.countries.ui.hud.CountrySearchSheet
-import com.dirzaaulia.countries.ui.hud.MissionLegendSheet
-import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineSheet
-import com.dirzaaulia.countries.ui.globe.SpaceWeatherHudCard
-import com.dirzaaulia.countries.ui.globe.SpaceWeatherUiState
 
 @Composable
 fun AppSheetsOverlay(
@@ -67,6 +78,7 @@ fun AppSheetsOverlay(
     onSelectTimezoneCountry: (Country) -> Unit = {},
     showMarketSheet: Boolean = false,
     activeMarkets: List<FinancialMarket> = emptyList(),
+    markets: List<FinancialMarket> = com.dirzaaulia.countries.domain.astronomy.MAJOR_FINANCIAL_MARKETS,
     onCloseMarketSheet: () -> Unit = {},
     onFlyToMarket: ((FinancialMarket) -> Unit)? = null,
     selectedPlate: TectonicPlate? = null,
@@ -74,6 +86,9 @@ fun AppSheetsOverlay(
     selectedEarthquake: Earthquake? = null,
     onCloseEarthquakeSheet: () -> Unit = {},
     onFlyToEarthquake: (Earthquake) -> Unit = {},
+    showSolarSystem: Boolean = false,
+    onCloseSolarSystem: () -> Unit = {},
+    onDiveFromSolarSystem: (com.dirzaaulia.countries.domain.solarsystem.PlanetId, Float, Float) -> Unit = { _, _, _ -> },
 ) {
     if (showLegendSheet && isSheetOpen) {
         MissionLegendSheet(onClose = onCloseLegend)
@@ -162,6 +177,7 @@ fun AppSheetsOverlay(
             activeMarkets = activeMarkets,
             currentUtcMillis = currentTimeMillis,
             onClose = onCloseMarketSheet,
+            allMarkets = markets,
             onFlyToMarket = onFlyToMarket,
         )
     }
@@ -181,5 +197,32 @@ fun AppSheetsOverlay(
                 onFlyToEarthquake(selectedEarthquake)
             },
         )
+    }
+
+    if (showSolarSystem && isSheetOpen) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF020408)),
+        ) {
+            SolarSystemView(
+                currentTimeMillis = currentTimeMillis,
+                onDiveToPlanet = { planetId, pitch, yaw ->
+                    onCloseSolarSystem()
+                    onDiveFromSolarSystem(planetId, pitch, yaw)
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+            Box(
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .statusBarsPadding()
+                        .padding(top = 12.dp, end = 16.dp),
+            ) {
+                MinimalistCloseButton(onClick = onCloseSolarSystem)
+            }
+        }
     }
 }

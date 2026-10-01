@@ -64,6 +64,7 @@ object PlanetWebGLRenderer {
     private var uCloudOffsetLoc: WebGLUniformLocation? = null
     private var uIsMoonLoc: WebGLUniformLocation? = null
     private var uIsMarsLoc: WebGLUniformLocation? = null
+    private var uPlanetTypeLoc: WebGLUniformLocation? = null
 
     // VBO & IBO buffers
     private var positionBuffer: WebGLBuffer? = null
@@ -78,10 +79,17 @@ object PlanetWebGLRenderer {
     private var cloudTexture: WebGLTexture? = null
     private var moonTexture: WebGLTexture? = null
     private var marsTexture: WebGLTexture? = null
+    private var mercuryTexture: WebGLTexture? = null
+    private var venusTexture: WebGLTexture? = null
+    private var jupiterTexture: WebGLTexture? = null
+    private var saturnTexture: WebGLTexture? = null
+    private var uranusTexture: WebGLTexture? = null
+    private var neptuneTexture: WebGLTexture? = null
 
     // Current state
     private var isMoonMode = false
     private var isMarsMode = false
+    private var planetType = 0f
     private var moonPhaseAngle = 0.0
     private var moonSubsolarLatitude = 0.0
     private var moonLibrationLatitude = 0.0
@@ -168,6 +176,7 @@ object PlanetWebGLRenderer {
         uCloudOffsetLoc = context.getUniformLocation(prog, "u_CloudOffset")
         uIsMoonLoc = context.getUniformLocation(prog, "u_IsMoon")
         uIsMarsLoc = context.getUniformLocation(prog, "u_IsMars")
+        uPlanetTypeLoc = context.getUniformLocation(prog, "u_PlanetType")
 
         setIdentity(viewMatrix)
 
@@ -221,9 +230,26 @@ object PlanetWebGLRenderer {
                 val moonBytes = runCatching { Res.readBytes("files/moon.jpg") }.getOrNull()
                 if (moonBytes != null) loadTextureFromBytes(moonBytes) { tex -> moonTexture = tex }
 
-                val marsBytes = runCatching { Res.readBytes("files/mars_2k.jpg") }.getOrNull()
-                    ?: moonBytes
+                val marsBytes = runCatching { Res.readBytes("files/mars_2k.jpg") }.getOrNull() ?: moonBytes
                 if (marsBytes != null) loadTextureFromBytes(marsBytes) { tex -> marsTexture = tex }
+
+                val mercBytes = runCatching { Res.readBytes("files/mercury.jpg") }.getOrNull() ?: moonBytes
+                if (mercBytes != null) loadTextureFromBytes(mercBytes) { tex -> mercuryTexture = tex }
+
+                val venBytes = runCatching { Res.readBytes("files/venus.jpg") }.getOrNull() ?: moonBytes
+                if (venBytes != null) loadTextureFromBytes(venBytes) { tex -> venusTexture = tex }
+
+                val jupBytes = runCatching { Res.readBytes("files/jupiter.jpg") }.getOrNull() ?: moonBytes
+                if (jupBytes != null) loadTextureFromBytes(jupBytes) { tex -> jupiterTexture = tex }
+
+                val satBytes = runCatching { Res.readBytes("files/saturn.jpg") }.getOrNull() ?: moonBytes
+                if (satBytes != null) loadTextureFromBytes(satBytes) { tex -> saturnTexture = tex }
+
+                val uraBytes = runCatching { Res.readBytes("files/uranus.jpg") }.getOrNull() ?: moonBytes
+                if (uraBytes != null) loadTextureFromBytes(uraBytes) { tex -> uranusTexture = tex }
+
+                val nepBytes = runCatching { Res.readBytes("files/neptune.jpg") }.getOrNull() ?: moonBytes
+                if (nepBytes != null) loadTextureFromBytes(nepBytes) { tex -> neptuneTexture = tex }
             } catch (e: Exception) {
                 println("PlanetWebGLRenderer: Error loading textures: ${e.message}")
             }
@@ -277,13 +303,15 @@ object PlanetWebGLRenderer {
     }
 
     fun setPlanetMode(
-        isMoon: Boolean,
+        planetType: Float,
+        isMoon: Boolean = false,
         isMars: Boolean = false,
         phaseAngle: Double = 0.0,
         subsolarLatitude: Double = 0.0,
         librationLatitude: Double = 0.0,
         librationLongitude: Double = 0.0,
     ) {
+        this.planetType = planetType
         isMoonMode = isMoon
         isMarsMode = isMars
         moonPhaseAngle = phaseAngle
@@ -327,7 +355,18 @@ object PlanetWebGLRenderer {
 
         context.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
-        val activeDayTex = if (isMoonMode) (moonTexture ?: dayTexture) else if (isMarsMode) (marsTexture ?: dayTexture) else dayTexture
+        val activeDayTex =
+            when {
+                planetType in 3.5f..4.5f -> venusTexture ?: dayTexture
+                planetType in 4.5f..5.5f -> jupiterTexture ?: dayTexture
+                planetType in 5.5f..6.5f -> saturnTexture ?: dayTexture
+                planetType in 6.5f..7.5f -> uranusTexture ?: dayTexture
+                planetType in 7.5f..8.5f -> neptuneTexture ?: dayTexture
+                planetType in 2.5f..3.5f -> mercuryTexture ?: dayTexture
+                isMarsMode || (planetType in 1.5f..2.5f) -> marsTexture ?: dayTexture
+                isMoonMode || (planetType in 0.5f..1.5f) -> moonTexture ?: dayTexture
+                else -> dayTexture
+            }
         if (activeDayTex == null) return // Texture still streaming
 
         context.useProgram(prog)
@@ -362,6 +401,7 @@ object PlanetWebGLRenderer {
         context.uniform1f(uCloudOffsetLoc, 0f)
         context.uniform1f(uIsMoonLoc, if (isMoonMode) 1.0f else 0.0f)
         context.uniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
+        context.uniform1f(uPlanetTypeLoc, planetType)
 
         // 3. Sun Direction calculation
         val radX = modelPitch.toDouble() * PI / 180.0

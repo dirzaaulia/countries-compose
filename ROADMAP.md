@@ -111,6 +111,9 @@ Detailed technical specifications, math proofs, and engine architectures are org
 | 81 | Tectonic Plates & Seismic Fault Lines | [03. Hazards](docs/roadmap/03_iss_eonet_hazards.md) | ✅ DONE | P1 | Lithospheric plate boundaries, Pacific Ring of Fire volcanic aura, live USGS earthquakes with depth color-coding & shockwave rings, and tectonic/seismic detail sheets |
 | 82 | Lunar Heritage & Selenological Geology Layer | [01. Moon](docs/roadmap/01_deep_space_moon.md) | ✅ DONE | P1 | International lunar mission heritage archive (Apollo, Soviet Luna, Chang'e, Chandrayaan-3, SLIM, CLPS), geological Maria & Craters, far-side tidally locked badge, and Category Filter Bar |
 | 83 | Financial Market Stock Exchanges Globe Layer | [02. Solar](docs/roadmap/02_astronomy_shaders.md) | ✅ DONE | P1 | Dynamic Remote Config stock exchange bundle provider with in-app defaults, 3D Globe vector layer with status-colored beacons ([OPEN], [SOON], [CLOSED]), exchange/local timezone dual displays, and "Fly to Exchange" 3D camera auto-glide |
+| 84 | Heliocentric Solar System & Live Keplerian Planetary Orbits (Initial Launch Screen) | [01. Deep Space](docs/roadmap/01_deep_space_moon.md) | ✅ DONE | P0 | Initial app entry point: Sun at center with procedural corona, live millisecond-accurate Keplerian orbital mechanics (Mercury to Saturn), 3D interactive gesture navigation, and smooth dive transitions into Earth, Moon, and Mars |
+| 85 | 3D Planetary Night Lighting Enhancement & Day/Night Terminator Scrubber | [01. Deep Space](docs/roadmap/01_deep_space_moon.md) | ✅ DONE | P1 | Reduced harsh dark region and boosted night ambient lighting (~0.42–0.45) across all 3D rendered planets (Mercury to Neptune) with soft atmospheric limb glow in GlobeShaders; added real-time day/night solar terminator scrubber HUD with RESET LIVE action to GenericPlanetView |
+
 
 
 

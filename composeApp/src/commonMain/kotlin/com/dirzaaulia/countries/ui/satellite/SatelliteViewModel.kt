@@ -17,11 +17,11 @@ data class SatelliteUiState(
     val selectedSatellite: SatelliteTelemetry? = null,
     val nextPassOverSelectedCountry: String? = null,
     val isSatellitesLayerVisible: Boolean = true,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )
 
 class SatelliteViewModel(
-    private val repository: SatelliteRepository
+    private val repository: SatelliteRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SatelliteUiState())
     val uiState: StateFlow<SatelliteUiState> = _uiState.asStateFlow()
@@ -38,7 +38,10 @@ class SatelliteViewModel(
         _uiState.update { it.copy(isSatellitesLayerVisible = !it.isSatellitesLayerVisible) }
     }
 
-    fun calculateNextPassForCountry(countryLat: Double, countryLng: Double) {
+    fun calculateNextPassForCountry(
+        countryLat: Double,
+        countryLng: Double,
+    ) {
         val selected = _uiState.value.selectedSatellite ?: return
         val pass = repository.calculateNextPass(selected, LatLng(countryLat, countryLng))
         if (pass != null) {
@@ -58,7 +61,7 @@ class SatelliteViewModel(
                 it.copy(
                     fleet = fleet,
                     selectedSatellite = updatedSelected,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }

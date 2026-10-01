@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,14 +65,13 @@ import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toDegrees
 import com.dirzaaulia.countries.domain.globe.toRadians
+import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
+import com.dirzaaulia.countries.domain.tectonic.Earthquake
+import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.platform.Globe3DPlatformView
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.ui.overlay.CELESTIAL_STARS
-import androidx.compose.ui.text.rememberTextMeasurer
-import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
-import com.dirzaaulia.countries.domain.tectonic.Earthquake
-import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.ui.overlay.drawAuroralOval
 import com.dirzaaulia.countries.ui.overlay.drawCartographicBorders
 import com.dirzaaulia.countries.ui.overlay.drawCountryHighlights
@@ -356,9 +356,10 @@ fun GlobeView(
                                     // Check Fleet Satellites Tap
                                     val fleetList = currentSatelliteFleet
                                     if (currentShowSatellites && fleetList.isNotEmpty()) {
-                                        val nearbySat = fleetList.find { sat ->
-                                            AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(sat.lat, sat.lng)) < 800.0
-                                        }
+                                        val nearbySat =
+                                            fleetList.find { sat ->
+                                                AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(sat.lat, sat.lng)) < 800.0
+                                            }
                                         if (nearbySat != null) {
                                             currentOnSatelliteSelected?.invoke(nearbySat)
                                             return@detectTapGestures
@@ -394,9 +395,10 @@ fun GlobeView(
                                     // Check Stock Exchanges Tap
                                     val marketsList = currentMarkets
                                     if (currentIsMarketLayerActive && marketsList.isNotEmpty()) {
-                                        val nearbyMarket = marketsList.find { m ->
-                                            AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(m.lat, m.lng)) < 500.0
-                                        }
+                                        val nearbyMarket =
+                                            marketsList.find { m ->
+                                                AstronomyMath.calculateGreatCircleDistance(tappedLatLng, LatLng(m.lat, m.lng)) < 500.0
+                                            }
                                         if (nearbyMarket != null) {
                                             currentOnMarketSelected?.invoke(nearbyMarket)
                                             return@detectTapGestures

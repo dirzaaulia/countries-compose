@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -23,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.data.repository.AuroralCountry
 import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
@@ -47,10 +44,11 @@ fun SpaceWeatherHudCard(
         scrimColor = MaterialTheme.colorScheme.background.copy(alpha = 0f),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Spacing.medium)
-                .padding(bottom = Spacing.extraLarge),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.medium)
+                    .padding(bottom = Spacing.extraLarge),
             verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             HeaderSection(onClose)
@@ -89,20 +87,22 @@ private fun HeaderSection(onClose: () -> Unit) {
 
 @Composable
 private fun KpIndexGauge(kpIndex: Double) {
-    val category = when {
-        kpIndex < 3.0 -> "QUIET" to MaterialTheme.extendedColors.statusActive
-        kpIndex < 4.0 -> "UNSETTLED" to MaterialTheme.extendedColors.categoryRobotic
-        kpIndex < 5.0 -> "ACTIVE" to MaterialTheme.extendedColors.categoryRobotic
-        kpIndex < 6.0 -> "MINOR STORM" to MaterialTheme.extendedColors.categoryGeological
-        else -> "SEVERE STORM" to MaterialTheme.extendedColors.categoryGeological
-    }
+    val category =
+        when {
+            kpIndex < 3.0 -> "QUIET" to MaterialTheme.extendedColors.statusActive
+            kpIndex < 4.0 -> "UNSETTLED" to MaterialTheme.extendedColors.categoryRobotic
+            kpIndex < 5.0 -> "ACTIVE" to MaterialTheme.extendedColors.categoryRobotic
+            kpIndex < 6.0 -> "MINOR STORM" to MaterialTheme.extendedColors.categoryGeological
+            else -> "SEVERE STORM" to MaterialTheme.extendedColors.categoryGeological
+        }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(Spacing.small))
-            .background(MaterialTheme.extendedColors.telemetryBackground)
-            .padding(Spacing.medium),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(Spacing.small))
+                .background(MaterialTheme.extendedColors.telemetryBackground)
+                .padding(Spacing.medium),
         verticalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         Row(
@@ -125,45 +125,52 @@ private fun KpIndexGauge(kpIndex: Double) {
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(Spacing.small)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(Spacing.small)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth((kpIndex / 9.0).toFloat().coerceIn(0f, 1f))
-                    .height(Spacing.small)
-                    .background(category.second),
+                modifier =
+                    Modifier
+                        .fillMaxWidth((kpIndex / 9.0).toFloat().coerceIn(0f, 1f))
+                        .height(Spacing.small)
+                        .background(category.second),
             )
         }
     }
 }
 
 @Composable
-private fun TelemetryRow(solarWindSpeed: Double, bzGsm: Double) {
+private fun TelemetryRow(
+    solarWindSpeed: Double,
+    bzGsm: Double,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .clip(RoundedCornerShape(Spacing.small))
-                .background(MaterialTheme.extendedColors.telemetryBackground)
-                .padding(Spacing.small),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(Spacing.small))
+                    .background(MaterialTheme.extendedColors.telemetryBackground)
+                    .padding(Spacing.small),
         ) {
             Text("SOLAR WIND SPEED", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             Text("${solarWindSpeed.roundToInt()} km/s", color = MaterialTheme.colorScheme.onSurface, fontSize = 13.sp, fontWeight = FontWeight.Bold)
         }
 
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .clip(RoundedCornerShape(Spacing.small))
-                .background(MaterialTheme.extendedColors.telemetryBackground)
-                .padding(Spacing.small),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(Spacing.small))
+                    .background(MaterialTheme.extendedColors.telemetryBackground)
+                    .padding(Spacing.small),
         ) {
             Text("Bz GSM VECTOR", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             Text("$bzGsm nT", color = MaterialTheme.colorScheme.onSurface, fontSize = 13.sp, fontWeight = FontWeight.Bold)
@@ -188,11 +195,12 @@ private fun AffectedCountriesRow(
         LazyRow(horizontalArrangement = Arrangement.spacedBy(Spacing.small)) {
             items(countries) { country ->
                 Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(Spacing.small))
-                        .background(MaterialTheme.extendedColors.telemetryBackground)
-                        .clickable { onFlyToCountry(country.lat, country.lng) }
-                        .padding(horizontal = Spacing.medium, vertical = Spacing.small),
+                    modifier =
+                        Modifier
+                            .clip(RoundedCornerShape(Spacing.small))
+                            .background(MaterialTheme.extendedColors.telemetryBackground)
+                            .clickable { onFlyToCountry(country.lat, country.lng) }
+                            .padding(horizontal = Spacing.medium, vertical = Spacing.small),
                 ) {
                     Text(
                         text = country.name,

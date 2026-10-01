@@ -44,18 +44,23 @@ fun GlobalTimezoneSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val meridianLng = utcOffset * 15.0
     val formattedMeridian =
-        if (meridianLng == 0.0) "0° Greenwich"
-        else if (meridianLng > 0) "${meridianLng.toInt()}°E"
-        else "${abs(meridianLng).toInt()}°W"
+        if (meridianLng == 0.0) {
+            "0° Greenwich"
+        } else if (meridianLng > 0) {
+            "${meridianLng.toInt()}°E"
+        } else {
+            "${abs(meridianLng).toInt()}°W"
+        }
 
     val matchingCountries =
-        allCountries.filter { country ->
-            abs(country.center.lng - meridianLng) <= 12.0 ||
-                country.timezones.any { tz ->
-                    tz.contains(if (utcOffset >= 0) "UTC+${utcOffset}" else "UTC$utcOffset") ||
-                        tz.contains(if (utcOffset >= 0) "+${utcOffset}" else "$utcOffset")
-                }
-        }.take(12)
+        allCountries
+            .filter { country ->
+                abs(country.center.lng - meridianLng) <= 12.0 ||
+                    country.timezones.any { tz ->
+                        tz.contains(if (utcOffset >= 0) "UTC+$utcOffset" else "UTC$utcOffset") ||
+                            tz.contains(if (utcOffset >= 0) "+$utcOffset" else "$utcOffset")
+                    }
+            }.take(12)
 
     val solarTime = localSolarTime(meridianLng)
 

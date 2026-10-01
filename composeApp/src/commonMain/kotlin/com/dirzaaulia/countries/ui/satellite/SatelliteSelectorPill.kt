@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
-import com.dirzaaulia.countries.ui.theme.Spacing
 import com.dirzaaulia.countries.ui.theme.extendedColors
 
 @Composable
@@ -43,24 +42,26 @@ fun SatelliteSelectorPill(
         Row(
             modifier = Modifier.padding(2.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             fleet.forEach { sat ->
                 val isSelected = selectedSatellite?.id == sat.id
-                val tabColor = when (sat.id) {
-                    "ISS" -> MaterialTheme.colorScheme.primary
-                    "CSS" -> MaterialTheme.extendedColors.categoryRobotic
-                    "HST" -> Color(0xFFA855F7)
-                    else -> MaterialTheme.extendedColors.statusActive
-                }
+                val tabColor =
+                    when (sat.id) {
+                        "ISS" -> MaterialTheme.colorScheme.primary
+                        "CSS" -> MaterialTheme.extendedColors.categoryRobotic
+                        "HST" -> Color(0xFFA855F7)
+                        else -> MaterialTheme.extendedColors.statusActive
+                    }
 
                 Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(17.dp))
-                        .background(if (isSelected) tabColor.copy(alpha = 0.25f) else Color.Transparent)
-                        .clickable { onSelectSatellite(sat) },
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(17.dp))
+                            .background(if (isSelected) tabColor.copy(alpha = 0.25f) else Color.Transparent)
+                            .clickable { onSelectSatellite(sat) },
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(

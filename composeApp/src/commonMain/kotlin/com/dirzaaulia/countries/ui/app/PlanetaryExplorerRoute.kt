@@ -1,9 +1,9 @@
 package com.dirzaaulia.countries.ui.app
 
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,6 +26,7 @@ fun PlanetaryExplorerRoute() {
     val satellite by models.satellite.uiState.collectAsState()
     val comparison by models.comparison.uiState.collectAsState()
     val timezone by models.timezone.uiState.collectAsState()
+    val tectonic by models.tectonic.uiState.collectAsState()
     val features =
         ExplorerFeatures(
             globe = globe,
@@ -38,25 +39,28 @@ fun PlanetaryExplorerRoute() {
             satellite = satellite,
             comparison = comparison,
             timezone = timezone,
+            tectonic = tectonic,
         )
     var controls by remember { mutableStateOf(ExplorerControls(currentTimeMillis = currentEpochMillis())) }
     val camera = rememberGlobeState()
     val moonCamera = rememberGlobeState()
     val marsCamera = rememberGlobeState()
-    val pager = rememberPagerState(initialPage = 0, pageCount = { 3 })
+    var activePage by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
 
     androidx.compose.runtime.LaunchedEffect(controls.currentTimeMillis) {
         models.timezone.updateTime(controls.currentTimeMillis)
     }
 
-    ExplorerEffects(features, controls, pager.currentPage, camera, models) {
+    ExplorerEffects(features, controls, activePage, camera, models) {
         controls = it(controls)
     }
     val actions =
         ExplorerActions(
             scope = scope,
             camera = camera,
+            moonCamera = moonCamera,
+            marsCamera = marsCamera,
             globeVm = models.globe,
             hazardVm = models.hazard,
             issVm = models.iss,
@@ -67,9 +71,9 @@ fun PlanetaryExplorerRoute() {
             timezoneVm = models.timezone,
             tectonicVm = models.tectonic,
             features = features,
-        ) {
-            controls = it(controls)
-        }
+            update = { controls = it(controls) },
+            onSelectPage = { page -> activePage = page },
+        )
     PlanetaryExplorerScreen(
         features = features,
         controls = controls,
@@ -77,7 +81,7 @@ fun PlanetaryExplorerRoute() {
         camera = camera,
         moonCamera = moonCamera,
         marsCamera = marsCamera,
-        pager = pager,
+        activePage = activePage,
         actions = actions,
     )
 }

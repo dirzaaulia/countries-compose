@@ -32,14 +32,15 @@ class SpaceWeatherViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val info = repository.fetchSpaceWeather()
-            _uiState.value = SpaceWeatherUiState(
-                kpIndex = info.kpIndex,
-                solarWindSpeed = info.solarWindSpeed,
-                bzGsm = info.bzGsm,
-                isAuroraActive = info.isAuroraActive,
-                affectedCountries = info.affectedCountries,
-                isLoading = false,
-            )
+            _uiState.value =
+                SpaceWeatherUiState(
+                    kpIndex = info.kpIndex,
+                    solarWindSpeed = info.solarWindSpeed,
+                    bzGsm = info.bzGsm,
+                    isAuroraActive = info.isAuroraActive,
+                    affectedCountries = info.affectedCountries,
+                    isLoading = false,
+                )
         }
     }
 }

@@ -20,7 +20,7 @@ internal fun ExplorerGlobe(
         selectedCountryId = features.globe.selectedCountryId,
         onCountrySelected = actions::onCountryTap,
         state = camera,
-        isPageActive = page == 0,
+        isPageActive = page == 1,
         isSheetOpen = features.isAnySheetOpen(controls, page),
         isSupersonic = controls.isSupersonicFlight,
         showBorders = controls.showBorders,

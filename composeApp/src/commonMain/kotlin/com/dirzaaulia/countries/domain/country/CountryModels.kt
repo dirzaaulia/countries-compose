@@ -29,8 +29,6 @@ data class Geometry(
     val coordinates: JsonElement,
 )
 
-
-
 data class LatLng(
     val lat: Double,
     val lng: Double,

@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.dirzaaulia.countries.domain.astronomy.AstronomyMath
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
 import com.dirzaaulia.countries.domain.globe.GlobeState
+import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 
 @Composable
 expect fun Globe3DPlatformView(
@@ -27,6 +28,15 @@ expect fun Moon3DPlatformView(
 
 @Composable
 expect fun Mars3DPlatformView(
+    state: GlobeState,
+    sunPosition: SunPosition = AstronomyMath.calculateSunPosition(),
+    isPageActive: Boolean = true,
+    modifier: Modifier = Modifier,
+)
+
+@Composable
+expect fun Planet3DPlatformView(
+    planetId: PlanetId,
     state: GlobeState,
     sunPosition: SunPosition = AstronomyMath.calculateSunPosition(),
     isPageActive: Boolean = true,

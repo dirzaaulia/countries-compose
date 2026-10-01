@@ -58,14 +58,15 @@ fun MarsEnvironmentHudCard(
         shape = RoundedCornerShape(Spacing.medium),
         color = MaterialTheme.extendedColors.overlayBackground,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
-        modifier = modifier
-            .navigationBarsPadding()
-            .padding(Spacing.medium)
-            .fillMaxWidth()
+        modifier =
+            modifier
+                .navigationBarsPadding()
+                .padding(Spacing.medium)
+                .fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.medium),
-            verticalArrangement = Arrangement.spacedBy(Spacing.small)
+            verticalArrangement = Arrangement.spacedBy(Spacing.small),
         ) {
             MarsTimeRow(info.solNumber, info.mtcTimeFormatted, info.isDustStormSeason)
 
@@ -73,7 +74,7 @@ fun MarsEnvironmentHudCard(
                 text = "${info.seasonName} (Ls ${(info.solarLongitudeDeg * 10).roundToInt() / 10.0}°)",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
 
             Spacer(modifier = Modifier.height(Spacing.extraSmall))
@@ -83,52 +84,57 @@ fun MarsEnvironmentHudCard(
 }
 
 @Composable
-private fun MarsTimeRow(sol: Long, mtc: String, isDustStorm: Boolean) {
+private fun MarsTimeRow(
+    sol: Long,
+    mtc: String,
+    isDustStorm: Boolean,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(Spacing.small),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "SOL $sol",
                 color = MaterialTheme.extendedColors.categoryRobotic,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.ExtraBold,
-                letterSpacing = 1.sp
+                letterSpacing = 1.sp,
             )
             Text(
                 text = mtc,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
         if (isDustStorm) {
             Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(Spacing.small))
-                    .background(MaterialTheme.extendedColors.categoryGeological.copy(alpha = 0.2f))
-                    .padding(horizontal = Spacing.small, vertical = 2.dp),
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(Spacing.small))
+                        .background(MaterialTheme.extendedColors.categoryGeological.copy(alpha = 0.2f))
+                        .padding(horizontal = Spacing.small, vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Warning,
                     contentDescription = "Dust Storm Warning",
                     tint = MaterialTheme.extendedColors.categoryGeological,
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(12.dp),
                 )
                 Text(
                     text = "DUST STORM SEASON",
                     color = MaterialTheme.extendedColors.categoryGeological,
                     fontSize = 9.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -136,37 +142,41 @@ private fun MarsTimeRow(sol: Long, mtc: String, isDustStorm: Boolean) {
 }
 
 @Composable
-private fun MarsTelemetryPill(distance: Double, delayMin: Double) {
+private fun MarsTelemetryPill(
+    distance: Double,
+    delayMin: Double,
+) {
     Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(Spacing.small))
-            .background(MaterialTheme.extendedColors.telemetryBackground)
-            .padding(horizontal = Spacing.medium, vertical = Spacing.small),
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(Spacing.small))
+                .background(MaterialTheme.extendedColors.telemetryBackground)
+                .padding(horizontal = Spacing.medium, vertical = Spacing.small),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+        horizontalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         Icon(
             imageVector = Icons.Outlined.CellTower,
             contentDescription = "Radio Link",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(14.dp),
         )
         Text(
             text = "${(distance * 10).roundToInt() / 10.0}M km",
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 11.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = "•",
             color = MaterialTheme.colorScheme.outline,
-            fontSize = 11.sp
+            fontSize = 11.sp,
         )
         Text(
             text = "${(delayMin * 10).roundToInt() / 10.0} min delay",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }

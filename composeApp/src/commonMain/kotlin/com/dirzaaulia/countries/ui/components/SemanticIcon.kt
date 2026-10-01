@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class UiSymbol {
+    Solar,
     Earth,
     Moon,
     Mars,
@@ -106,6 +107,7 @@ fun SemanticIcon(
 private val UiSymbol.imageVector: ImageVector
     get() =
         when (this) {
+            UiSymbol.Solar -> Icons.Outlined.WbSunny
             UiSymbol.Earth -> Icons.Outlined.Public
             UiSymbol.Moon -> Icons.Outlined.Brightness3
             UiSymbol.Mars -> Icons.Outlined.Public

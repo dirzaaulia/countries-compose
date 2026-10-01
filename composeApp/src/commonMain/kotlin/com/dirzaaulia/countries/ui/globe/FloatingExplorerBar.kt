@@ -53,9 +53,8 @@ fun FloatingExplorerBar(
     onToggleQuizMode: () -> Unit,
     modifier: Modifier = Modifier,
     onOpenSpaceWeather: () -> Unit = {},
-    showTectonic: Boolean = false,
-    onToggleTectonic: () -> Unit = {},
     onToggleMarketCard: () -> Unit = {},
+    onOpenSolarSystem: () -> Unit = {},
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -185,14 +184,6 @@ fun FloatingExplorerBar(
                             isExpanded = false
                             onOpenSpaceWeather()
                         },
-                    )
-
-                    MenuActionButton(
-                        label = "Tectonic Plates",
-                        symbol = UiSymbol.Landscape,
-                        color = if (showTectonic) Color(0xFFEF4444) else Color(0xFF64748B),
-                        isActive = showTectonic,
-                        onClick = { onToggleTectonic() },
                     )
 
                     MenuActionButton(

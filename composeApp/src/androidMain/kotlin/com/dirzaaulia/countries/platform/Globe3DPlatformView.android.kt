@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
 import com.dirzaaulia.countries.domain.globe.GlobeState
+import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 import com.dirzaaulia.countries.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,7 +33,6 @@ actual fun Globe3DPlatformView(
         surfaceView?.requestRender()
     }
 
-    // Pause/resume the GL thread when this page is not visible
     LaunchedEffect(isPageActive) {
         val sv = surfaceView ?: return@LaunchedEffect
         if (isPageActive) {
@@ -64,7 +64,6 @@ actual fun Globe3DPlatformView(
                 setEGLConfigChooser(8, 8, 8, 8, 16, 0)
                 holder.setFormat(PixelFormat.TRANSLUCENT)
                 setZOrderMediaOverlay(true)
-                // Preserve EGL context across pause/resume and window transitions (fixes blackout after sheet dismiss)
                 preserveEGLContextOnPause = true
                 val earthRenderer =
                     EarthGLRenderer(ctx).apply {
@@ -78,7 +77,6 @@ actual fun Globe3DPlatformView(
             }
         },
         update = { sv ->
-            // Force a redraw every time the composable is re-evaluated (e.g. after sheet dismiss)
             sv.requestRender()
         },
         modifier = modifier,
@@ -108,7 +106,6 @@ actual fun Moon3DPlatformView(
         surfaceView?.requestRender()
     }
 
-    // Pause/resume the GL thread when this page is not visible
     LaunchedEffect(isPageActive) {
         val sv = surfaceView ?: return@LaunchedEffect
         if (isPageActive) {
@@ -219,6 +216,120 @@ actual fun Mars3DPlatformView(
         update = { sv ->
             sv.requestRender()
         },
+        modifier = modifier,
+    )
+}
+
+@Composable
+actual fun Planet3DPlatformView(
+    planetId: PlanetId,
+    state: GlobeState,
+    sunPosition: SunPosition,
+    isPageActive: Boolean,
+    modifier: Modifier,
+) {
+    if (planetId == PlanetId.EARTH) {
+        Globe3DPlatformView(state, sunPosition, isPageActive, modifier)
+        return
+    }
+    if (planetId == PlanetId.MOON) {
+        Moon3DPlatformView(state = state, isPageActive = isPageActive, modifier = modifier)
+        return
+    }
+    if (planetId == PlanetId.MARS) {
+        Mars3DPlatformView(state, sunPosition, isPageActive, modifier)
+        return
+    }
+
+    val planetTypeFloat =
+        remember(planetId) {
+            when (planetId) {
+                PlanetId.MERCURY -> 3f
+                PlanetId.VENUS -> 4f
+                PlanetId.JUPITER -> 5f
+                PlanetId.SATURN -> 6f
+                PlanetId.URANUS -> 7f
+                PlanetId.NEPTUNE -> 8f
+                else -> 1f
+            }
+        }
+
+    var renderer by remember { mutableStateOf<EarthGLRenderer?>(null) }
+    var surfaceView by remember { mutableStateOf<GLSurfaceView?>(null) }
+
+    LaunchedEffect(state.rotationX, state.rotationY, state.zoom, sunPosition) {
+        renderer?.updateCamera(state.rotationX, state.rotationY, state.zoom)
+        renderer?.setSunPosition(sunPosition)
+        surfaceView?.requestRender()
+    }
+
+    LaunchedEffect(isPageActive) {
+        val sv = surfaceView ?: return@LaunchedEffect
+        if (isPageActive) {
+            sv.onResume()
+            sv.requestRender()
+        } else {
+            sv.onPause()
+        }
+    }
+
+    LaunchedEffect(renderer, planetId) {
+        val r = renderer ?: return@LaunchedEffect
+        withContext(Dispatchers.Default) {
+            val fileName =
+                when (planetId) {
+                    PlanetId.MERCURY -> "files/mercury.jpg"
+                    PlanetId.VENUS -> "files/venus.jpg"
+                    PlanetId.JUPITER -> "files/jupiter.jpg"
+                    PlanetId.SATURN -> "files/saturn.jpg"
+                    PlanetId.URANUS -> "files/uranus.jpg"
+                    PlanetId.NEPTUNE -> "files/neptune.jpg"
+                    else -> "files/moon.jpg"
+                }
+            val bytes =
+                runCatching { Res.readBytes(fileName) }.getOrNull()
+                    ?: runCatching { Res.readBytes("files/moon.jpg") }.getOrNull()
+            if (bytes != null) {
+                r.setPlanetType(planetTypeFloat)
+                r.setTextures(bytes)
+                surfaceView?.requestRender()
+            }
+        }
+    }
+
+    AndroidView(
+        factory = { ctx ->
+            GLSurfaceView(ctx).apply {
+                setEGLContextClientVersion(2)
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                holder.setFormat(PixelFormat.TRANSLUCENT)
+                setZOrderMediaOverlay(true)
+                preserveEGLContextOnPause = true
+                val planetTypeFloat =
+                    when (planetId) {
+                        PlanetId.EARTH -> 0f
+                        PlanetId.MOON -> 1f
+                        PlanetId.MARS -> 2f
+                        PlanetId.MERCURY -> 3f
+                        PlanetId.VENUS -> 4f
+                        PlanetId.JUPITER -> 5f
+                        PlanetId.SATURN -> 6f
+                        PlanetId.URANUS -> 7f
+                        PlanetId.NEPTUNE -> 8f
+                        else -> 0f
+                    }
+                val planetRenderer =
+                    EarthGLRenderer(ctx).apply {
+                        setPlanetType(planetTypeFloat)
+                        setSunPosition(sunPosition)
+                    }
+                setRenderer(planetRenderer)
+                renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+                renderer = planetRenderer
+                surfaceView = this
+            }
+        },
+        update = { sv -> sv.requestRender() },
         modifier = modifier,
     )
 }

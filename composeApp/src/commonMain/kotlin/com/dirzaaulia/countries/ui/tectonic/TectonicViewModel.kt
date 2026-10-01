@@ -69,10 +69,10 @@ class TectonicViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val plates = tectonicRepository.loadTectonicPlates()
+            _uiState.value = _uiState.value.copy(plates = plates)
             val quakes = tectonicRepository.fetchLiveEarthquakes()
             _uiState.value =
                 _uiState.value.copy(
-                    plates = plates,
                     earthquakes = quakes,
                     isLoading = false,
                 )

@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +42,7 @@ import kotlinx.coroutines.launch
 fun MoonView(
     moonInfo: MoonInfo,
     modifier: Modifier = Modifier,
+    onBackToSolarSystem: () -> Unit = {},
     eclipseFeed: EclipseFeed? = null,
     isEclipseFeedLoading: Boolean = false,
     isPageActive: Boolean = true,
@@ -67,6 +72,21 @@ fun MoonView(
             isPageActive = isPageActive,
             modifier = Modifier.fillMaxSize(),
         )
+
+        IconButton(
+            onClick = onBackToSolarSystem,
+            modifier =
+                Modifier
+                    .align(Alignment.TopStart)
+                    .statusBarsPadding()
+                    .padding(16.dp),
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                contentDescription = "Back to Solar System",
+                tint = Color.White,
+            )
+        }
 
         MoonOverlayCanvas(
             state = state,

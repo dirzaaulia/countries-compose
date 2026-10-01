@@ -33,7 +33,6 @@ import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.util.formatArea
 import com.dirzaaulia.countries.util.formatDecimal
-import com.dirzaaulia.countries.util.formatNumber
 import com.dirzaaulia.countries.util.formatPopulation
 
 @Composable

@@ -2,12 +2,12 @@ package com.dirzaaulia.countries.data.satellite
 
 import com.dirzaaulia.countries.domain.astronomy.AstronomyMath
 import com.dirzaaulia.countries.domain.country.LatLng
+import com.dirzaaulia.countries.domain.globe.toDegrees
+import com.dirzaaulia.countries.domain.globe.toRadians
 import com.dirzaaulia.countries.domain.satellite.PassOverheadPrediction
 import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
 import com.dirzaaulia.countries.domain.satellite.SatelliteType
 import com.dirzaaulia.countries.platform.currentEpochMillis
-import com.dirzaaulia.countries.domain.globe.toRadians
-import com.dirzaaulia.countries.domain.globe.toDegrees
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.asin
@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 class SatelliteRepository(
-    private val apiClient: SatelliteApiClient
+    private val apiClient: SatelliteApiClient,
 ) {
     private var cachedFleet: List<SatelliteTelemetry> = emptyList()
     private val mutex = Mutex()
@@ -56,7 +56,7 @@ class SatelliteRepository(
         perigeeKm: Double,
         operator: String,
         launchYear: Int,
-        now: Long
+        now: Long,
     ): SatelliteTelemetry {
         val raw = apiClient.fetchSatelliteRaw(noradId)
         val lat: Double
@@ -104,7 +104,7 @@ class SatelliteRepository(
             apogeeKm = apogeeKm,
             perigeeKm = perigeeKm,
             operator = operator,
-            launchYear = launchYear
+            launchYear = launchYear,
         )
     }
 
@@ -133,7 +133,7 @@ class SatelliteRepository(
             apogeeKm = 1520000.0,
             perigeeKm = 1480000.0,
             operator = "NASA / ESA / CSA",
-            launchYear = 2021
+            launchYear = 2021,
         )
     }
 
@@ -141,7 +141,7 @@ class SatelliteRepository(
         startLat: Double,
         startLng: Double,
         periodMin: Double,
-        inclinationDeg: Double
+        inclinationDeg: Double,
     ): List<LatLng> {
         val track = mutableListOf<LatLng>()
         val steps = 24
@@ -159,7 +159,10 @@ class SatelliteRepository(
         return track
     }
 
-    fun calculateNextPass(satellite: SatelliteTelemetry, target: LatLng): PassOverheadPrediction? {
+    fun calculateNextPass(
+        satellite: SatelliteTelemetry,
+        target: LatLng,
+    ): PassOverheadPrediction? {
         if (satellite.type == SatelliteType.DEEP_SPACE_OBSERVATORY) {
             return PassOverheadPrediction(0, "Deep Space L2", 90)
         }
@@ -192,7 +195,7 @@ class SatelliteRepository(
         return PassOverheadPrediction(
             minutesUntilPass = bestMinutes,
             passTimeFormatted = timeFormatted,
-            maxElevationDeg = maxElevation
+            maxElevationDeg = maxElevation,
         )
     }
 }

@@ -84,6 +84,7 @@ class EarthGLRenderer(
     private var uCloudOffsetLoc = 0
     private var uIsMoonLoc = 0
     private var uIsMarsLoc = 0
+    private var uPlanetTypeLoc = 0
 
     private var aPositionLoc = 0
     private var aTexCoordinateLoc = 0
@@ -98,6 +99,11 @@ class EarthGLRenderer(
 
     @Volatile
     private var isMarsMode = false
+    private var planetType = 0f
+
+    fun setPlanetType(type: Float) {
+        planetType = type
+    }
 
     @Volatile
     private var pendingDayBytes: ByteArray? = null
@@ -206,6 +212,7 @@ class EarthGLRenderer(
         uCloudOffsetLoc = GLES20.glGetUniformLocation(programId, "u_CloudOffset")
         uIsMoonLoc = GLES20.glGetUniformLocation(programId, "u_IsMoon")
         uIsMarsLoc = GLES20.glGetUniformLocation(programId, "u_IsMars")
+        uPlanetTypeLoc = GLES20.glGetUniformLocation(programId, "u_PlanetType")
 
         aPositionLoc = GLES20.glGetAttribLocation(programId, "a_Position")
         aTexCoordinateLoc = GLES20.glGetAttribLocation(programId, "a_TexCoordinate")
@@ -261,6 +268,7 @@ class EarthGLRenderer(
         GLES20.glUniform1f(uCloudOffsetLoc, cloudOffset)
         GLES20.glUniform1f(uIsMoonLoc, if (isMoonMode) 1.0f else 0.0f)
         GLES20.glUniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
+        GLES20.glUniform1f(uPlanetTypeLoc, planetType)
 
         // Real-time astronomical Sun direction
         val radX = modelPitch.toDouble().toRadians

@@ -1,18 +1,25 @@
 package com.dirzaaulia.countries.ui.app
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.dirzaaulia.countries.domain.globe.GlobeState
-import com.dirzaaulia.countries.ui.hud.MissionControlTopBar
+import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 import com.dirzaaulia.countries.ui.mars.MarsView
 import com.dirzaaulia.countries.ui.moon.MoonView
+import com.dirzaaulia.countries.ui.solarsystem.GenericPlanetView
+import com.dirzaaulia.countries.ui.solarsystem.SolarSystemView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -23,116 +30,92 @@ fun PlanetaryExplorerScreen(
     camera: GlobeState,
     moonCamera: GlobeState,
     marsCamera: GlobeState,
-    pager: PagerState,
+    activePage: Int,
     actions: ExplorerActions,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier.fillMaxSize().background(Color(0xFF03060C))) {
-        ExplorerPages(
-            features = features,
-            controls = controls,
-            astronomy = astronomy,
-            camera = camera,
-            moonCamera = moonCamera,
-            marsCamera = marsCamera,
-            pager = pager,
-            actions = actions,
-        )
-        ExplorerTopBar(
-            features = features,
-            controls = controls,
-            astronomy = astronomy,
-            pager = pager,
-            actions = actions,
-        )
-        if (pager.currentPage == 0) {
-            FeatureHudHost(features, controls, astronomy.sun, actions)
-        }
-        ExplorerSheets(features, controls, pager.currentPage, actions)
-    }
-}
-
-@Composable
-private fun ExplorerPages(
-    features: ExplorerFeatures,
-    controls: ExplorerControls,
-    astronomy: ExplorerAstronomy,
-    camera: GlobeState,
-    moonCamera: GlobeState,
-    marsCamera: GlobeState,
-    pager: PagerState,
-    actions: ExplorerActions,
-    modifier: Modifier = Modifier,
-) {
-    HorizontalPager(
-        state = pager,
-        userScrollEnabled = false,
-        modifier = modifier.fillMaxSize(),
-    ) { page ->
-        if (page == pager.currentPage) {
+    Box(modifier = modifier.fillMaxSize().background(Color(0xFF03060C))) {
+        AnimatedContent(
+            targetState = activePage,
+            transitionSpec = {
+                if (initialState == 0 && targetState > 0) {
+                    (fadeIn(tween(800, easing = LinearEasing)) + scaleIn(initialScale = 0.95f, animationSpec = tween(800))) togetherWith
+                        (fadeOut(tween(800, easing = LinearEasing)) + scaleOut(targetScale = 1.12f, animationSpec = tween(800)))
+                } else if (initialState > 0 && targetState == 0) {
+                    (fadeIn(tween(600, easing = LinearEasing)) + scaleIn(initialScale = 1.08f, animationSpec = tween(600))) togetherWith
+                        (fadeOut(tween(600, easing = LinearEasing)) + scaleOut(targetScale = 0.95f, animationSpec = tween(600)))
+                } else {
+                    fadeIn(tween(400)) togetherWith fadeOut(tween(400))
+                }
+            },
+            label = "spaceContinuumTransition",
+            modifier = Modifier.fillMaxSize(),
+        ) { page ->
             when (page) {
-                0 -> ExplorerGlobe(features, controls, astronomy, camera, page, actions)
-                1 ->
+                0 ->
+                    SolarSystemView(
+                        currentTimeMillis = controls.currentTimeMillis,
+                        onDiveToPlanet = { planetId, pitch, yaw ->
+                            val targetPage =
+                                when (planetId) {
+                                    PlanetId.EARTH -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        1
+                                    }
+                                    PlanetId.MOON -> {
+                                        actions.scope.launch { moonCamera.snapTo(pitch, yaw, moonCamera.zoom) }
+                                        2
+                                    }
+                                    PlanetId.MARS -> {
+                                        actions.scope.launch { marsCamera.snapTo(pitch, yaw, marsCamera.zoom) }
+                                        3
+                                    }
+                                    PlanetId.MERCURY -> 4
+                                    PlanetId.VENUS -> 5
+                                    PlanetId.JUPITER -> 6
+                                    PlanetId.SATURN -> 7
+                                    PlanetId.URANUS -> 8
+                                    PlanetId.NEPTUNE -> 9
+                                    else -> 1
+                                }
+                            actions.selectPage(targetPage)
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+
+                1 -> ExplorerGlobe(features, controls, astronomy, camera, page, actions)
+
+                2 ->
                     MoonView(
                         moonInfo = astronomy.moon,
                         modifier = Modifier.fillMaxSize(),
+                        onBackToSolarSystem = { actions.selectPage(0) },
                         eclipseFeed = features.globe.eclipseFeed,
                         isEclipseFeedLoading = features.globe.isEclipseFeedLoading,
                         isPageActive = true,
                         state = moonCamera,
                     )
 
-                else ->
+                3 ->
                     MarsView(
                         state = marsCamera,
                         modifier = Modifier.fillMaxSize(),
+                        onBackToSolarSystem = { actions.selectPage(0) },
                         sunPosition = astronomy.sun,
                         isPageActive = true,
                     )
+
+                4 -> GenericPlanetView(PlanetId.MERCURY, camera, { actions.selectPage(0) })
+                5 -> GenericPlanetView(PlanetId.VENUS, camera, { actions.selectPage(0) })
+                6 -> GenericPlanetView(PlanetId.JUPITER, camera, { actions.selectPage(0) })
+                7 -> GenericPlanetView(PlanetId.SATURN, camera, { actions.selectPage(0) })
+                8 -> GenericPlanetView(PlanetId.URANUS, camera, { actions.selectPage(0) })
+                else -> GenericPlanetView(PlanetId.NEPTUNE, camera, { actions.selectPage(0) })
             }
         }
-    }
-}
 
-@Composable
-private fun ExplorerTopBar(
-    features: ExplorerFeatures,
-    controls: ExplorerControls,
-    astronomy: ExplorerAstronomy,
-    pager: PagerState,
-    actions: ExplorerActions,
-    modifier: Modifier = Modifier,
-) {
-    val scope = rememberCoroutineScope()
-    MissionControlTopBar(
-        currentPage = pager.currentPage,
-        onSelectPage = { page -> scope.launch { pager.scrollToPage(page) } },
-        showBorders = controls.showBorders,
-        onToggleBorders = actions::toggleBorders,
-        showSatellites = controls.showSatellites,
-        onToggleSatellites = actions::toggleSatellites,
-        showHazards = controls.showHazards,
-        onToggleHazards = actions::toggleHazards,
-        showAurora = controls.showAurora,
-        onToggleAurora = actions::toggleAurora,
-        showTimezones = features.timezone.isTimezoneLayerActive,
-        onToggleTimezones = actions::toggleTimezoneLayer,
-        showMarkets = features.timezone.showMarketCard,
-        onToggleMarkets = actions::toggleMarketCard,
-        showTectonic = features.tectonic.isTectonicLayerActive,
-        onToggleTectonic = actions::toggleTectonicLayer,
-        moonDistanceKm = astronomy.moon.distanceKm,
-        localTime = astronomy.localTime,
-        utcTime = astronomy.utcTime,
-        satelliteFleet = features.satellite.fleet,
-        selectedSatellite = features.satellite.selectedSatellite,
-        onSelectSatellite = { sat ->
-            actions.selectSatellite(sat)
-            actions.flyTo(sat.lat, sat.lng, 1.6f)
-        },
-        onOpenLegend = { actions.setOverlay(ExplorerOverlay.LEGEND) },
-        onOpenSearch = { actions.setOverlay(ExplorerOverlay.SEARCH) },
-        onOpenSpaceWeather = { actions.setOverlay(ExplorerOverlay.SPACE_WEATHER) },
-        modifier = modifier,
-    )
+        FeatureHudHost(features, controls, astronomy, activePage, actions)
+
+        ExplorerSheets(features, controls, activePage, actions)
+    }
 }

@@ -7,13 +7,26 @@ import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 val PACIFIC_RING_OF_FIRE_BOUNDARIES: List<List<LatLng>> =
     listOf(
         listOf(
-            LatLng(-45.0, 168.0), LatLng(-38.0, 176.0), LatLng(-20.0, 178.0),
-            LatLng(-15.0, -173.0), LatLng(0.0, 126.0), LatLng(10.0, 126.0),
-            LatLng(14.0, 144.0), LatLng(35.0, 140.0), LatLng(45.0, 150.0),
-            LatLng(52.0, 174.0), LatLng(54.0, -165.0), LatLng(60.0, -145.0),
-            LatLng(50.0, -128.0), LatLng(38.0, -123.0), LatLng(32.0, -115.0),
-            LatLng(18.0, -105.0), LatLng(5.0, -85.0), LatLng(-15.0, -75.0),
-            LatLng(-35.0, -73.0), LatLng(-55.0, -68.0),
+            LatLng(-45.0, 168.0),
+            LatLng(-38.0, 176.0),
+            LatLng(-20.0, 178.0),
+            LatLng(-15.0, -173.0),
+            LatLng(0.0, 126.0),
+            LatLng(10.0, 126.0),
+            LatLng(14.0, 144.0),
+            LatLng(35.0, 140.0),
+            LatLng(45.0, 150.0),
+            LatLng(52.0, 174.0),
+            LatLng(54.0, -165.0),
+            LatLng(60.0, -145.0),
+            LatLng(50.0, -128.0),
+            LatLng(38.0, -123.0),
+            LatLng(32.0, -115.0),
+            LatLng(18.0, -105.0),
+            LatLng(5.0, -85.0),
+            LatLng(-15.0, -75.0),
+            LatLng(-35.0, -73.0),
+            LatLng(-55.0, -68.0),
         ),
     )
 
@@ -38,9 +51,15 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(65.0, -18.0), LatLng(50.0, -30.0), LatLng(36.0, -10.0),
-                        LatLng(36.0, 25.0), LatLng(30.0, 60.0), LatLng(28.0, 85.0),
-                        LatLng(10.0, 98.0), LatLng(0.0, 120.0), LatLng(35.0, 140.0),
+                        LatLng(65.0, -18.0),
+                        LatLng(50.0, -30.0),
+                        LatLng(36.0, -10.0),
+                        LatLng(36.0, 25.0),
+                        LatLng(30.0, 60.0),
+                        LatLng(28.0, 85.0),
+                        LatLng(10.0, 98.0),
+                        LatLng(0.0, 120.0),
+                        LatLng(35.0, 140.0),
                         LatLng(65.0, 170.0),
                     ),
                 ),
@@ -55,9 +74,15 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(80.0, 0.0), LatLng(65.0, -18.0), LatLng(30.0, -42.0),
-                        LatLng(18.0, -65.0), LatLng(15.0, -90.0), LatLng(32.0, -115.0),
-                        LatLng(50.0, -128.0), LatLng(60.0, -145.0), LatLng(65.0, 170.0),
+                        LatLng(80.0, 0.0),
+                        LatLng(65.0, -18.0),
+                        LatLng(30.0, -42.0),
+                        LatLng(18.0, -65.0),
+                        LatLng(15.0, -90.0),
+                        LatLng(32.0, -115.0),
+                        LatLng(50.0, -128.0),
+                        LatLng(60.0, -145.0),
+                        LatLng(65.0, 170.0),
                     ),
                 ),
         ),
@@ -71,9 +96,14 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(36.0, -10.0), LatLng(0.0, -20.0), LatLng(-54.0, -5.0),
-                        LatLng(-50.0, 30.0), LatLng(-12.0, 48.0), LatLng(12.0, 43.0),
-                        LatLng(30.0, 32.0), LatLng(36.0, 25.0),
+                        LatLng(36.0, -10.0),
+                        LatLng(0.0, -20.0),
+                        LatLng(-54.0, -5.0),
+                        LatLng(-50.0, 30.0),
+                        LatLng(-12.0, 48.0),
+                        LatLng(12.0, 43.0),
+                        LatLng(30.0, 32.0),
+                        LatLng(36.0, 25.0),
                     ),
                 ),
         ),
@@ -87,9 +117,14 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(28.0, 85.0), LatLng(10.0, 98.0), LatLng(-10.0, 120.0),
-                        LatLng(-45.0, 168.0), LatLng(-50.0, 110.0), LatLng(-35.0, 78.0),
-                        LatLng(-10.0, 60.0), LatLng(25.0, 62.0),
+                        LatLng(28.0, 85.0),
+                        LatLng(10.0, 98.0),
+                        LatLng(-10.0, 120.0),
+                        LatLng(-45.0, 168.0),
+                        LatLng(-50.0, 110.0),
+                        LatLng(-35.0, 78.0),
+                        LatLng(-10.0, 60.0),
+                        LatLng(25.0, 62.0),
                     ),
                 ),
         ),
@@ -103,8 +138,12 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(12.0, -70.0), LatLng(0.0, -20.0), LatLng(-54.0, -5.0),
-                        LatLng(-55.0, -68.0), LatLng(-35.0, -73.0), LatLng(-15.0, -75.0),
+                        LatLng(12.0, -70.0),
+                        LatLng(0.0, -20.0),
+                        LatLng(-54.0, -5.0),
+                        LatLng(-55.0, -68.0),
+                        LatLng(-35.0, -73.0),
+                        LatLng(-15.0, -75.0),
                         LatLng(5.0, -78.0),
                     ),
                 ),
@@ -119,8 +158,12 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(5.0, -85.0), LatLng(-15.0, -75.0), LatLng(-35.0, -73.0),
-                        LatLng(-45.0, -75.0), LatLng(-40.0, -95.0), LatLng(-20.0, -115.0),
+                        LatLng(5.0, -85.0),
+                        LatLng(-15.0, -75.0),
+                        LatLng(-35.0, -73.0),
+                        LatLng(-45.0, -75.0),
+                        LatLng(-40.0, -95.0),
+                        LatLng(-20.0, -115.0),
                         LatLng(0.0, -100.0),
                     ),
                 ),
@@ -135,8 +178,12 @@ val ALL_TECTONIC_PLATES: List<TectonicPlate> =
             boundaries =
                 listOf(
                     listOf(
-                        LatLng(35.0, 140.0), LatLng(25.0, 122.0), LatLng(10.0, 126.0),
-                        LatLng(5.0, 135.0), LatLng(14.0, 144.0), LatLng(25.0, 143.0),
+                        LatLng(35.0, 140.0),
+                        LatLng(25.0, 122.0),
+                        LatLng(10.0, 126.0),
+                        LatLng(5.0, 135.0),
+                        LatLng(14.0, 144.0),
+                        LatLng(25.0, 143.0),
                     ),
                 ),
         ),

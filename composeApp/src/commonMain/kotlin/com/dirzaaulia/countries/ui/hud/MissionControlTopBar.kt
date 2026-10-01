@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
 import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
+import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
 import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
@@ -54,12 +55,13 @@ fun MissionControlTopBar(
     onToggleAurora: () -> Unit = {},
     showTimezones: Boolean = false,
     onToggleTimezones: () -> Unit = {},
-    showMarkets: Boolean = false,
-    onToggleMarkets: () -> Unit = {},
     showTectonic: Boolean = false,
     onToggleTectonic: () -> Unit = {},
     showTimeMachine: Boolean = false,
     onToggleTimeMachine: () -> Unit = {},
+    showMissionControl: Boolean = false,
+    onOpenMissionControl: () -> Unit = {},
+    onCloseMissionControl: () -> Unit = {},
     moonDistanceKm: Double = 384400.0,
     localTime: String = "",
     utcTime: String = "LIVE UTC",
@@ -71,7 +73,6 @@ fun MissionControlTopBar(
     onOpenSpaceWeather: () -> Unit = {},
     earthMissionContent: @Composable (() -> Unit)? = null,
 ) {
-    var showMissionControl by remember { mutableStateOf(false) }
     var showSatelliteSelector by remember { mutableStateOf(false) }
 
     Column(
@@ -86,44 +87,62 @@ fun MissionControlTopBar(
                 Modifier
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TimeDisplayCard(
-                utcTime = utcTime,
-                localTime = localTime,
-                modifier = Modifier.fillMaxHeight(),
-            )
-            CelestialSwitcher(
-                currentPage = currentPage,
-                onSelectPage = onSelectPage,
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-            )
-            if (showSatellites && satelliteFleet.isNotEmpty()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 TopBarIconButton(
-                    contentDescription = "Satellite Fleet",
-                    onClick = { showSatelliteSelector = !showSatelliteSelector },
+                    contentDescription = "Back to Solar System",
+                    onClick = { onSelectPage(0) },
                     modifier = Modifier.fillMaxHeight(),
                 ) {
-                    SemanticIcon(
-                        symbol = UiSymbol.Iss,
-                        contentDescription = "Satellites",
-                        tint = if (selectedSatellite != null) Color(0xFF38BDF8) else Color.White,
-                        modifier = Modifier.size(20.dp),
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = "Back to Solar System",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp),
                     )
                 }
-            }
-            TopBarIconButton(
-                contentDescription = "Mission control",
-                onClick = { showMissionControl = true },
-                modifier = Modifier.fillMaxHeight(),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.MoreVert,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp),
+                TimeDisplayCard(
+                    utcTime = utcTime,
+                    localTime = localTime,
+                    modifier = Modifier.fillMaxHeight(),
                 )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (showSatellites && satelliteFleet.isNotEmpty()) {
+                    TopBarIconButton(
+                        contentDescription = "Satellite Fleet",
+                        onClick = { showSatelliteSelector = !showSatelliteSelector },
+                        modifier = Modifier.fillMaxHeight(),
+                    ) {
+                        SemanticIcon(
+                            symbol = UiSymbol.Iss,
+                            contentDescription = "Satellites",
+                            tint = if (selectedSatellite != null) Color(0xFF38BDF8) else Color.White,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+                }
+                TopBarIconButton(
+                    contentDescription = "Mission control",
+                    onClick = onOpenMissionControl,
+                    modifier = Modifier.fillMaxHeight(),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
             }
         }
         if (showSatelliteSelector && showSatellites && satelliteFleet.isNotEmpty()) {
@@ -142,7 +161,7 @@ fun MissionControlTopBar(
 
     if (showMissionControl) {
         AdaptiveInfoSheet(
-            onDismissRequest = { showMissionControl = false },
+            onDismissRequest = onCloseMissionControl,
             shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
             containerColor = Color(0xF209111E),
             contentColor = Color.White,
@@ -179,17 +198,19 @@ fun MissionControlTopBar(
                             letterSpacing = 1.sp,
                         )
                         Text(
-                            text = when (currentPage) {
-                                0 -> "Earth operations"
-                                1 -> "Moon operations"
-                                else -> "Mars operations"
-                            },
+                            text =
+                                when (currentPage) {
+                                    0 -> "Solar System overview"
+                                    1 -> "Earth operations"
+                                    2 -> "Moon operations"
+                                    else -> "Mars operations"
+                                },
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                         )
                     }
-                    MinimalistCloseButton(onClick = { showMissionControl = false })
+                    MinimalistCloseButton(onClick = onCloseMissionControl)
                 }
 
                 MissionStatusCard(
@@ -202,12 +223,12 @@ fun MissionControlTopBar(
                     symbol = UiSymbol.Info,
                     tint = Color(0xFF38BDF8),
                     onClick = {
-                        showMissionControl = false
+                        onCloseMissionControl()
                         onOpenLegend()
                     },
                 )
 
-                if (currentPage == 0) {
+                if (currentPage == 1) {
                     Text(
                         text = "VISUALIZATION LAYERS",
                         color = Color(0xFF94A3B8),
@@ -230,7 +251,6 @@ fun MissionControlTopBar(
                     ) {
                         LayerToggleCard("Aurora", if (showAurora) "Oval" else "Off", UiSymbol.Clear, showAurora, Color(0xFF10B981), onToggleAurora, Modifier.weight(1f))
                         LayerToggleCard("Timezones", if (showTimezones) "24 Grid" else "Off", UiSymbol.Time, showTimezones, Color(0xFF38BDF8), onToggleTimezones, Modifier.weight(1f))
-                        LayerToggleCard("Markets", if (showMarkets) "Exchanges" else "Off", UiSymbol.Economy, showMarkets, Color(0xFFF59E0B), onToggleMarkets, Modifier.weight(1f))
                         LayerToggleCard("Tectonic", if (showTectonic) "Plates/Quakes" else "Off", UiSymbol.Landscape, showTectonic, Color(0xFFEF4444), onToggleTectonic, Modifier.weight(1f))
                     }
                 }

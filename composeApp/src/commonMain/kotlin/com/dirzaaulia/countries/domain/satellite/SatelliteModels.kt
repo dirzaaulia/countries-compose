@@ -5,7 +5,7 @@ import com.dirzaaulia.countries.domain.country.LatLng
 enum class SatelliteType {
     SPACE_STATION,
     SPACE_TELESCOPE,
-    DEEP_SPACE_OBSERVATORY
+    DEEP_SPACE_OBSERVATORY,
 }
 
 data class SatelliteTelemetry(
@@ -24,11 +24,11 @@ data class SatelliteTelemetry(
     val apogeeKm: Double,
     val perigeeKm: Double,
     val operator: String = "",
-    val launchYear: Int = 1998
+    val launchYear: Int = 1998,
 )
 
 data class PassOverheadPrediction(
     val minutesUntilPass: Int,
     val passTimeFormatted: String,
-    val maxElevationDeg: Int
+    val maxElevationDeg: Int,
 )

@@ -13,7 +13,7 @@ data class MarsEnvironmentInfo(
     val seasonName: String,
     val earthDistanceMillionKm: Double,
     val radioDelayMinutes: Double,
-    val isDustStormSeason: Boolean
+    val isDustStormSeason: Boolean,
 )
 
 object MarsAstronomyMath {
@@ -51,12 +51,13 @@ object MarsAstronomyMath {
         if (ls < 0.0) ls += 360.0
 
         // 5. Martian Seasons
-        val seasonName = when {
-            ls < 90 -> "Northern Spring / Southern Autumn"
-            ls < 180 -> "Northern Summer / Southern Winter"
-            ls < 270 -> "Northern Autumn / Southern Spring"
-            else -> "Northern Winter / Southern Summer"
-        }
+        val seasonName =
+            when {
+                ls < 90 -> "Northern Spring / Southern Autumn"
+                ls < 180 -> "Northern Summer / Southern Winter"
+                ls < 270 -> "Northern Autumn / Southern Spring"
+                else -> "Northern Winter / Southern Summer"
+            }
         val isDustStormSeason = ls in 180.0..330.0
 
         // 6. Earth-Mars Distance & Signal Latency
@@ -73,7 +74,7 @@ object MarsAstronomyMath {
             seasonName = seasonName,
             earthDistanceMillionKm = earthDistanceMillionKm,
             radioDelayMinutes = radioDelayMinutes,
-            isDustStormSeason = isDustStormSeason
+            isDustStormSeason = isDustStormSeason,
         )
     }
 }

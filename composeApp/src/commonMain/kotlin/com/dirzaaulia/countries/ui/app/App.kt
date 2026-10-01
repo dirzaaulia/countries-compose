@@ -3,14 +3,13 @@ package com.dirzaaulia.countries.ui.app
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import com.dirzaaulia.countries.di.appModules
-import org.koin.compose.KoinApplication
-import org.koin.dsl.koinConfiguration
-
-import androidx.compose.runtime.CompositionLocalProvider
 import com.dirzaaulia.countries.ui.theme.LocalExtendedColors
 import com.dirzaaulia.countries.ui.theme.defaultExtendedColors
+import org.koin.compose.KoinApplication
+import org.koin.dsl.koinConfiguration
 
 @Composable
 fun App() {

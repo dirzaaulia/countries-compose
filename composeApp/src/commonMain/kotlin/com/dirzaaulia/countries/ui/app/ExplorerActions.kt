@@ -1,23 +1,24 @@
 package com.dirzaaulia.countries.ui.app
 
+import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
 import com.dirzaaulia.countries.domain.country.Country
 import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.domain.globe.GlobeState
-import com.dirzaaulia.countries.platform.currentEpochMillis
-import com.dirzaaulia.countries.domain.astronomy.FinancialMarket
+import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
+import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 import com.dirzaaulia.countries.domain.tectonic.Earthquake
 import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
+import com.dirzaaulia.countries.platform.currentEpochMillis
 import com.dirzaaulia.countries.ui.comparison.ComparisonViewModel
-import com.dirzaaulia.countries.ui.tectonic.TectonicViewModel
-import com.dirzaaulia.countries.ui.timezone.TimezoneViewModel
 import com.dirzaaulia.countries.ui.globe.FlightViewModel
 import com.dirzaaulia.countries.ui.globe.GlobeViewModel
 import com.dirzaaulia.countries.ui.globe.HazardViewModel
 import com.dirzaaulia.countries.ui.globe.IssViewModel
-import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
 import com.dirzaaulia.countries.ui.globe.QuizViewModel
 import com.dirzaaulia.countries.ui.satellite.SatelliteViewModel
+import com.dirzaaulia.countries.ui.tectonic.TectonicViewModel
+import com.dirzaaulia.countries.ui.timezone.TimezoneViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -26,14 +27,21 @@ internal fun ExplorerFeatures.isAnySheetOpen(
     page: Int,
 ): Boolean =
     (selectedCountry != null && globe.showCountryDossier) ||
-        (controls.overlay != null && (controls.overlay != ExplorerOverlay.TIME_MACHINE || page == 0)) ||
-        hazards.selectedHazard != null || iss.selectedIss != null ||
-        comparison.showComparisonSheet || comparison.showCountrySelectorForSlot != null ||
-        timezone.showTimezoneSheet || tectonic.selectedPlate != null || tectonic.selectedEarthquake != null
+        (controls.overlay != null && (controls.overlay != ExplorerOverlay.TIME_MACHINE || page == 1)) ||
+        hazards.selectedHazard != null ||
+        iss.selectedIss != null ||
+        comparison.showComparisonSheet ||
+        comparison.showCountrySelectorForSlot != null ||
+        timezone.showTimezoneSheet ||
+        timezone.showMarketCard ||
+        tectonic.selectedPlate != null ||
+        tectonic.selectedEarthquake != null
 
 class ExplorerActions(
-    private val scope: CoroutineScope,
+    val scope: CoroutineScope,
     private val camera: GlobeState,
+    private val moonCamera: GlobeState,
+    private val marsCamera: GlobeState,
     private val globeVm: GlobeViewModel,
     private val hazardVm: HazardViewModel,
     private val issVm: IssViewModel,
@@ -45,7 +53,24 @@ class ExplorerActions(
     private val tectonicVm: TectonicViewModel,
     private val features: ExplorerFeatures,
     private val update: ((ExplorerControls) -> ExplorerControls) -> Unit,
+    private val onSelectPage: ((Int) -> Unit)? = null,
 ) {
+    fun snapCamera(
+        planetId: PlanetId,
+        pitch: Float,
+        yaw: Float,
+    ) {
+        when (planetId) {
+            PlanetId.EARTH -> scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+            PlanetId.MARS -> scope.launch { marsCamera.snapTo(pitch, yaw, marsCamera.zoom) }
+            else -> scope.launch { moonCamera.snapTo(pitch, yaw, moonCamera.zoom) }
+        }
+    }
+
+    fun selectPage(page: Int) {
+        onSelectPage?.invoke(page)
+    }
+
     fun setOverlay(overlay: ExplorerOverlay?) = update { it.copy(overlay = overlay) }
 
     fun toggleBorders() = update { it.copy(showBorders = !it.showBorders) }
@@ -140,9 +165,15 @@ class ExplorerActions(
 
     fun selectSatellite(sat: SatelliteTelemetry?) = satelliteVm.selectSatellite(sat)
 
-    fun calculateNextPassForCountry(lat: Double, lng: Double) = satelliteVm.calculateNextPassForCountry(lat, lng)
+    fun calculateNextPassForCountry(
+        lat: Double,
+        lng: Double,
+    ) = satelliteVm.calculateNextPassForCountry(lat, lng)
 
-    fun startComparison(countryA: Country, countryB: Country? = null) {
+    fun startComparison(
+        countryA: Country,
+        countryB: Country? = null,
+    ) {
         setDossierOpen(false)
         comparisonVm.startComparison(countryA, countryB)
         if (countryB != null) {

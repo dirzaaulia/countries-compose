@@ -51,6 +51,7 @@ fun GlobalMarketSheet(
     currentUtcMillis: Long,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    allMarkets: List<FinancialMarket> = MAJOR_FINANCIAL_MARKETS,
     onFlyToMarket: ((FinancialMarket) -> Unit)? = null,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -84,6 +85,7 @@ fun GlobalMarketSheet(
             SheetHeader(overlapName = overlapName, activeCount = activeMarkets.size, onClose = onClose)
             Spacer(Modifier.height(12.dp))
             MarketList(
+                allMarkets = allMarkets,
                 utcHour = utcHour,
                 deviceLocalTime = deviceLocalTime,
                 onFlyToMarket = onFlyToMarket,
@@ -136,6 +138,7 @@ private fun SheetHeader(
 
 @Composable
 private fun MarketList(
+    allMarkets: List<FinancialMarket>,
     utcHour: Double,
     deviceLocalTime: String,
     modifier: Modifier = Modifier,
@@ -145,7 +148,7 @@ private fun MarketList(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier.fillMaxSize(),
     ) {
-        items(MAJOR_FINANCIAL_MARKETS, key = { it.id }) { market ->
+        items(allMarkets, key = { it.id }) { market ->
             val status = calculateMarketStatus(market, utcHour)
             val localHour = (utcHour + market.utcOffsetHours + 24.0) % 24.0
             val h = localHour.toInt()

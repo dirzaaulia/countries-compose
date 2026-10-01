@@ -10,5 +10,5 @@ data class MarsLandmark(
     val year: Int?,
     val agency: String?,
     val elevationKm: Double?,
-    val significance: String
+    val significance: String,
 )

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -24,17 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import com.dirzaaulia.countries.util.formatNumber
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.astronomy.MoonInfo
-import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
-import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
-import com.dirzaaulia.countries.ui.components.SemanticIcon
-import com.dirzaaulia.countries.ui.components.UiSymbol
-import androidx.compose.material3.MaterialTheme
 import com.dirzaaulia.countries.generated.resources.Res
 import com.dirzaaulia.countries.generated.resources.moon_apogee_format
 import com.dirzaaulia.countries.generated.resources.moon_atmosphere
@@ -59,8 +53,13 @@ import com.dirzaaulia.countries.generated.resources.moon_radius_value
 import com.dirzaaulia.countries.generated.resources.moon_supermoon
 import com.dirzaaulia.countries.generated.resources.moon_surface_temp
 import com.dirzaaulia.countries.generated.resources.moon_temp_value
+import com.dirzaaulia.countries.ui.components.AdaptiveInfoSheet
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
+import com.dirzaaulia.countries.ui.components.SemanticIcon
+import com.dirzaaulia.countries.ui.components.UiSymbol
 import com.dirzaaulia.countries.ui.theme.Spacing
 import com.dirzaaulia.countries.ui.theme.extendedColors
+import com.dirzaaulia.countries.util.formatNumber
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
@@ -130,7 +129,7 @@ private fun MoonHeader(moonInfo: MoonInfo) {
         Column(modifier = Modifier.weight(1f)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 Text(
                     text = stringResource(Res.string.moon_luna_title),
@@ -140,10 +139,11 @@ private fun MoonHeader(moonInfo: MoonInfo) {
                 )
                 if (moonInfo.isSupermoon) {
                     Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(Spacing.extraSmall))
-                            .background(MaterialTheme.extendedColors.statusWarning.copy(alpha = 0.2f))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier =
+                            Modifier
+                                .clip(RoundedCornerShape(Spacing.extraSmall))
+                                .background(MaterialTheme.extendedColors.statusWarning.copy(alpha = 0.2f))
+                                .padding(horizontal = 6.dp, vertical = 2.dp),
                     ) {
                         Text(
                             text = stringResource(Res.string.moon_supermoon),
@@ -172,14 +172,14 @@ private fun MoonTelemetryGrid(moonInfo: MoonInfo) {
                 title = stringResource(Res.string.moon_orbital_distance),
                 value = "${formatNumber(moonInfo.distanceKm)} km",
                 subtitle = stringResource(Res.string.moon_light_seconds_format, ((moonInfo.lightTravelSec * 100).roundToInt() / 100.0)),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             val ratio = (moonInfo.distancePercent * 100).toInt()
             TelemetryCardWithProgress(
                 title = stringResource(Res.string.moon_perigee_apogee),
                 value = stringResource(Res.string.moon_apogee_format, ratio),
                 progress = moonInfo.distancePercent,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -187,13 +187,13 @@ private fun MoonTelemetryGrid(moonInfo: MoonInfo) {
                 title = stringResource(Res.string.moon_lunation_cycle),
                 value = stringResource(Res.string.moon_lunation_format, ((moonInfo.moonAgeDays * 10).roundToInt() / 10.0)),
                 progress = (moonInfo.moonAgeDays / 29.53).toFloat(),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             TelemetryCard(
                 title = stringResource(Res.string.moon_surface_temp),
                 value = stringResource(Res.string.moon_temp_value),
                 subtitle = stringResource(Res.string.moon_polar_temp),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -204,7 +204,7 @@ private fun TelemetryCard(
     title: String,
     value: String,
     subtitle: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -226,7 +226,7 @@ private fun TelemetryCardWithProgress(
     title: String,
     value: String,
     progress: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -240,17 +240,19 @@ private fun TelemetryCardWithProgress(
             Text(value, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(6.dp))
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Spacing.extraSmall)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(Spacing.extraSmall)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(progress.coerceIn(0f, 1f))
-                        .height(Spacing.extraSmall)
-                        .background(MaterialTheme.colorScheme.primary)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(progress.coerceIn(0f, 1f))
+                            .height(Spacing.extraSmall)
+                            .background(MaterialTheme.colorScheme.primary),
                 )
             }
         }
@@ -260,12 +262,13 @@ private fun TelemetryCardWithProgress(
 @Composable
 private fun MoonPhysicalOverview() {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.extendedColors.telemetryBackground)
-            .padding(Spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.extendedColors.telemetryBackground)
+                .padding(Spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(stringResource(Res.string.moon_physical_overview), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
@@ -281,7 +284,12 @@ private fun MoonPhysicalOverview() {
 }
 
 @Composable
-private fun OverviewItem(title: String, value: String, subtitle: String, modifier: Modifier = Modifier) {
+private fun OverviewItem(
+    title: String,
+    value: String,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier) {
         Text(title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp, fontWeight = FontWeight.Bold)
         Text(value, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)

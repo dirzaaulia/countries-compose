@@ -16,11 +16,11 @@ data class MarsRoverUiState(
     val photos: List<MarsPhoto> = emptyList(),
     val isLoading: Boolean = false,
     val selectedPhoto: MarsPhoto? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 class MarsRoverGalleryViewModel(
-    private val repository: MarsRoverRepository
+    private val repository: MarsRoverRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MarsRoverUiState())
     val uiState: StateFlow<MarsRoverUiState> = _uiState.asStateFlow()
@@ -43,7 +43,10 @@ class MarsRoverGalleryViewModel(
         _uiState.update { it.copy(selectedPhoto = photo) }
     }
 
-    private fun loadPhotos(rover: String, sol: Long) {
+    private fun loadPhotos(
+        rover: String,
+        sol: Long,
+    ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             repository.getPhotos(rover, sol).fold(
@@ -52,7 +55,7 @@ class MarsRoverGalleryViewModel(
                 },
                 onFailure = { error ->
                     _uiState.update { it.copy(errorMessage = error.message, isLoading = false) }
-                }
+                },
             )
         }
     }

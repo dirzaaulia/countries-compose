@@ -87,11 +87,12 @@ private fun EarthquakeHeader(
     earthquake: Earthquake,
     onClose: () -> Unit,
 ) {
-    val magColor = when {
-        earthquake.magnitude >= 7.0 -> Color(0xFFEF4444)
-        earthquake.magnitude >= 6.0 -> Color(0xFFF97316)
-        else -> Color(0xFFF59E0B)
-    }
+    val magColor =
+        when {
+            earthquake.magnitude >= 7.0 -> Color(0xFFEF4444)
+            earthquake.magnitude >= 6.0 -> Color(0xFFF97316)
+            else -> Color(0xFFF59E0B)
+        }
 
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -127,11 +128,12 @@ private fun EarthquakeHeader(
 
 @Composable
 private fun EarthquakeInfoCard(earthquake: Earthquake) {
-    val depthLabel = when {
-        earthquake.depthKm < 70.0 -> "[SHALLOW] (${earthquake.depthKm} km)"
-        earthquake.depthKm <= 300.0 -> "[INTERMEDIATE] (${earthquake.depthKm} km)"
-        else -> "[DEEP] (${earthquake.depthKm} km)"
-    }
+    val depthLabel =
+        when {
+            earthquake.depthKm < 70.0 -> "[SHALLOW] (${earthquake.depthKm} km)"
+            earthquake.depthKm <= 300.0 -> "[INTERMEDIATE] (${earthquake.depthKm} km)"
+            else -> "[DEEP] (${earthquake.depthKm} km)"
+        }
 
     Surface(
         shape = RoundedCornerShape(16.dp),

@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
@@ -160,12 +159,13 @@ private fun PlateDynamicsCard(plate: TectonicPlate) {
             Text("TECTONIC MARGIN DYNAMICS", color = Color(0xFF94A3B8), fontSize = 11.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
             Text(
-                text = when (plate.id) {
-                    "pacific" -> "Features active convergent subduction zones along the Pacific Ring of Fire, giving rise to intense volcanism and deep-focus megathrust earthquakes."
-                    "eurasian" -> "Forms collision zones with the Indian plate creating the Himalayas, and transform fault lines across southern Europe and Central Asia."
-                    "north_american" -> "Intersects the Pacific plate along the San Andreas strike-slip fault system and subducts the Juan de Fuca plate in the Pacific Northwest."
-                    else -> "Extends across oceanic ridges and continental margins with active seismic strain along divergent and convergent fault boundaries."
-                },
+                text =
+                    when (plate.id) {
+                        "pacific" -> "Features active convergent subduction zones along the Pacific Ring of Fire, giving rise to intense volcanism and deep-focus megathrust earthquakes."
+                        "eurasian" -> "Forms collision zones with the Indian plate creating the Himalayas, and transform fault lines across southern Europe and Central Asia."
+                        "north_american" -> "Intersects the Pacific plate along the San Andreas strike-slip fault system and subducts the Juan de Fuca plate in the Pacific Northwest."
+                        else -> "Extends across oceanic ridges and continental margins with active seismic strain along divergent and convergent fault boundaries."
+                    },
                 color = Color.White,
                 fontSize = 12.sp,
                 lineHeight = 17.sp,

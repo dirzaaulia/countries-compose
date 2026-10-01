@@ -70,14 +70,14 @@ jobs:
             VERSION_NAME="${BASE_VERSION}-${TRACK} (${VERSION_CODE})"
           fi
           echo "Building with VERSION_CODE=$VERSION_CODE and VERSION_NAME=$VERSION_NAME"
-          ./gradlew :app:bundleRelease -PVERSION_CODE=$VERSION_CODE -PVERSION_NAME="$VERSION_NAME" --stacktrace
+          ./gradlew :androidApp:bundleRelease -PVERSION_CODE=$VERSION_CODE -PVERSION_NAME="$VERSION_NAME" --stacktrace
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: app-release
-          path: app/build/outputs/bundle/release/app-release.aab
+          path: androidApp/build/outputs/bundle/release/*.aab
           retention-days: 14
 
       - name: Publish to Google Play
@@ -85,7 +85,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_CONSOLE_JSON_KEY || secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.dirzaaulia.countries
-          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: androidApp/build/outputs/bundle/release/*.aab
           track: ${{ github.event.inputs.track || 'internal' }}
           status: ${{ github.event.inputs.status || 'completed' }}
 

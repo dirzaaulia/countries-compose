@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.mars.MarsLandmark
 import com.dirzaaulia.countries.generated.resources.Res
@@ -53,31 +52,33 @@ fun MarsLandmarkSheet(
         scrimColor = MaterialTheme.colorScheme.background.copy(alpha = 0f),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Spacing.large)
-                .padding(bottom = Spacing.extraLarge),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.large)
+                    .padding(bottom = Spacing.extraLarge),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
-                    val categoryColor = when (landmark.category) {
-                        "ROVER", "LANDER" -> MaterialTheme.extendedColors.categoryRobotic
-                        "MOUNTAIN", "CANYON", "BASIN" -> MaterialTheme.extendedColors.categoryGeological
-                        "POLAR_CAP" -> MaterialTheme.extendedColors.categoryPolar
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant
-                    }
+                    val categoryColor =
+                        when (landmark.category) {
+                            "ROVER", "LANDER" -> MaterialTheme.extendedColors.categoryRobotic
+                            "MOUNTAIN", "CANYON", "BASIN" -> MaterialTheme.extendedColors.categoryGeological
+                            "POLAR_CAP" -> MaterialTheme.extendedColors.categoryPolar
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
 
                     Text(
                         text = landmark.subtitle.uppercase(),
                         color = categoryColor,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
+                        letterSpacing = 1.sp,
                     )
                     Text(
                         text = landmark.name.uppercase(),
@@ -93,47 +94,48 @@ fun MarsLandmarkSheet(
                 text = landmark.significance,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
             ) {
                 InfoBadge(
                     label = stringResource(Res.string.mars_lat),
                     value = stringResource(Res.string.mars_lat_format, landmark.lat),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 InfoBadge(
                     label = stringResource(Res.string.mars_lng),
                     value = stringResource(Res.string.mars_lat_format, landmark.lng),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 if (landmark.year != null) {
                     InfoBadge(
                         label = stringResource(Res.string.mars_year),
                         value = "${landmark.year}",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 } else if (landmark.elevationKm != null) {
                     InfoBadge(
                         label = stringResource(Res.string.mars_elevation),
                         value = stringResource(Res.string.mars_elevation_format, landmark.elevationKm),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
 
             if (landmark.agency != null) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(Spacing.medium))
-                        .background(MaterialTheme.extendedColors.telemetryBackground)
-                        .padding(Spacing.medium),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(Spacing.medium))
+                            .background(MaterialTheme.extendedColors.telemetryBackground)
+                            .padding(Spacing.medium),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column {
                         Text(
@@ -141,30 +143,31 @@ fun MarsLandmarkSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
+                            letterSpacing = 1.sp,
                         )
                         Text(
                             text = landmark.agency.uppercase(),
                             color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                        horizontalArrangement = Arrangement.spacedBy(Spacing.small),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(Spacing.small)
-                                .background(MaterialTheme.extendedColors.statusActive, CircleShape)
+                            modifier =
+                                Modifier
+                                    .size(Spacing.small)
+                                    .background(MaterialTheme.extendedColors.statusActive, CircleShape),
                         )
                         Text(
                             text = stringResource(Res.string.mars_historical),
                             color = MaterialTheme.extendedColors.statusActive,
                             fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
@@ -178,28 +181,29 @@ fun MarsLandmarkSheet(
 private fun InfoBadge(
     label: String,
     value: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(Spacing.small))
-            .background(MaterialTheme.extendedColors.telemetryBackground)
-            .padding(Spacing.medium),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(Spacing.small))
+                .background(MaterialTheme.extendedColors.telemetryBackground)
+                .padding(Spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = label,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
+            letterSpacing = 1.sp,
         )
         Text(
             text = value,
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
         )
     }
 }

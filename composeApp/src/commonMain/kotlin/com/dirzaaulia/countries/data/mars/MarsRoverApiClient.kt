@@ -8,14 +8,18 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 
-class MarsRoverApiClient(private val httpClient: HttpClient) {
-
+class MarsRoverApiClient(
+    private val httpClient: HttpClient,
+) {
     private companion object {
         const val PRIMARY_API_KEY = "zLs6Iv5XDNrgezxoIrJsJFqip1lTO6lI7Sb6ubki"
         const val DEMO_API_KEY = "DEMO_KEY"
     }
 
-    suspend fun getRoverPhotos(rover: String, sol: Long): MarsPhotosResponse {
+    suspend fun getRoverPhotos(
+        rover: String,
+        sol: Long,
+    ): MarsPhotosResponse {
         // 1. Try Primary API Key
         tryFetch(rover, sol, PRIMARY_API_KEY)?.let { return it }
 
@@ -26,18 +30,22 @@ class MarsRoverApiClient(private val httpClient: HttpClient) {
         return MarsPhotosResponse()
     }
 
-    private suspend fun tryFetch(rover: String, sol: Long, apiKey: String): MarsPhotosResponse? {
-        return runCatching {
-            val response: HttpResponse = httpClient.get("https://api.nasa.gov/mars-photos/api/v1/rovers/$rover/photos") {
-                parameter("sol", sol)
-                parameter("page", 1)
-                parameter("api_key", apiKey)
-            }
+    private suspend fun tryFetch(
+        rover: String,
+        sol: Long,
+        apiKey: String,
+    ): MarsPhotosResponse? =
+        runCatching {
+            val response: HttpResponse =
+                httpClient.get("https://api.nasa.gov/mars-photos/api/v1/rovers/$rover/photos") {
+                    parameter("sol", sol)
+                    parameter("page", 1)
+                    parameter("api_key", apiKey)
+                }
             if (response.status.isSuccess()) {
                 response.body<MarsPhotosResponse>()
             } else {
                 null
             }
         }.getOrNull()
-    }
 }
