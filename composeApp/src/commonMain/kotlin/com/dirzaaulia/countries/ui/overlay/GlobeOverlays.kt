@@ -42,50 +42,23 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
-import kotlin.random.Random
-
-// Deterministic celestial starfield positions in deep space
-val CELESTIAL_STARS: List<Triple<Float, Float, Float>> =
-    (0..260).map { i ->
-        val rng = Random(i * 7919)
-        Triple(rng.nextFloat(), rng.nextFloat(), 0.7f + rng.nextFloat() * 1.6f)
-    }
+import com.dirzaaulia.countries.ui.solarsystem.drawDeepSpaceStarfield as drawSolarDeepSpaceStarfield
 
 internal fun DrawScope.drawDeepSpaceStarfield(
     starTwinkle: Float,
-    earthR2: Float,
+    occludeR2: Float,
     canvasCenter: Offset,
     canvasSize: Size,
-) {
-    CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
-        val sx = normX * canvasSize.width
-        val sy = normY * canvasSize.height
-        val dx = sx - canvasCenter.x
-        val dy = sy - canvasCenter.y
-        if (dx * dx + dy * dy > earthR2 + 10f) {
-            val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.25f, 1f)
-            val starColor =
-                when {
-                    idx % 7 == 0 -> Color(0xFF90CAF9)
-                    idx % 11 == 0 -> Color(0xFFFFE082)
-                    idx % 13 == 0 -> Color(0xFFFFCCBC)
-                    else -> Color.White
-                }
-            if (starRadius > 1.6f) {
-                drawCircle(
-                    color = starColor.copy(alpha = alpha * 0.35f),
-                    radius = starRadius * 2.5f,
-                    center = Offset(sx, sy),
-                )
-            }
-            drawCircle(
-                color = starColor.copy(alpha = alpha * 0.92f),
-                radius = starRadius * 1.3f,
-                center = Offset(sx, sy),
-            )
-        }
-    }
-}
+    cameraYaw: Float = 0f,
+    cameraPitch: Float = 0f,
+) = drawSolarDeepSpaceStarfield(
+    starTwinkle = starTwinkle,
+    occludeR2 = occludeR2,
+    canvasCenter = canvasCenter,
+    canvasSize = canvasSize,
+    cameraYaw = cameraYaw,
+    cameraPitch = cameraPitch,
+)
 
 internal fun DrawScope.drawCartographicBorders(
     countries: List<Country>,

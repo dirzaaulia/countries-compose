@@ -91,3 +91,59 @@ fun CelestialStarfieldBackground(
         drawSolarStarfield(starTwinkle)
     }
 }
+
+/** Deterministic 3D spherical star positions in deep space (normX, normY, radius). */
+val CELESTIAL_STARS: List<Triple<Float, Float, Float>> =
+    (0..450).map { i ->
+        val rng = Random(i * 7919 + 31)
+        Triple(rng.nextFloat(), rng.nextFloat(), 0.6f + rng.nextFloat() * 1.8f)
+    }
+
+/**
+ * Draws an unconstrained 360-degree celestial starfield in deep space.
+ * Seamlessly tracks camera orbital pitch and yaw via spherical parallax wrap-around.
+ * Stars directly occluded by the solid planet disk [occludeR2] are clipped.
+ */
+fun DrawScope.drawDeepSpaceStarfield(
+    starTwinkle: Float,
+    occludeR2: Float,
+    canvasCenter: Offset,
+    canvasSize: androidx.compose.ui.geometry.Size,
+    cameraYaw: Float = 0f,
+    cameraPitch: Float = 0f,
+) {
+    val yawShift = (cameraYaw / 360f) % 1f
+    val pitchShift = (cameraPitch / 360f) % 1f
+
+    CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
+        val shiftedX = ((normX - yawShift) % 1f + 1f) % 1f
+        val shiftedY = ((normY - pitchShift) % 1f + 1f) % 1f
+        val sx = shiftedX * canvasSize.width
+        val sy = shiftedY * canvasSize.height
+        val dx = sx - canvasCenter.x
+        val dy = sy - canvasCenter.y
+
+        if (dx * dx + dy * dy > occludeR2) {
+            val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.25f, 1f)
+            val starColor =
+                when {
+                    idx % 7 == 0 -> Color(0xFF90CAF9) // electric blue
+                    idx % 11 == 0 -> Color(0xFFFFE082) // warm amber
+                    idx % 13 == 0 -> Color(0xFFFFCCBC) // deep orange
+                    else -> Color.White
+                }
+            if (starRadius > 1.6f) {
+                drawCircle(
+                    color = starColor.copy(alpha = alpha * 0.35f),
+                    radius = starRadius * 2.5f,
+                    center = Offset(sx, sy),
+                )
+            }
+            drawCircle(
+                color = starColor.copy(alpha = alpha * 0.92f),
+                radius = starRadius * 1.3f,
+                center = Offset(sx, sy),
+            )
+        }
+    }
+}

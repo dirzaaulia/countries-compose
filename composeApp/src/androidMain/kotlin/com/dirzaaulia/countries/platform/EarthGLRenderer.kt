@@ -12,10 +12,6 @@ import com.dirzaaulia.countries.domain.globe.SphereMesh
 import com.dirzaaulia.countries.domain.globe.rotateX
 import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toRadians
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
-import java.nio.ShortBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.cos
@@ -25,47 +21,8 @@ class EarthGLRenderer(
     @Suppress("UNUSED_PARAMETER") context: Context,
 ) : GLSurfaceView.Renderer {
     private val sphereMesh = SphereMesh(stacks = 48, sectors = 96, radius = 1.0f)
+    private val sphereBuffers = SphereGLBuffers(sphereMesh)
     private val ringState = RingGLState()
-
-    private val vertexBuffer: FloatBuffer =
-        ByteBuffer
-            .allocateDirect(sphereMesh.vertices.size * 4)
-            .order(ByteOrder.nativeOrder())
-            .asFloatBuffer()
-            .apply {
-                put(sphereMesh.vertices)
-                position(0)
-            }
-
-    private val texCoordBuffer: FloatBuffer =
-        ByteBuffer
-            .allocateDirect(sphereMesh.texCoords.size * 4)
-            .order(ByteOrder.nativeOrder())
-            .asFloatBuffer()
-            .apply {
-                put(sphereMesh.texCoords)
-                position(0)
-            }
-
-    private val normalBuffer: FloatBuffer =
-        ByteBuffer
-            .allocateDirect(sphereMesh.normals.size * 4)
-            .order(ByteOrder.nativeOrder())
-            .asFloatBuffer()
-            .apply {
-                put(sphereMesh.normals)
-                position(0)
-            }
-
-    private val indexBuffer: ShortBuffer =
-        ByteBuffer
-            .allocateDirect(sphereMesh.indices.size * 2)
-            .order(ByteOrder.nativeOrder())
-            .asShortBuffer()
-            .apply {
-                put(sphereMesh.indices)
-                position(0)
-            }
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
@@ -173,9 +130,9 @@ class EarthGLRenderer(
         GLES20.glEnable(GLES20.GL_CULL_FACE)
         GLES20.glCullFace(GLES20.GL_BACK)
 
-        val vertexShader = compileShader(GLES20.GL_VERTEX_SHADER, GlobeShaders.VERTEX_SHADER)
-        val fragmentShader = compileShader(GLES20.GL_FRAGMENT_SHADER, GlobeShaders.FRAGMENT_SHADER)
-        programId = createProgram(vertexShader, fragmentShader)
+        val vertexShader = compileGLShader(GLES20.GL_VERTEX_SHADER, GlobeShaders.VERTEX_SHADER)
+        val fragmentShader = compileGLShader(GLES20.GL_FRAGMENT_SHADER, GlobeShaders.FRAGMENT_SHADER)
+        programId = createGLProgram(vertexShader, fragmentShader)
 
         uMVPMatrixLoc = GLES20.glGetUniformLocation(programId, "u_MVPMatrix")
         uMVMatrixLoc = GLES20.glGetUniformLocation(programId, "u_MVMatrix")
@@ -219,20 +176,26 @@ class EarthGLRenderer(
 
         GLES20.glUseProgram(programId)
 
-        // Realistic static cloud cover
         cloudOffset = 0f
 
-        // Model matrix with rotation and responsive zoom
-        Matrix.setIdentityM(modelMatrix, 0)
-
-        // Exact 1:1 pixel-perfect mathematical synchronization with GlobeView 2D Canvas:
         val baseRadius = minOf(viewportWidth, viewportHeight).toFloat() * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        val modelPitch = currentRotationX + if (isMoonMode) moonLibrationLatitude.toFloat() else 0f
-        val modelYaw = currentRotationY + if (isMoonMode) moonLibrationLongitude.toFloat() else 0f
-        Matrix.rotateM(modelMatrix, 0, modelPitch, 1f, 0f, 0f)
-        Matrix.rotateM(modelMatrix, 0, modelYaw, 0f, 1f, 0f)
+        // NASA Eyes orbital camera: User controls orbital camera around the planet
+        Matrix.setIdentityM(viewMatrix, 0)
+        Matrix.rotateM(viewMatrix, 0, currentRotationX, 1f, 0f, 0f)
+        Matrix.rotateM(viewMatrix, 0, currentRotationY, 0f, 1f, 0f)
+
+        // Planet stays stationary in world space with its natural astronomical axial tilt
+        Matrix.setIdentityM(modelMatrix, 0)
+        val axialTilt = getPlanetAxialTilt(planetType, isMoonMode)
+        if (axialTilt != 0f) {
+            Matrix.rotateM(modelMatrix, 0, axialTilt, 1f, 0f, 0f)
+        }
+        if (isMoonMode) {
+            Matrix.rotateM(modelMatrix, 0, moonLibrationLatitude.toFloat(), 1f, 0f, 0f)
+            Matrix.rotateM(modelMatrix, 0, moonLibrationLongitude.toFloat(), 0f, 1f, 0f)
+        }
         Matrix.scaleM(modelMatrix, 0, currentRadius, currentRadius, currentRadius)
 
         Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0)
@@ -245,37 +208,23 @@ class EarthGLRenderer(
         GLES20.glUniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
         GLES20.glUniform1f(uPlanetTypeLoc, planetType)
 
-        // Real-time astronomical Sun direction
-        val radX = modelPitch.toDouble().toRadians
-        val radY = modelYaw.toDouble().toRadians
-        val cosX = cos(radX)
-        val sinX = sin(radX)
-        val cosY = cos(radY)
-        val sinY = sin(radY)
-
-        val sunEye =
+        // Sun direction in Eye Space: World-space Sun direction transformed by camera viewMatrix
+        val sunWorld =
             if (isMoonMode) {
                 val phaseRad = moonPhaseAngle.toRadians
-                // At phase 180 (Full Moon), Sun is at +Z (facing front)
-                // At phase 0 (New Moon), Sun is at -Z (behind Moon)
-                // At phase 90 (First Quarter), Sun is at +X (right)
-                // At phase 270 (Last Quarter), Sun is at -X (left)
                 val latitudeRad = moonSubsolarLatitude.toRadians
-                var p =
-                    Point3D(
-                        sin(phaseRad) * cos(latitudeRad),
-                        sin(latitudeRad),
-                        -cos(phaseRad) * cos(latitudeRad),
-                    )
-                p = rotateY(p, cosY, sinY)
-                p = rotateX(p, cosX, sinX)
-                p
+                Point3D(
+                    sin(phaseRad) * cos(latitudeRad),
+                    sin(latitudeRad),
+                    -cos(phaseRad) * cos(latitudeRad),
+                )
             } else {
-                var p = sunPosition.vector
-                p = rotateY(p, cosY, sinY)
-                p = rotateX(p, cosX, sinX)
-                p
+                sunPosition.vector
             }
+
+        val radX = currentRotationX.toDouble().toRadians
+        val radY = currentRotationY.toDouble().toRadians
+        val sunEye = rotateX(rotateY(sunWorld, radY), radX)
 
         GLES20.glUniform3f(
             uSunDirectionLoc,
@@ -289,36 +238,34 @@ class EarthGLRenderer(
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures.dayTextureId)
         GLES20.glUniform1i(uDayTextureLoc, 0)
 
-        // Bind Night Texture to Unit 1 (fallback to dayTextureId if not present)
+        // Bind Night Texture to Unit 1
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1)
         val nightId = if (textures.nightTextureId != 0) textures.nightTextureId else textures.dayTextureId
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, nightId)
         GLES20.glUniform1i(uNightTextureLoc, 1)
 
-        // Bind Cloud Texture to Unit 2 (fallback to dayTextureId if not present)
+        // Bind Cloud Texture to Unit 2
         GLES20.glActiveTexture(GLES20.GL_TEXTURE2)
         val cloudId = if (textures.cloudTextureId != 0) textures.cloudTextureId else textures.dayTextureId
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, cloudId)
         GLES20.glUniform1i(uCloudTextureLoc, 2)
 
-        // Vertex positions
+        // Vertex positions, texcoords, normals
         GLES20.glEnableVertexAttribArray(aPositionLoc)
-        GLES20.glVertexAttribPointer(aPositionLoc, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer)
+        GLES20.glVertexAttribPointer(aPositionLoc, 3, GLES20.GL_FLOAT, false, 0, sphereBuffers.vertexBuffer)
 
-        // Texture coordinates
         GLES20.glEnableVertexAttribArray(aTexCoordinateLoc)
-        GLES20.glVertexAttribPointer(aTexCoordinateLoc, 2, GLES20.GL_FLOAT, false, 0, texCoordBuffer)
+        GLES20.glVertexAttribPointer(aTexCoordinateLoc, 2, GLES20.GL_FLOAT, false, 0, sphereBuffers.texCoordBuffer)
 
-        // Normals
         GLES20.glEnableVertexAttribArray(aNormalLoc)
-        GLES20.glVertexAttribPointer(aNormalLoc, 3, GLES20.GL_FLOAT, false, 0, normalBuffer)
+        GLES20.glVertexAttribPointer(aNormalLoc, 3, GLES20.GL_FLOAT, false, 0, sphereBuffers.normalBuffer)
 
         // Draw the 3D Sphere
         GLES20.glDrawElements(
             GLES20.GL_TRIANGLES,
-            sphereMesh.indices.size,
+            sphereBuffers.indexCount,
             GLES20.GL_UNSIGNED_SHORT,
-            indexBuffer,
+            sphereBuffers.indexBuffer,
         )
 
         GLES20.glDisableVertexAttribArray(aPositionLoc)
@@ -329,8 +276,7 @@ class EarthGLRenderer(
         if (planetType == 6f) {
             ringState.drawRings(
                 projectionMatrix = projectionMatrix,
-                modelPitch = modelPitch,
-                modelYaw = modelYaw,
+                viewMatrix = viewMatrix,
                 currentRadius = currentRadius,
                 sunEye = sunEye,
             )
@@ -338,14 +284,4 @@ class EarthGLRenderer(
     }
 
     private fun loadTexturesIfPending() = textures.uploadPending()
-
-    private fun compileShader(
-        type: Int,
-        shaderCode: String,
-    ): Int = compileGLShader(type, shaderCode)
-
-    private fun createProgram(
-        vertexShader: Int,
-        fragmentShader: Int,
-    ): Int = createGLProgram(vertexShader, fragmentShader)
 }

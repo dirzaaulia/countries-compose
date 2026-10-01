@@ -43,3 +43,65 @@ internal fun createGLProgram(
     GLES20.glLinkProgram(program)
     return program
 }
+
+internal fun getPlanetAxialTilt(
+    planetType: Float,
+    isMoonMode: Boolean,
+): Float =
+    when {
+        isMoonMode || planetType in 0.5f..1.5f -> 1.54f // Moon
+        planetType in 1.5f..2.5f -> 25.19f // Mars
+        planetType in 2.5f..3.5f -> 0.03f // Mercury
+        planetType in 3.5f..4.5f -> 177.36f // Venus
+        planetType in 4.5f..5.5f -> 3.13f // Jupiter
+        planetType in 5.5f..6.5f -> 26.73f // Saturn
+        planetType in 6.5f..7.5f -> 97.77f // Uranus
+        planetType in 7.5f..8.5f -> 28.32f // Neptune
+        else -> 0f // Earth
+    }
+
+internal class SphereGLBuffers(
+    sphereMesh: com.dirzaaulia.countries.domain.globe.SphereMesh,
+) {
+    val indexCount = sphereMesh.indices.size
+
+    val vertexBuffer: java.nio.FloatBuffer =
+        java.nio.ByteBuffer
+            .allocateDirect(sphereMesh.vertices.size * 4)
+            .order(java.nio.ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .apply {
+                put(sphereMesh.vertices)
+                position(0)
+            }
+
+    val texCoordBuffer: java.nio.FloatBuffer =
+        java.nio.ByteBuffer
+            .allocateDirect(sphereMesh.texCoords.size * 4)
+            .order(java.nio.ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .apply {
+                put(sphereMesh.texCoords)
+                position(0)
+            }
+
+    val normalBuffer: java.nio.FloatBuffer =
+        java.nio.ByteBuffer
+            .allocateDirect(sphereMesh.normals.size * 4)
+            .order(java.nio.ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .apply {
+                put(sphereMesh.normals)
+                position(0)
+            }
+
+    val indexBuffer: java.nio.ShortBuffer =
+        java.nio.ByteBuffer
+            .allocateDirect(sphereMesh.indices.size * 2)
+            .order(java.nio.ByteOrder.nativeOrder())
+            .asShortBuffer()
+            .apply {
+                put(sphereMesh.indices)
+                position(0)
+            }
+}

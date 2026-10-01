@@ -80,7 +80,14 @@ fun MarsOverlayCanvas(
         val currentRadius = baseRadius * state.zoom
         val marsR2 = currentRadius * currentRadius
 
-        drawDeepSpaceStarfield(starTwinkle, marsR2, canvasCenter, size)
+        drawDeepSpaceStarfield(
+            starTwinkle = starTwinkle,
+            occludeR2 = marsR2,
+            canvasCenter = canvasCenter,
+            canvasSize = size,
+            cameraYaw = state.rotationY,
+            cameraPitch = state.rotationX,
+        )
 
         MARS_LANDMARKS.forEach { landmark ->
             val isSelected = landmark.id == selectedLandmark?.id

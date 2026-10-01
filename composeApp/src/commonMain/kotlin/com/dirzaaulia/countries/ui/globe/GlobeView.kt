@@ -392,7 +392,14 @@ fun GlobeView(
 
             // 0. Twinkling Stars in Deep Space
             val earthR2 = currentRadius * currentRadius
-            drawDeepSpaceStarfield(starTwinkle, earthR2, canvasCenter, size)
+            drawDeepSpaceStarfield(
+                starTwinkle = starTwinkle,
+                occludeR2 = earthR2,
+                canvasCenter = canvasCenter,
+                canvasSize = size,
+                cameraYaw = state.rotationY,
+                cameraPitch = state.rotationX,
+            )
 
             // 0b. Photographic Twilight Bands (Golden Hour & Blue Hour)
             drawTwilightBands(

@@ -90,7 +90,14 @@ fun MoonOverlayCanvas(
         val currentRadius = baseRadius * state.zoom
         val moonR2 = currentRadius * currentRadius
 
-        drawDeepSpaceStarfield(starTwinkle, moonR2, center, size)
+        drawDeepSpaceStarfield(
+            starTwinkle = starTwinkle,
+            occludeR2 = moonR2,
+            canvasCenter = center,
+            canvasSize = size,
+            cameraYaw = state.rotationY,
+            cameraPitch = state.rotationX,
+        )
 
         drawLandmarkBeacons(
             state = state,

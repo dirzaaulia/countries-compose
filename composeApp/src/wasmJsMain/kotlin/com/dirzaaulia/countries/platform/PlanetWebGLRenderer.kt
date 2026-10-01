@@ -378,15 +378,35 @@ object PlanetWebGLRenderer {
         val halfH = targetHeight / 2.0f
         ortho(projectionMatrix, -halfW, halfW, -halfH, halfH, -50000f, 50000f)
 
-        // 2. Model Matrix matching exact 1:1 pixel scale of GlobeView
+        // 2. Camera View Matrix (NASA Eyes orbital camera)
+        setIdentity(viewMatrix)
+        rotateX(viewMatrix, currentRotX)
+        rotateY(viewMatrix, currentRotY)
+
+        // 3. Model Matrix with astronomical axial tilt
         setIdentity(modelMatrix)
         val baseRadius = minOf(targetWidth, targetHeight) * 0.38f
         val currentRadius = baseRadius * currentZoom
 
-        val modelPitch = currentRotX + if (isMoonMode) moonLibrationLatitude.toFloat() else 0f
-        val modelYaw = currentRotY + if (isMoonMode) moonLibrationLongitude.toFloat() else 0f
-        rotateX(modelMatrix, modelPitch)
-        rotateY(modelMatrix, modelYaw)
+        val axialTilt =
+            when {
+                isMoonMode || planetType in 0.5f..1.5f -> 1.54f
+                planetType in 1.5f..2.5f -> 25.19f
+                planetType in 2.5f..3.5f -> 0.03f
+                planetType in 3.5f..4.5f -> 177.36f
+                planetType in 4.5f..5.5f -> 3.13f
+                planetType in 5.5f..6.5f -> 26.73f
+                planetType in 6.5f..7.5f -> 97.77f
+                planetType in 7.5f..8.5f -> 28.32f
+                else -> 0f
+            }
+        if (axialTilt != 0f) {
+            rotateX(modelMatrix, axialTilt)
+        }
+        if (isMoonMode) {
+            rotateX(modelMatrix, moonLibrationLatitude.toFloat())
+            rotateY(modelMatrix, moonLibrationLongitude.toFloat())
+        }
         scale(modelMatrix, currentRadius, currentRadius, currentRadius)
 
         multiply(mvMatrix, viewMatrix, modelMatrix)
@@ -405,37 +425,27 @@ object PlanetWebGLRenderer {
         context.uniform1f(uIsMarsLoc, if (isMarsMode) 1.0f else 0.0f)
         context.uniform1f(uPlanetTypeLoc, planetType)
 
-        // 3. Sun Direction calculation
-        val radX = modelPitch.toDouble() * PI / 180.0
-        val radY = modelYaw.toDouble() * PI / 180.0
-        val cosX = cos(radX)
-        val sinX = sin(radX)
-        val cosY = cos(radY)
-        val sinY = sin(radY)
-
-        val sunEye =
+        // 4. Sun Direction calculation in Eye Space
+        val sunWorld =
             if (isMoonMode) {
                 val phaseRad = moonPhaseAngle * PI / 180.0
                 val latitudeRad = moonSubsolarLatitude * PI / 180.0
-                var p =
-                    Point3D(
-                        sin(phaseRad) * cos(latitudeRad),
-                        sin(latitudeRad),
-                        -cos(phaseRad) * cos(latitudeRad),
-                    )
-                p = rotateY(p, cosY, sinY)
-                p = rotateX(p, cosX, sinX)
-                p
+                Point3D(
+                    sin(phaseRad) * cos(latitudeRad),
+                    sin(latitudeRad),
+                    -cos(phaseRad) * cos(latitudeRad),
+                )
             } else {
-                var p = sunPosition.vector
-                p = rotateY(p, cosY, sinY)
-                p = rotateX(p, cosX, sinX)
-                p
+                sunPosition.vector
             }
+
+        val radX = currentRotX.toDouble() * PI / 180.0
+        val radY = currentRotY.toDouble() * PI / 180.0
+        val sunEye = rotateX(rotateY(sunWorld, radY), radX)
 
         context.uniform3f(uSunDirectionLoc, sunEye.x.toFloat(), sunEye.y.toFloat(), sunEye.z.toFloat())
 
-        // 4. Bind Texture Samplers
+        // 5. Bind Texture Samplers
         context.activeTexture(WebGLRenderingContext.TEXTURE0)
         context.bindTexture(WebGLRenderingContext.TEXTURE_2D, activeDayTex)
         context.uniform1i(uDayTextureLoc, 0)
@@ -448,7 +458,7 @@ object PlanetWebGLRenderer {
         context.bindTexture(WebGLRenderingContext.TEXTURE_2D, cloudTexture ?: activeDayTex)
         context.uniform1i(uCloudTextureLoc, 2)
 
-        // 5. Bind Geometry Buffers & Draw
+        // 6. Bind Geometry Buffers & Draw
         context.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, positionBuffer)
         context.enableVertexAttribArray(aPositionLoc)
         context.vertexAttribPointer(aPositionLoc, 3, WebGLRenderingContext.FLOAT, false, 0, 0)
@@ -469,8 +479,7 @@ object PlanetWebGLRenderer {
             ringState.drawWebGLRings(
                 gl = context,
                 projectionMatrix = projectionMatrix,
-                modelPitch = modelPitch,
-                modelYaw = modelYaw,
+                viewMatrix = viewMatrix,
                 currentRadius = currentRadius,
                 sunEye = sunEye,
             )

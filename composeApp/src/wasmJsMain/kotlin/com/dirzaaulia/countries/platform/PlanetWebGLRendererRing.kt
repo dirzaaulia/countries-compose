@@ -86,8 +86,7 @@ private fun compileRingWebGLShader(
 internal fun RingWebGLState.drawWebGLRings(
     gl: WebGLRenderingContext,
     projectionMatrix: FloatArray,
-    modelPitch: Float,
-    modelYaw: Float,
+    viewMatrix: FloatArray,
     currentRadius: Float,
     sunEye: Point3D,
 ) {
@@ -98,13 +97,14 @@ internal fun RingWebGLState.drawWebGLRings(
     gl.disable(WebGLRenderingContext.CULL_FACE)
 
     val ringModel = ringIdentity()
-    ringRotateX(ringModel, modelPitch)
-    ringRotateY(ringModel, modelYaw)
-    ringRotateX(ringModel, 26.73f) // Saturn axial tilt
+    // NASA Eyes model: Saturn's rings stay fixed in space at Saturn's 26.73° equatorial tilt
+    ringRotateX(ringModel, 26.73f)
     ringScale(ringModel, currentRadius)
 
+    val ringMV = FloatArray(16)
+    ringMultiply(ringMV, viewMatrix, ringModel)
     val ringMVP = FloatArray(16)
-    ringMultiply(ringMVP, projectionMatrix, ringModel)
+    ringMultiply(ringMVP, projectionMatrix, ringMV)
 
     gl.useProgram(prog)
     val mvpArr = Float32Array(16).also { a -> for (i in 0..15) a[i] = ringMVP[i] }

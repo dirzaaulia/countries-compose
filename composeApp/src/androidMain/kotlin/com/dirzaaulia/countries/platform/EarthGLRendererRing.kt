@@ -88,15 +88,13 @@ private fun compileRingShader(
  * Draws the Saturn ring disc as a second draw call.
  *
  * @param projectionMatrix  Orthographic projection (from EarthGLRenderer)
- * @param modelPitch        Current sphere pitch rotation angle (°)
- * @param modelYaw          Current sphere yaw rotation angle (°)
+ * @param viewMatrix        Camera orbital view matrix (from EarthGLRenderer)
  * @param currentRadius     Pixel-space scaled planet radius
  * @param sunEye            Sun direction in eye space
  */
 internal fun RingGLState.drawRings(
     projectionMatrix: FloatArray,
-    modelPitch: Float,
-    modelYaw: Float,
+    viewMatrix: FloatArray,
     currentRadius: Float,
     sunEye: Point3D,
 ) {
@@ -108,14 +106,14 @@ internal fun RingGLState.drawRings(
 
     val ringModel = FloatArray(16)
     Matrix.setIdentityM(ringModel, 0)
-    // Match sphere camera rotation, then apply Saturn's 26.73° axial tilt
-    Matrix.rotateM(ringModel, 0, modelPitch, 1f, 0f, 0f)
-    Matrix.rotateM(ringModel, 0, modelYaw, 0f, 1f, 0f)
+    // NASA Eyes model: Saturn's rings stay fixed in space at Saturn's 26.73° equatorial tilt
     Matrix.rotateM(ringModel, 0, 26.73f, 1f, 0f, 0f)
     Matrix.scaleM(ringModel, 0, currentRadius, currentRadius, currentRadius)
 
+    val ringMV = FloatArray(16)
+    Matrix.multiplyMM(ringMV, 0, viewMatrix, 0, ringModel, 0)
     val ringMVP = FloatArray(16)
-    Matrix.multiplyMM(ringMVP, 0, projectionMatrix, 0, ringModel, 0)
+    Matrix.multiplyMM(ringMVP, 0, projectionMatrix, 0, ringMV, 0)
 
     GLES20.glUseProgram(programId)
     GLES20.glUniformMatrix4fv(uRingMVPLoc, 1, false, ringMVP, 0)
