@@ -77,8 +77,8 @@ fun MoonOverlayCanvas(
                         scope.launch {
                             state.stopAnimations()
                             val dragFactor = currentSensitivity.value / state.zoom
-                            val newY = state.rotationY + pan.x * dragFactor
-                            val newX = (state.rotationX + pan.y * dragFactor).coerceIn(-85f, 85f)
+                            val newY = state.rotationY - pan.x * dragFactor
+                            val newX = (state.rotationX - pan.y * dragFactor).coerceIn(-85f, 85f)
                             val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
                             state.snapTo(newX, newY, newZoom)
                         }

@@ -119,8 +119,8 @@ fun GenericPlanetView(
                             // Orbital camera: yaw free, pitch clamped — matches solar system feel
                             val pitchSens = 0.35f / state.zoom
                             val yawSens = 0.45f / state.zoom
-                            val newX = (state.rotationX + pan.y * pitchSens).coerceIn(-MAX_PITCH, MAX_PITCH)
-                            val newY = state.rotationY + pan.x * yawSens
+                            val newX = (state.rotationX - pan.y * pitchSens).coerceIn(-MAX_PITCH, MAX_PITCH)
+                            val newY = state.rotationY - pan.x * yawSens
                             val newZoom = if (zoom != 1.0f) state.zoom * zoom else null
                             scope.launch {
                                 state.stopAnimations()

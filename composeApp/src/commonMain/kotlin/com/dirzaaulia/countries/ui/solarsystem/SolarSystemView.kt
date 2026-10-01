@@ -9,6 +9,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,10 +18,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import com.dirzaaulia.countries.domain.solarsystem.LivePlanetPosition
 import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 import com.dirzaaulia.countries.domain.solarsystem.SolarCameraState
@@ -108,7 +112,7 @@ fun SolarSystemView(
         coronaPhase = coronaPhase,
         onOrbit = { pan ->
             rotationZ = (rotationZ - pan.x * 0.45f) % 360f
-            tiltAngleX = (tiltAngleX + pan.y * 0.35f).coerceIn(10f, 85f)
+            tiltAngleX = (tiltAngleX - pan.y * 0.35f).coerceIn(10f, 85f)
         },
         onPan = { pan -> panOffset = Offset(panOffset.x + pan.x, panOffset.y + pan.y) },
         onZoom = { zoom -> zoomFactor = (zoomFactor * zoom).coerceIn(0.05f, 50.0f) },
@@ -203,5 +207,15 @@ private fun SolarSystemContent(
             onClose = { onSelectPlanet(null) },
             onDiveToPlanet = onDiveToPlanet,
         )
+
+        if (selectedPlanet == null) {
+            SolarTouchControlsCard(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomStart)
+                        .navigationBarsPadding()
+                        .padding(start = 16.dp, bottom = 16.dp),
+            )
+        }
     }
 }
