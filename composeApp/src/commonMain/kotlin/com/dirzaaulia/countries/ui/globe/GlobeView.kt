@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -71,7 +70,6 @@ import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.platform.Globe3DPlatformView
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
-import com.dirzaaulia.countries.ui.overlay.CELESTIAL_STARS
 import com.dirzaaulia.countries.ui.overlay.drawAuroralOval
 import com.dirzaaulia.countries.ui.overlay.drawCartographicBorders
 import com.dirzaaulia.countries.ui.overlay.drawCountryHighlights
@@ -85,6 +83,7 @@ import com.dirzaaulia.countries.ui.overlay.drawTectonicLayer
 import com.dirzaaulia.countries.ui.overlay.drawTimezoneMeridians
 import com.dirzaaulia.countries.ui.overlay.drawTrueSizeComparisonOverlay
 import com.dirzaaulia.countries.ui.overlay.drawTwilightBands
+import com.dirzaaulia.countries.ui.solarsystem.CelestialStarfieldBackground
 import kotlinx.coroutines.launch
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -209,57 +208,7 @@ fun GlobeView(
 
     Box(modifier = modifier.fillMaxSize()) {
         // 1. Deep Space Starfield Background
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRect(
-                brush =
-                    Brush.radialGradient(
-                        colors =
-                            listOf(
-                                Color(0xFF070E1E),
-                                Color(0xFF03060C),
-                                Color(0xFF010205),
-                            ),
-                        center = center,
-                        radius = size.maxDimension * 0.9f,
-                    ),
-            )
-
-            // Milky Way Galactic Dust Lane (diagonal celestial dust band)
-            drawRect(
-                brush =
-                    Brush.linearGradient(
-                        colors =
-                            listOf(
-                                Color.Transparent,
-                                Color(0x15312E81),
-                                Color(0x281E1B4B),
-                                Color(0x180284C7),
-                                Color.Transparent,
-                            ),
-                        start = Offset(0f, size.height * 0.15f),
-                        end = Offset(size.width, size.height * 0.85f),
-                    ),
-            )
-
-            // Twinkling stars in deep space
-            CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
-                val x = normX * size.width
-                val y = normY * size.height
-                val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.2f, 1f)
-                val starColor =
-                    when {
-                        idx % 7 == 0 -> Color(0xFF90CAF9)
-                        idx % 11 == 0 -> Color(0xFFFFE082)
-                        idx % 13 == 0 -> Color(0xFFFFCCBC)
-                        else -> Color.White
-                    }
-                drawCircle(
-                    color = starColor.copy(alpha = alpha * 0.85f),
-                    radius = starRadius,
-                    center = Offset(x, y),
-                )
-            }
-        }
+        CelestialStarfieldBackground(starTwinkle = starTwinkle)
 
         val currentSunPos by rememberUpdatedState(sunPos)
         val currentIsMarketLayerActive by rememberUpdatedState(isMarketLayerActive)
@@ -423,7 +372,7 @@ fun GlobeView(
                                 state.stopAnimations()
                                 val dragFactor = sensitivity / state.zoom
                                 val newY = state.rotationY + pan.x * dragFactor
-                                val newX = state.rotationX + pan.y * dragFactor
+                                val newX = (state.rotationX + pan.y * dragFactor).coerceIn(-85f, 85f)
                                 val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
                                 state.snapTo(newX, newY, newZoom)
                             }

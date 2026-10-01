@@ -35,6 +35,7 @@ import com.dirzaaulia.countries.domain.moon.LunarLandmarkType
 import com.dirzaaulia.countries.platform.Moon3DPlatformView
 import com.dirzaaulia.countries.platform.currentEpochMillis
 import com.dirzaaulia.countries.ui.hud.MoonDetailSheet
+import com.dirzaaulia.countries.ui.solarsystem.CelestialStarfieldBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,6 +64,10 @@ fun MoonView(
                 .fillMaxSize()
                 .background(Color(0xFF020408)),
     ) {
+        CelestialStarfieldBackground(
+            starTwinkle = moonViewState.starTwinkle,
+        )
+
         Moon3DPlatformView(
             state = state,
             phaseAngle = moonViewState.displayedMoonInfo.phaseAngle,

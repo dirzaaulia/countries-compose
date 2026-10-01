@@ -108,7 +108,7 @@ fun SolarSystemView(
         coronaPhase = coronaPhase,
         onOrbit = { pan ->
             rotationZ = (rotationZ - pan.x * 0.45f) % 360f
-            tiltAngleX = (tiltAngleX + pan.y * 0.35f) % 360f
+            tiltAngleX = (tiltAngleX + pan.y * 0.35f).coerceIn(10f, 85f)
         },
         onPan = { pan -> panOffset = Offset(panOffset.x + pan.x, panOffset.y + pan.y) },
         onZoom = { zoom -> zoomFactor = (zoomFactor * zoom).coerceIn(0.05f, 50.0f) },

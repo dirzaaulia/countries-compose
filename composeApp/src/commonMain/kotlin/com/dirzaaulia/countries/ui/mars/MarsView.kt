@@ -1,5 +1,11 @@
 package com.dirzaaulia.countries.ui.mars
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +33,7 @@ import com.dirzaaulia.countries.domain.globe.GlobeState
 import com.dirzaaulia.countries.domain.mars.MarsLandmark
 import com.dirzaaulia.countries.platform.Mars3DPlatformView
 import com.dirzaaulia.countries.ui.mars.components.MarsEnvironmentHudCard
+import com.dirzaaulia.countries.ui.solarsystem.CelestialStarfieldBackground
 import com.dirzaaulia.countries.ui.theme.extendedColors
 
 @Composable
@@ -41,7 +48,12 @@ fun MarsView(
     modifier: Modifier = Modifier,
 ) {
     var selectedLandmark by remember { mutableStateOf<MarsLandmark?>(null) }
-    var starTwinkle by remember { mutableStateOf(1f) } // Or use infinite transition if desired
+    val starTwinkle by rememberInfiniteTransition(label = "marsStarTwinkle").animateFloat(
+        initialValue = 0.35f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(2600, easing = LinearEasing), RepeatMode.Reverse),
+        label = "starTwinkle",
+    )
     var showGallery by remember { mutableStateOf(false) }
 
     Box(
@@ -50,6 +62,8 @@ fun MarsView(
                 .fillMaxSize()
                 .background(Color(0xFF03060C)),
     ) {
+        CelestialStarfieldBackground(starTwinkle = starTwinkle)
+
         Mars3DPlatformView(
             state = state,
             sunPosition = sunPosition,

@@ -22,7 +22,6 @@ import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toRadians
 import com.dirzaaulia.countries.domain.mars.MarsLandmark
 import com.dirzaaulia.countries.ui.mars.MARS_LANDMARKS
-import com.dirzaaulia.countries.ui.overlay.CELESTIAL_STARS
 import com.dirzaaulia.countries.ui.theme.extendedColors
 import kotlinx.coroutines.launch
 import kotlin.math.cos
@@ -68,7 +67,7 @@ fun MarsOverlayCanvas(
                             state.stopAnimations()
                             val dragFactor = currentSensitivity.value / state.zoom
                             val newY = state.rotationY + pan.x * dragFactor
-                            val newX = state.rotationX + pan.y * dragFactor
+                            val newX = (state.rotationX + pan.y * dragFactor).coerceIn(-85f, 85f)
                             val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
                             state.snapTo(newX, newY, newZoom)
                         }
@@ -78,11 +77,6 @@ fun MarsOverlayCanvas(
         val canvasCenter = center
         val baseRadius = minOf(size.width, size.height) * 0.38f
         val currentRadius = baseRadius * state.zoom
-
-        drawCelestialStars(
-            starTwinkle = starTwinkle,
-            planetRadius = currentRadius,
-        )
 
         MARS_LANDMARKS.forEach { landmark ->
             val isSelected = landmark.id == selectedLandmark?.id
@@ -97,43 +91,6 @@ fun MarsOverlayCanvas(
                 geologicalColor = geologicalColor,
                 polarColor = polarColor,
                 defaultColor = defaultColor,
-            )
-        }
-    }
-}
-
-private fun DrawScope.drawCelestialStars(
-    starTwinkle: Float,
-    planetRadius: Float,
-) {
-    val canvasCenter = center
-    val planetR2 = planetRadius * planetRadius
-
-    CELESTIAL_STARS.forEachIndexed { idx, (normX, normY, starRadius) ->
-        val sx = normX * size.width
-        val sy = normY * size.height
-        val dx = sx - canvasCenter.x
-        val dy = sy - canvasCenter.y
-        if (dx * dx + dy * dy > planetR2 + 10f) {
-            val alpha = if (idx % 2 == 0) starTwinkle else (1.4f - starTwinkle).coerceIn(0.25f, 1f)
-            val starColor =
-                when {
-                    idx % 7 == 0 -> Color(0xFF90CAF9)
-                    idx % 11 == 0 -> Color(0xFFFFE082)
-                    idx % 13 == 0 -> Color(0xFFFFCCBC)
-                    else -> Color.White
-                }
-            if (starRadius > 1.6f) {
-                drawCircle(
-                    color = starColor.copy(alpha = alpha * 0.35f),
-                    radius = starRadius * 2.5f,
-                    center = Offset(sx, sy),
-                )
-            }
-            drawCircle(
-                color = starColor.copy(alpha = alpha * 0.92f),
-                radius = starRadius * 1.3f,
-                center = Offset(sx, sy),
             )
         }
     }

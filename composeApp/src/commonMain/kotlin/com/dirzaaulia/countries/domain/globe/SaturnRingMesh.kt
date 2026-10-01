@@ -67,9 +67,13 @@ class SaturnRingMesh(
             val i2 = (seg * 2 + 2).toShort()
             val i3 = (seg * 2 + 3).toShort()
             // Upper face
-            indices[ii++] = i0; indices[ii++] = i2; indices[ii++] = i1
+            indices[ii++] = i0
+            indices[ii++] = i2
+            indices[ii++] = i1
             // Lower face (reversed winding — both sides visible)
-            indices[ii++] = i1; indices[ii++] = i2; indices[ii++] = i3
+            indices[ii++] = i1
+            indices[ii++] = i2
+            indices[ii++] = i3
         }
     }
 }

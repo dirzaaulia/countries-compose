@@ -23,14 +23,20 @@ internal fun loadGLTexture(bytes: ByteArray): Int {
     return textureHandle[0]
 }
 
-internal fun compileGLShader(type: Int, shaderCode: String): Int {
+internal fun compileGLShader(
+    type: Int,
+    shaderCode: String,
+): Int {
     val shader = GLES20.glCreateShader(type)
     GLES20.glShaderSource(shader, shaderCode)
     GLES20.glCompileShader(shader)
     return shader
 }
 
-internal fun createGLProgram(vertexShader: Int, fragmentShader: Int): Int {
+internal fun createGLProgram(
+    vertexShader: Int,
+    fragmentShader: Int,
+): Int {
     val program = GLES20.glCreateProgram()
     GLES20.glAttachShader(program, vertexShader)
     GLES20.glAttachShader(program, fragmentShader)

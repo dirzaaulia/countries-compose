@@ -8,7 +8,9 @@ import android.opengl.GLES20
  */
 internal class EarthGLTextureManager {
     @Volatile var pendingDayBytes: ByteArray? = null
+
     @Volatile var pendingNightBytes: ByteArray? = null
+
     @Volatile var pendingCloudBytes: ByteArray? = null
 
     var dayTextureId = 0

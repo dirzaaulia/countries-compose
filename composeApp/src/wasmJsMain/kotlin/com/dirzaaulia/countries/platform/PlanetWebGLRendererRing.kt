@@ -53,10 +53,12 @@ internal fun RingWebGLState.initWebGLRing(gl: WebGLRenderingContext) {
     gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer)
     gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, idxArray, WebGLRenderingContext.STATIC_DRAW)
 
-    val vs = compileRingWebGLShader(gl, WebGLRenderingContext.VERTEX_SHADER, GlobeShaders.RING_VERTEX_SHADER)
-        ?: return
-    val fs = compileRingWebGLShader(gl, WebGLRenderingContext.FRAGMENT_SHADER, GlobeShaders.RING_FRAGMENT_SHADER)
-        ?: return
+    val vs =
+        compileRingWebGLShader(gl, WebGLRenderingContext.VERTEX_SHADER, GlobeShaders.RING_VERTEX_SHADER)
+            ?: return
+    val fs =
+        compileRingWebGLShader(gl, WebGLRenderingContext.FRAGMENT_SHADER, GlobeShaders.RING_FRAGMENT_SHADER)
+            ?: return
     val prog = gl.createProgram() ?: return
     gl.attachShader(prog, vs)
     gl.attachShader(prog, fs)
@@ -69,7 +71,11 @@ internal fun RingWebGLState.initWebGLRing(gl: WebGLRenderingContext) {
     aTexCoordLoc = gl.getAttribLocation(prog, "a_TexCoord")
 }
 
-private fun compileRingWebGLShader(gl: WebGLRenderingContext, type: Int, src: String): WebGLShader? {
+private fun compileRingWebGLShader(
+    gl: WebGLRenderingContext,
+    type: Int,
+    src: String,
+): WebGLShader? {
     val shader = gl.createShader(type) ?: return null
     gl.shaderSource(shader, src)
     gl.compileShader(shader)
@@ -124,34 +130,69 @@ internal fun RingWebGLState.drawWebGLRings(
 
 // ---- Minimal column-major 4x4 matrix helpers (ring-local, no Android.Matrix) ----
 
-private fun ringIdentity() = FloatArray(16).also { m ->
-    m[0] = 1f; m[5] = 1f; m[10] = 1f; m[15] = 1f
-}
+private fun ringIdentity() =
+    FloatArray(16).also { m ->
+        m[0] = 1f
+        m[5] = 1f
+        m[10] = 1f
+        m[15] = 1f
+    }
 
-private fun ringRotateX(m: FloatArray, angleDeg: Float) {
+private fun ringRotateX(
+    m: FloatArray,
+    angleDeg: Float,
+) {
     val rad = angleDeg * PI.toFloat() / 180f
-    val c = cos(rad); val s = sin(rad)
+    val c = cos(rad)
+    val s = sin(rad)
     val tmp = ringIdentity()
-    tmp[5] = c; tmp[9] = -s; tmp[6] = s; tmp[10] = c
-    val r = FloatArray(16); ringMultiply(r, m, tmp); r.copyInto(m)
+    tmp[5] = c
+    tmp[9] = -s
+    tmp[6] = s
+    tmp[10] = c
+    val r = FloatArray(16)
+    ringMultiply(r, m, tmp)
+    r.copyInto(m)
 }
 
-private fun ringRotateY(m: FloatArray, angleDeg: Float) {
+private fun ringRotateY(
+    m: FloatArray,
+    angleDeg: Float,
+) {
     val rad = angleDeg * PI.toFloat() / 180f
-    val c = cos(rad); val s = sin(rad)
+    val c = cos(rad)
+    val s = sin(rad)
     val tmp = ringIdentity()
-    tmp[0] = c; tmp[8] = s; tmp[2] = -s; tmp[10] = c
-    val r = FloatArray(16); ringMultiply(r, m, tmp); r.copyInto(m)
+    tmp[0] = c
+    tmp[8] = s
+    tmp[2] = -s
+    tmp[10] = c
+    val r = FloatArray(16)
+    ringMultiply(r, m, tmp)
+    r.copyInto(m)
 }
 
-private fun ringScale(m: FloatArray, s: Float) {
-    for (i in 0..3) { m[i] *= s; m[4 + i] *= s; m[8 + i] *= s }
-}
-
-private fun ringMultiply(result: FloatArray, lhs: FloatArray, rhs: FloatArray) {
+private fun ringScale(
+    m: FloatArray,
+    s: Float,
+) {
     for (i in 0..3) {
-        val r0 = rhs[i * 4]; val r1 = rhs[i * 4 + 1]
-        val r2 = rhs[i * 4 + 2]; val r3 = rhs[i * 4 + 3]
+        m[i] *= s
+        m[4 + i] *= s
+        m[8 + i] *= s
+    }
+}
+
+private fun ringMultiply(
+    result: FloatArray,
+    lhs: FloatArray,
+    rhs: FloatArray,
+) {
+    for (i in 0..3) {
+        val r0 = rhs[i * 4]
+        val r1 = rhs[i * 4 + 1]
+        val r2 = rhs[i * 4 + 2]
+        val r3 = rhs[i * 4 + 3]
         for (j in 0..3) {
             result[i * 4 + j] = lhs[j] * r0 + lhs[4 + j] * r1 + lhs[8 + j] * r2 + lhs[12 + j] * r3
         }

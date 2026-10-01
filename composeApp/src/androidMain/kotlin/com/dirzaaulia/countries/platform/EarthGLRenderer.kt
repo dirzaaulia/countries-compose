@@ -92,34 +92,57 @@ class EarthGLRenderer(
     private val textures = EarthGLTextureManager()
 
     @Volatile private var isMoonMode = false
+
     @Volatile private var isMarsMode = false
     private var planetType = 0f
 
     @Volatile private var currentRotationX = 0f
+
     @Volatile private var currentRotationY = 0f
+
     @Volatile private var currentZoom = 1.0f
+
     @Volatile private var sunPosition = AstronomyMath.calculateSunPosition()
 
     @Volatile private var moonPhaseAngle = 0.0
+
     @Volatile private var moonSubsolarLatitude = 0.0
+
     @Volatile private var moonLibrationLatitude = 0.0
+
     @Volatile private var moonLibrationLongitude = 0.0
 
     private var viewportWidth = 1
     private var viewportHeight = 1
     private var cloudOffset = 0f
 
-    fun setPlanetType(type: Float) { planetType = type }
-
-    fun updateCamera(rotX: Float, rotY: Float, zoom: Float) {
-        currentRotationX = rotX; currentRotationY = rotY; currentZoom = zoom
+    fun setPlanetType(type: Float) {
+        planetType = type
     }
 
-    fun setSunPosition(position: SunPosition) { sunPosition = position }
+    fun updateCamera(
+        rotX: Float,
+        rotY: Float,
+        zoom: Float,
+    ) {
+        currentRotationX = rotX
+        currentRotationY = rotY
+        currentZoom = zoom
+    }
 
-    fun setIsMoon(isMoon: Boolean) { isMoonMode = isMoon; if (isMoon) isMarsMode = false }
+    fun setSunPosition(position: SunPosition) {
+        sunPosition = position
+    }
 
-    fun setIsMars(isMars: Boolean) { isMarsMode = isMars; if (isMars) isMoonMode = false }
+    fun setIsMoon(isMoon: Boolean) {
+        isMoonMode = isMoon
+        if (isMoon) isMarsMode = false
+    }
+
+    fun setIsMars(isMars: Boolean) {
+        isMarsMode = isMars
+        if (isMars) isMoonMode = false
+    }
 
     fun setMoonOrientation(
         phaseAngle: Double,
@@ -316,8 +339,13 @@ class EarthGLRenderer(
 
     private fun loadTexturesIfPending() = textures.uploadPending()
 
-    private fun compileShader(type: Int, shaderCode: String): Int = compileGLShader(type, shaderCode)
+    private fun compileShader(
+        type: Int,
+        shaderCode: String,
+    ): Int = compileGLShader(type, shaderCode)
 
-    private fun createProgram(vertexShader: Int, fragmentShader: Int): Int =
-        createGLProgram(vertexShader, fragmentShader)
+    private fun createProgram(
+        vertexShader: Int,
+        fragmentShader: Int,
+    ): Int = createGLProgram(vertexShader, fragmentShader)
 }

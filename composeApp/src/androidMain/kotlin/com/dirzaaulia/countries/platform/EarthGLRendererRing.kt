@@ -3,8 +3,8 @@ package com.dirzaaulia.countries.platform
 import android.opengl.GLES20
 import android.opengl.Matrix
 import com.dirzaaulia.countries.domain.globe.GlobeShaders
-import com.dirzaaulia.countries.domain.globe.SaturnRingMesh
 import com.dirzaaulia.countries.domain.globe.Point3D
+import com.dirzaaulia.countries.domain.globe.SaturnRingMesh
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -31,23 +31,35 @@ internal fun RingGLState.initRing() {
     val mesh = SaturnRingMesh()
     ringIndexCount = mesh.indices.size
 
-    vertexBuffer = ByteBuffer
-        .allocateDirect(mesh.vertices.size * 4)
-        .order(ByteOrder.nativeOrder())
-        .asFloatBuffer()
-        .apply { put(mesh.vertices); position(0) }
+    vertexBuffer =
+        ByteBuffer
+            .allocateDirect(mesh.vertices.size * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .apply {
+                put(mesh.vertices)
+                position(0)
+            }
 
-    texCoordBuffer = ByteBuffer
-        .allocateDirect(mesh.texCoords.size * 4)
-        .order(ByteOrder.nativeOrder())
-        .asFloatBuffer()
-        .apply { put(mesh.texCoords); position(0) }
+    texCoordBuffer =
+        ByteBuffer
+            .allocateDirect(mesh.texCoords.size * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer()
+            .apply {
+                put(mesh.texCoords)
+                position(0)
+            }
 
-    indexBuffer = ByteBuffer
-        .allocateDirect(mesh.indices.size * 2)
-        .order(ByteOrder.nativeOrder())
-        .asShortBuffer()
-        .apply { put(mesh.indices); position(0) }
+    indexBuffer =
+        ByteBuffer
+            .allocateDirect(mesh.indices.size * 2)
+            .order(ByteOrder.nativeOrder())
+            .asShortBuffer()
+            .apply {
+                put(mesh.indices)
+                position(0)
+            }
 
     val vs = compileRingShader(GLES20.GL_VERTEX_SHADER, GlobeShaders.RING_VERTEX_SHADER)
     val fs = compileRingShader(GLES20.GL_FRAGMENT_SHADER, GlobeShaders.RING_FRAGMENT_SHADER)
@@ -62,7 +74,10 @@ internal fun RingGLState.initRing() {
     aTexCoordLoc = GLES20.glGetAttribLocation(programId, "a_TexCoord")
 }
 
-private fun compileRingShader(type: Int, src: String): Int {
+private fun compileRingShader(
+    type: Int,
+    src: String,
+): Int {
     val shader = GLES20.glCreateShader(type)
     GLES20.glShaderSource(shader, src)
     GLES20.glCompileShader(shader)

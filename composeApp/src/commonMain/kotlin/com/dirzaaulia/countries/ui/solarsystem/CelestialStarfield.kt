@@ -1,6 +1,11 @@
 package com.dirzaaulia.countries.ui.solarsystem
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import kotlin.random.Random
@@ -43,4 +48,46 @@ internal fun DrawScope.drawSolarStarfield(twinklePhase: Float) {
 /** Renders a pristine deep space canvas. */
 internal fun DrawScope.drawMilkyWayLane(driftPhase: Float) {
     // Pristine deep space background
+}
+
+/**
+ * Renders an immersive deep-space starfield background with cosmic nebula gradients
+ * and twinkling stars. Shared across all celestial views (Solar System, Earth, Moon, Mars, Planets).
+ */
+@Composable
+fun CelestialStarfieldBackground(
+    starTwinkle: Float,
+    modifier: Modifier = Modifier,
+) {
+    Canvas(modifier = modifier.fillMaxSize()) {
+        drawRect(
+            brush =
+                Brush.radialGradient(
+                    colors =
+                        listOf(
+                            Color(0xFF070E1E),
+                            Color(0xFF03060C),
+                            Color(0xFF010205),
+                        ),
+                    center = center,
+                    radius = size.maxDimension * 0.9f,
+                ),
+        )
+        drawRect(
+            brush =
+                Brush.linearGradient(
+                    colors =
+                        listOf(
+                            Color.Transparent,
+                            Color(0x15312E81),
+                            Color(0x281E1B4B),
+                            Color(0x180284C7),
+                            Color.Transparent,
+                        ),
+                    start = Offset(0f, size.height * 0.15f),
+                    end = Offset(size.width, size.height * 0.85f),
+                ),
+        )
+        drawSolarStarfield(starTwinkle)
+    }
 }

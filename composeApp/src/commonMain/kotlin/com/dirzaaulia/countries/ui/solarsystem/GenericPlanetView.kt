@@ -1,5 +1,11 @@
 package com.dirzaaulia.countries.ui.solarsystem
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
@@ -38,6 +44,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val DAY_MILLIS = 86_400_000L
+
+/** Pitch clamp for orbital camera — matches solar system feel (not free-tumble 360°). */
+private const val MAX_PITCH = 85f
 
 @Composable
 fun GenericPlanetView(
@@ -86,10 +95,18 @@ fun GenericPlanetView(
                 sunPosition
             } else {
                 val dayStart = nowMillis - (nowMillis % DAY_MILLIS)
-                val simulatedEpoch = dayStart + scrubbedMinute.toLong() * 60_000L
-                AstronomyMath.calculateSunPosition(simulatedEpoch)
+                AstronomyMath.calculateSunPosition(dayStart + scrubbedMinute.toLong() * 60_000L)
             }
         }
+
+    // Star twinkle — same animation profile as SolarSystemView
+    val starTwinkle by rememberInfiniteTransition(label = "planetStarField")
+        .animateFloat(
+            initialValue = 0.35f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(2600, easing = LinearEasing), RepeatMode.Reverse),
+            label = "starTwinkle",
+        )
 
     Box(
         modifier =
@@ -99,9 +116,11 @@ fun GenericPlanetView(
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
                         if (pan != Offset.Zero) {
-                            val dragFactor = 0.38f / state.zoom
-                            val newX = state.rotationX + pan.y * dragFactor
-                            val newY = state.rotationY + pan.x * dragFactor
+                            // Orbital camera: yaw free, pitch clamped — matches solar system feel
+                            val pitchSens = 0.35f / state.zoom
+                            val yawSens = 0.45f / state.zoom
+                            val newX = (state.rotationX + pan.y * pitchSens).coerceIn(-MAX_PITCH, MAX_PITCH)
+                            val newY = state.rotationY + pan.x * yawSens
                             val newZoom = if (zoom != 1.0f) state.zoom * zoom else null
                             scope.launch {
                                 state.stopAnimations()
@@ -114,6 +133,8 @@ fun GenericPlanetView(
                     }
                 },
     ) {
+        CelestialStarfieldBackground(starTwinkle = starTwinkle)
+
         Planet3DPlatformView(
             planetId = planetId,
             state = state,
