@@ -98,6 +98,7 @@ object PlanetWebGLRenderer {
     private var currentRotY = 0f
     private var currentZoom = 1.0f
     private var sunPosition = AstronomyMath.calculateSunPosition()
+    private val ringState = RingWebGLState()
 
     private var isInitialized = false
     private var isLoadingTextures = false
@@ -209,6 +210,7 @@ object PlanetWebGLRenderer {
         context.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, idxArray, WebGLRenderingContext.STATIC_DRAW)
 
         // 7. Asynchronously load all 2K high-definition planetary textures
+        ringState.initWebGLRing(context)
         loadTextures(scope)
     }
 
@@ -461,6 +463,18 @@ object PlanetWebGLRenderer {
 
         context.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer)
         context.drawElements(WebGLRenderingContext.TRIANGLES, indexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
+
+        // Draw Saturn ring disc (second pass — only for Saturn, planetType == 6)
+        if (planetType == 6f) {
+            ringState.drawWebGLRings(
+                gl = context,
+                projectionMatrix = projectionMatrix,
+                modelPitch = modelPitch,
+                modelYaw = modelYaw,
+                currentRadius = currentRadius,
+                sunEye = sunEye,
+            )
+        }
     }
 
     private fun compileShader(

@@ -1,10 +1,8 @@
 package com.dirzaaulia.countries.platform
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.opengl.GLUtils
 import android.opengl.Matrix
 import com.dirzaaulia.countries.domain.astronomy.AstronomyMath
 import com.dirzaaulia.countries.domain.astronomy.SunPosition
@@ -27,6 +25,7 @@ class EarthGLRenderer(
     @Suppress("UNUSED_PARAMETER") context: Context,
 ) : GLSurfaceView.Renderer {
     private val sphereMesh = SphereMesh(stacks = 48, sectors = 96, radius = 1.0f)
+    private val ringState = RingGLState()
 
     private val vertexBuffer: FloatBuffer =
         ByteBuffer
@@ -90,81 +89,37 @@ class EarthGLRenderer(
     private var aTexCoordinateLoc = 0
     private var aNormalLoc = 0
 
-    private var dayTextureId = 0
-    private var nightTextureId = 0
-    private var cloudTextureId = 0
+    private val textures = EarthGLTextureManager()
 
-    @Volatile
-    private var isMoonMode = false
-
-    @Volatile
-    private var isMarsMode = false
+    @Volatile private var isMoonMode = false
+    @Volatile private var isMarsMode = false
     private var planetType = 0f
 
-    fun setPlanetType(type: Float) {
-        planetType = type
-    }
+    @Volatile private var currentRotationX = 0f
+    @Volatile private var currentRotationY = 0f
+    @Volatile private var currentZoom = 1.0f
+    @Volatile private var sunPosition = AstronomyMath.calculateSunPosition()
 
-    @Volatile
-    private var pendingDayBytes: ByteArray? = null
-
-    @Volatile
-    private var pendingNightBytes: ByteArray? = null
-
-    @Volatile
-    private var pendingCloudBytes: ByteArray? = null
-
-    @Volatile
-    private var currentRotationX = 0f
-
-    @Volatile
-    private var currentRotationY = 0f
-
-    @Volatile
-    private var currentZoom = 1.0f
-
-    @Volatile
-    private var sunPosition = AstronomyMath.calculateSunPosition()
+    @Volatile private var moonPhaseAngle = 0.0
+    @Volatile private var moonSubsolarLatitude = 0.0
+    @Volatile private var moonLibrationLatitude = 0.0
+    @Volatile private var moonLibrationLongitude = 0.0
 
     private var viewportWidth = 1
     private var viewportHeight = 1
     private var cloudOffset = 0f
 
-    fun updateCamera(
-        rotX: Float,
-        rotY: Float,
-        zoom: Float,
-    ) {
-        currentRotationX = rotX
-        currentRotationY = rotY
-        currentZoom = zoom
+    fun setPlanetType(type: Float) { planetType = type }
+
+    fun updateCamera(rotX: Float, rotY: Float, zoom: Float) {
+        currentRotationX = rotX; currentRotationY = rotY; currentZoom = zoom
     }
 
-    fun setSunPosition(position: SunPosition) {
-        sunPosition = position
-    }
+    fun setSunPosition(position: SunPosition) { sunPosition = position }
 
-    fun setIsMoon(isMoon: Boolean) {
-        isMoonMode = isMoon
-        if (isMoon) isMarsMode = false
-    }
+    fun setIsMoon(isMoon: Boolean) { isMoonMode = isMoon; if (isMoon) isMarsMode = false }
 
-    fun setIsMars(isMars: Boolean) {
-        isMarsMode = isMars
-        if (isMars) isMoonMode = false
-    }
-
-    @Volatile
-    private var moonPhaseAngle = 0.0
-
-    @Volatile
-    private var moonSubsolarLatitude = 0.0
-
-    @Volatile
-    private var moonLibrationLatitude = 0.0
-
-    @Volatile
-    private var moonLibrationLongitude = 0.0
+    fun setIsMars(isMars: Boolean) { isMarsMode = isMars; if (isMars) isMoonMode = false }
 
     fun setMoonOrientation(
         phaseAngle: Double,
@@ -182,11 +137,7 @@ class EarthGLRenderer(
         dayBytes: ByteArray,
         nightBytes: ByteArray? = null,
         cloudBytes: ByteArray? = null,
-    ) {
-        pendingDayBytes = dayBytes
-        pendingNightBytes = nightBytes
-        pendingCloudBytes = cloudBytes
-    }
+    ) = textures.setTextures(dayBytes, nightBytes, cloudBytes)
 
     override fun onSurfaceCreated(
         gl: GL10?,
@@ -219,6 +170,7 @@ class EarthGLRenderer(
         aNormalLoc = GLES20.glGetAttribLocation(programId, "a_Normal")
 
         Matrix.setIdentityM(viewMatrix, 0)
+        ringState.initRing()
     }
 
     override fun onSurfaceChanged(
@@ -240,7 +192,7 @@ class EarthGLRenderer(
 
         loadTexturesIfPending()
 
-        if (programId == 0 || dayTextureId == 0) return
+        if (programId == 0 || textures.dayTextureId == 0) return
 
         GLES20.glUseProgram(programId)
 
@@ -311,17 +263,19 @@ class EarthGLRenderer(
 
         // Bind Day Texture to Unit 0
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, dayTextureId)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures.dayTextureId)
         GLES20.glUniform1i(uDayTextureLoc, 0)
 
         // Bind Night Texture to Unit 1 (fallback to dayTextureId if not present)
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (nightTextureId != 0) nightTextureId else dayTextureId)
+        val nightId = if (textures.nightTextureId != 0) textures.nightTextureId else textures.dayTextureId
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, nightId)
         GLES20.glUniform1i(uNightTextureLoc, 1)
 
         // Bind Cloud Texture to Unit 2 (fallback to dayTextureId if not present)
         GLES20.glActiveTexture(GLES20.GL_TEXTURE2)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (cloudTextureId != 0) cloudTextureId else dayTextureId)
+        val cloudId = if (textures.cloudTextureId != 0) textures.cloudTextureId else textures.dayTextureId
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, cloudId)
         GLES20.glUniform1i(uCloudTextureLoc, 2)
 
         // Vertex positions
@@ -347,70 +301,23 @@ class EarthGLRenderer(
         GLES20.glDisableVertexAttribArray(aPositionLoc)
         GLES20.glDisableVertexAttribArray(aTexCoordinateLoc)
         GLES20.glDisableVertexAttribArray(aNormalLoc)
-    }
 
-    private fun loadTexturesIfPending() {
-        val dBytes = pendingDayBytes
-        if (dBytes != null) {
-            pendingDayBytes = null
-            if (dayTextureId != 0) {
-                GLES20.glDeleteTextures(1, intArrayOf(dayTextureId), 0)
-            }
-            dayTextureId = loadGLTexture(dBytes)
-        }
-        val nBytes = pendingNightBytes
-        if (nBytes != null) {
-            pendingNightBytes = null
-            if (nightTextureId != 0) {
-                GLES20.glDeleteTextures(1, intArrayOf(nightTextureId), 0)
-            }
-            nightTextureId = loadGLTexture(nBytes)
-        }
-        val cBytes = pendingCloudBytes
-        if (cBytes != null) {
-            pendingCloudBytes = null
-            if (cloudTextureId != 0) {
-                GLES20.glDeleteTextures(1, intArrayOf(cloudTextureId), 0)
-            }
-            cloudTextureId = loadGLTexture(cBytes)
+        // Draw Saturn ring disc (second pass — only for Saturn, planetType == 6)
+        if (planetType == 6f) {
+            ringState.drawRings(
+                projectionMatrix = projectionMatrix,
+                modelPitch = modelPitch,
+                modelYaw = modelYaw,
+                currentRadius = currentRadius,
+                sunEye = sunEye,
+            )
         }
     }
 
-    private fun loadGLTexture(bytes: ByteArray): Int {
-        if (bytes.isEmpty()) return 0
-        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return 0
-        val textureHandle = IntArray(1)
-        GLES20.glGenTextures(1, textureHandle, 0)
-        if (textureHandle[0] != 0) {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0])
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0)
-        }
-        bitmap.recycle()
-        return textureHandle[0]
-    }
+    private fun loadTexturesIfPending() = textures.uploadPending()
 
-    private fun compileShader(
-        type: Int,
-        shaderCode: String,
-    ): Int {
-        val shader = GLES20.glCreateShader(type)
-        GLES20.glShaderSource(shader, shaderCode)
-        GLES20.glCompileShader(shader)
-        return shader
-    }
+    private fun compileShader(type: Int, shaderCode: String): Int = compileGLShader(type, shaderCode)
 
-    private fun createProgram(
-        vertexShader: Int,
-        fragmentShader: Int,
-    ): Int {
-        val program = GLES20.glCreateProgram()
-        GLES20.glAttachShader(program, vertexShader)
-        GLES20.glAttachShader(program, fragmentShader)
-        GLES20.glLinkProgram(program)
-        return program
-    }
+    private fun createProgram(vertexShader: Int, fragmentShader: Int): Int =
+        createGLProgram(vertexShader, fragmentShader)
 }

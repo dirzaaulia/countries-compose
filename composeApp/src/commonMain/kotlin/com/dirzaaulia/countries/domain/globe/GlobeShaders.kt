@@ -19,6 +19,94 @@ object GlobeShaders {
         }
     """
 
+    /**
+     * Saturn Ring Shaders — NASA Cassini-mission photometric calibration.
+     *
+     * UV coordinate contract (set by SaturnRingMesh):
+     *   a_TexCoord.x = radial position: 0.0 = C-Ring inner edge (74,510 km)
+     *                                   1.0 = A-Ring outer edge (136,775 km)
+     *
+     * Ring radial positions (normalized over 74,510–136,775 km span = 62,265 km):
+     *   C Ring      : 0.000 – 0.281  (74,510 – 92,000 km)
+     *   B Ring      : 0.281 – 0.657  (92,000 – 117,580 km)  brightest, optically thick
+     *   Cassini Div : 0.657 – 0.729  (117,580 – 122,170 km) near-empty gap
+     *   A Ring      : 0.729 – 0.999  (122,170 – 136,775 km)
+     *   Encke Gap   : ~0.946         (133,590 km, ~325 km wide = 0.005 normalized)
+     *   Keeler Gap  : ~0.975         (136,530 km, ~35 km wide = 0.002 normalized)
+     */
+    const val RING_VERTEX_SHADER = """
+        attribute vec4 a_Position;
+        attribute vec2 a_TexCoord;
+        uniform mat4 u_RingMVP;
+        varying vec2 v_TexCoord;
+        void main() {
+            v_TexCoord = a_TexCoord;
+            gl_Position = u_RingMVP * a_Position;
+        }
+    """
+
+    const val RING_FRAGMENT_SHADER = """
+        precision mediump float;
+        uniform vec3 u_RingSun;
+        varying vec2 v_TexCoord;
+
+        float gap(float r, float mid, float w) {
+            float d = abs(r - mid) / (w * 0.5);
+            return clamp(d * d * d, 0.0, 1.0);
+        }
+
+        void main() {
+            float r = v_TexCoord.x;
+            float alpha;
+
+            if (r < 0.281) {
+                float fade = smoothstep(0.0, 0.04, r);
+                float inner = 0.38 + sin(r * 60.0) * 0.06;
+                alpha = fade * inner;
+            } else if (r < 0.657) {
+                float pos = (r - 0.281) / (0.657 - 0.281);
+                alpha = 0.70 + sin(pos * 3.14159) * 0.22;
+            } else if (r < 0.729) {
+                float pos = (r - 0.657) / (0.729 - 0.657);
+                float edge = min(smoothstep(0.0, 0.18, pos), smoothstep(1.0, 0.82, pos));
+                alpha = edge * 0.12;
+            } else if (r < 0.999) {
+                float pos = (r - 0.729) / (0.999 - 0.729);
+                float aBase = 0.62 - pos * 0.18;
+                float encke = gap(r, 0.946, 0.005);
+                float keeler = gap(r, 0.975, 0.002);
+                alpha = aBase * encke * keeler;
+            } else {
+                alpha = smoothstep(1.0, 0.999, r) * 0.18;
+            }
+
+            if (alpha < 0.005) discard;
+
+            vec3 cColor = vec3(0.72, 0.68, 0.60);
+            vec3 bColor = vec3(0.95, 0.92, 0.85);
+            vec3 aColor = vec3(0.88, 0.84, 0.76);
+            vec3 ringColor;
+            if (r < 0.281) {
+                ringColor = cColor;
+            } else if (r < 0.657) {
+                float t = (r - 0.281) / (0.657 - 0.281);
+                ringColor = mix(bColor * 0.85, bColor, smoothstep(0.0, 0.5, t));
+            } else if (r < 0.729) {
+                ringColor = vec3(0.50, 0.48, 0.42);
+            } else {
+                float t = (r - 0.729) / 0.270;
+                ringColor = mix(aColor, aColor * 0.78, t);
+            }
+
+            float sunlit = mix(
+                clamp(-u_RingSun.y * 2.0 + 0.55, 0.35, 1.0),
+                clamp( u_RingSun.y * 2.0 + 0.55, 0.35, 1.0),
+                clamp(u_RingSun.y + 0.5, 0.0, 1.0)
+            );
+            gl_FragColor = vec4(ringColor * sunlit, alpha);
+        }
+    """
+
     const val FRAGMENT_SHADER = """
         precision mediump float;
         
