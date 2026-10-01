@@ -35,7 +35,7 @@ class GlobeState(
         targetZoom: Float? = null,
     ) {
         coroutineScope {
-            launch { _rotationX.snapTo(x.coerceIn(-85f, 85f)) }
+            launch { _rotationX.snapTo(x) }
             launch { _rotationY.snapTo(y) }
             if (targetZoom != null) {
                 launch { _zoom.snapTo(targetZoom.coerceIn(0.6f, 4.5f)) }
@@ -87,13 +87,16 @@ class GlobeState(
             val diffY = ((targetLng - currentY + 180f) % 360f + 360f) % 360f - 180f
             val finalTargetLng = currentY + diffY
 
-            val clampedLat = targetLat.coerceIn(-85f, 85f)
+            // Shortest path for Pitch
+            val currentX = _rotationX.value
+            val diffX = ((targetLat - currentX + 180f) % 360f + 360f) % 360f - 180f
+            val finalTargetLat = currentX + diffX
 
             launch {
                 _zoom.animateTo(targetZoom.coerceIn(0.6f, 4.5f), animationSpec = tween(durationMs))
             }
             launch {
-                _rotationX.animateTo(clampedLat, animationSpec = tween(durationMs))
+                _rotationX.animateTo(finalTargetLat, animationSpec = tween(durationMs))
             }
             launch {
                 _rotationY.animateTo(finalTargetLng, animationSpec = tween(durationMs))

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
@@ -40,13 +41,11 @@ import com.dirzaaulia.countries.domain.solarsystem.PlanetId
 import com.dirzaaulia.countries.domain.solarsystem.PlanetaryCatalog
 import com.dirzaaulia.countries.platform.Planet3DPlatformView
 import com.dirzaaulia.countries.platform.currentEpochMillis
+import com.dirzaaulia.countries.ui.overlay.drawDeepSpaceStarfield
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val DAY_MILLIS = 86_400_000L
-
-/** Pitch clamp for orbital camera — matches solar system feel (not free-tumble 360°). */
-private const val MAX_PITCH = 85f
 
 @Composable
 fun GenericPlanetView(
@@ -116,11 +115,11 @@ fun GenericPlanetView(
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
                         if (pan != Offset.Zero) {
-                            // Orbital camera: yaw free, pitch clamped — matches solar system feel
+                            // Free 360 orbital camera — matches solar system view
                             val pitchSens = 0.35f / state.zoom
                             val yawSens = 0.45f / state.zoom
-                            val newX = (state.rotationX - pan.y * pitchSens).coerceIn(-MAX_PITCH, MAX_PITCH)
-                            val newY = state.rotationY - pan.x * yawSens
+                            val newX = (state.rotationX - pan.y * pitchSens) % 360f
+                            val newY = (state.rotationY - pan.x * yawSens) % 360f
                             val newZoom = if (zoom != 1.0f) state.zoom * zoom else null
                             scope.launch {
                                 state.stopAnimations()
@@ -142,6 +141,15 @@ fun GenericPlanetView(
             isPageActive = isPageActive,
             modifier = Modifier.fillMaxSize(),
         )
+
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasCenter = center
+            val baseRadius = minOf(size.width, size.height) * 0.38f
+            val currentRadius = baseRadius * state.zoom
+            val occludeRadius = if (planetId == PlanetId.SATURN) currentRadius * 2.3f else currentRadius
+            val occludeR2 = occludeRadius * occludeRadius
+            drawDeepSpaceStarfield(starTwinkle, occludeR2, canvasCenter, size)
+        }
 
         IconButton(
             onClick = onBackToSolarSystem,

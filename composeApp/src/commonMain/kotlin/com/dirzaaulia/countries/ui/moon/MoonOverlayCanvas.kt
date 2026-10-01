@@ -25,6 +25,7 @@ import com.dirzaaulia.countries.domain.globe.toRadians
 import com.dirzaaulia.countries.domain.moon.ALL_LUNAR_LANDMARKS
 import com.dirzaaulia.countries.domain.moon.LunarLandmark
 import com.dirzaaulia.countries.domain.moon.LunarLandmarkType
+import com.dirzaaulia.countries.ui.overlay.drawDeepSpaceStarfield
 import kotlinx.coroutines.launch
 import kotlin.math.cos
 import kotlin.math.pow
@@ -77,8 +78,8 @@ fun MoonOverlayCanvas(
                         scope.launch {
                             state.stopAnimations()
                             val dragFactor = currentSensitivity.value / state.zoom
-                            val newY = state.rotationY - pan.x * dragFactor
-                            val newX = (state.rotationX - pan.y * dragFactor).coerceIn(-85f, 85f)
+                            val newY = (state.rotationY - pan.x * dragFactor) % 360f
+                            val newX = (state.rotationX - pan.y * dragFactor) % 360f
                             val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
                             state.snapTo(newX, newY, newZoom)
                         }
@@ -87,6 +88,9 @@ fun MoonOverlayCanvas(
     ) {
         val baseRadius = minOf(size.width, size.height) * 0.38f
         val currentRadius = baseRadius * state.zoom
+        val moonR2 = currentRadius * currentRadius
+
+        drawDeepSpaceStarfield(starTwinkle, moonR2, center, size)
 
         drawLandmarkBeacons(
             state = state,

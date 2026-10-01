@@ -22,6 +22,7 @@ import com.dirzaaulia.countries.domain.globe.rotateY
 import com.dirzaaulia.countries.domain.globe.toRadians
 import com.dirzaaulia.countries.domain.mars.MarsLandmark
 import com.dirzaaulia.countries.ui.mars.MARS_LANDMARKS
+import com.dirzaaulia.countries.ui.overlay.drawDeepSpaceStarfield
 import com.dirzaaulia.countries.ui.theme.extendedColors
 import kotlinx.coroutines.launch
 import kotlin.math.cos
@@ -66,8 +67,8 @@ fun MarsOverlayCanvas(
                         scope.launch {
                             state.stopAnimations()
                             val dragFactor = currentSensitivity.value / state.zoom
-                            val newY = state.rotationY - pan.x * dragFactor
-                            val newX = (state.rotationX - pan.y * dragFactor).coerceIn(-85f, 85f)
+                            val newY = (state.rotationY - pan.x * dragFactor) % 360f
+                            val newX = (state.rotationX - pan.y * dragFactor) % 360f
                             val newZoom = if (zoomChange != 1.0f) state.zoom * zoomChange else null
                             state.snapTo(newX, newY, newZoom)
                         }
@@ -77,6 +78,9 @@ fun MarsOverlayCanvas(
         val canvasCenter = center
         val baseRadius = minOf(size.width, size.height) * 0.38f
         val currentRadius = baseRadius * state.zoom
+        val marsR2 = currentRadius * currentRadius
+
+        drawDeepSpaceStarfield(starTwinkle, marsR2, canvasCenter, size)
 
         MARS_LANDMARKS.forEach { landmark ->
             val isSelected = landmark.id == selectedLandmark?.id
