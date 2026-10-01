@@ -50,10 +50,11 @@
 - Real-time day/night solar terminator scrubber HUD (`PlanetScrubberHud.kt`) with RESET LIVE control.
 
 ## 1.7 Unified 360° Free Orbital Camera Navigation (Task 86 - P0)
-**Status: ⏳ PLANNED**
-- Unify camera movement across Earth, Moon, Mars, and all planets to match Solar System free orbital camera mechanics.
-- Camera orbits freely in 360° spherical coordinates around the target body without pitch clamping (gimbal-free / quaternion / continuous pitch navigation).
-- Moves the viewpoint rather than rotating the sphere model at fixed origin, mirroring NASA's Eyes on the Solar System.
+**Status: ✅ DONE**
+- Unified camera movement across Earth, Moon, Mars, and all planets to match Solar System free orbital camera mechanics.
+- Camera orbits freely in 360° spherical coordinates around the target body without pitch clamping (continuous pitch and yaw orbital navigation).
+- Moves the viewpoint freely around the celestial body, mirroring NASA's Eyes on the Solar System.
+- Balanced touch drag sensitivity across Earth, Moon, and Mars (0.38f) to eliminate sluggish Earth rotation.
 
 ## 1.8 Universal Planetary Dossier & Atmospheric Specs Sheet (Task 87 - P1)
 **Status: ⏳ PLANNED**

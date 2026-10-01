@@ -70,12 +70,30 @@ fun PlanetaryExplorerScreen(
                                         actions.scope.launch { marsCamera.snapTo(pitch, yaw, marsCamera.zoom) }
                                         3
                                     }
-                                    PlanetId.MERCURY -> 4
-                                    PlanetId.VENUS -> 5
-                                    PlanetId.JUPITER -> 6
-                                    PlanetId.SATURN -> 7
-                                    PlanetId.URANUS -> 8
-                                    PlanetId.NEPTUNE -> 9
+                                    PlanetId.MERCURY -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        4
+                                    }
+                                    PlanetId.VENUS -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        5
+                                    }
+                                    PlanetId.JUPITER -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        6
+                                    }
+                                    PlanetId.SATURN -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        7
+                                    }
+                                    PlanetId.URANUS -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        8
+                                    }
+                                    PlanetId.NEPTUNE -> {
+                                        actions.scope.launch { camera.snapTo(pitch, yaw, camera.zoom) }
+                                        9
+                                    }
                                     else -> 1
                                 }
                             actions.selectPage(targetPage)

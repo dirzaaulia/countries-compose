@@ -202,7 +202,7 @@ fun GlobeView(
 
     val daylightBordersPath = remember { Path() }
     val nightBordersPath = remember { Path() }
-    val sensitivity = 0.18f
+    val sensitivity = 0.38f
 
     // Real-time astronomical data
     val sunVector = sunPos.vector

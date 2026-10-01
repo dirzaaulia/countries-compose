@@ -99,11 +99,15 @@ fun GenericPlanetView(
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
                         if (pan != Offset.Zero) {
-                            val newX = (state.rotationX + pan.y * 0.35f).coerceIn(-89.5f, 89.5f)
-                            val newY = (state.rotationY - pan.x * 0.35f) % 360f
-                            scope.launch { state.snapTo(newX, newY, state.zoom) }
-                        }
-                        if (zoom != 1.0f) {
+                            val dragFactor = 0.38f / state.zoom
+                            val newX = state.rotationX + pan.y * dragFactor
+                            val newY = state.rotationY + pan.x * dragFactor
+                            val newZoom = if (zoom != 1.0f) state.zoom * zoom else null
+                            scope.launch {
+                                state.stopAnimations()
+                                state.snapTo(newX, newY, newZoom)
+                            }
+                        } else if (zoom != 1.0f) {
                             val newZoom = (state.zoom * zoom).coerceIn(0.6f, 4.5f)
                             scope.launch { state.snapZoom(newZoom) }
                         }
