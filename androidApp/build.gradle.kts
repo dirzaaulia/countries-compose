@@ -133,16 +133,19 @@ spotless {
 }
 
 play {
-    serviceAccountCredentials.set(
-        file(
-            localProperties.getProperty("PLAY_SERVICE_ACCOUNT")
-                ?: System.getenv("PLAY_SERVICE_ACCOUNT")
-                ?: "service-account.json",
-        ),
-    )
+    val serviceAccountPath =
+        localProperties.getProperty("PLAY_SERVICE_ACCOUNT")
+            ?: System.getenv("PLAY_SERVICE_ACCOUNT")
+            ?: "service-account.json"
+    val credFile = project.rootProject.file(serviceAccountPath)
+    if (credFile.exists()) {
+        serviceAccountCredentials.set(credFile)
+        resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.AUTO)
+    } else {
+        resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.IGNORE)
+    }
     defaultToAppBundles.set(true)
     track.set("internal")
-    resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.AUTO)
 }
 
 tasks.register("incrementBuildNumber") {

@@ -46,12 +46,16 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Decode Release Keystore
+      - name: Decode Release Keystore & Credentials
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          PLAY_JSON: ${{ secrets.PLAY_CONSOLE_JSON_KEY || secrets.PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
+          fi
+          if [ -n "$PLAY_JSON" ]; then
+            echo "$PLAY_JSON" > service-account.json
           fi
 
       - name: Build Release Bundle (AAB)
@@ -89,7 +93,7 @@ jobs:
           track: ${{ github.event.inputs.track || 'internal' }}
           status: ${{ github.event.inputs.status || 'completed' }}
 
-      - name: Cleanup Keystore
+      - name: Cleanup Keystore & Credentials
         if: always()
         run: |
-          rm -f keystore.jks
+          rm -f keystore.jks service-account.json
