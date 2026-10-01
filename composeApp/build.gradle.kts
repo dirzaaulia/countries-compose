@@ -47,6 +47,7 @@ kotlin {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.ktor.client.okhttp)
+            compileOnly(libs.chucker)
         }
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
