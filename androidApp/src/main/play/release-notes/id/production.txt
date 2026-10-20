@@ -1,0 +1,8 @@
+Memperkenalkan Terra: Planet & Tata Surya 3D!
+• Bola Bumi 3D interaktif dengan siklus siang-malam & aurora NOAA
+• Pelacak satelit real-time (ISS, CSS Tiangong, Hubble) dengan kamera Lock-On 3D
+• Data gempa bumi real-time USGS & garis lempeng tektonik
+• Radar penerbangan komersial langsung via OpenSky
+• Penjelajah Bulan 3D dengan situs pendaratan Apollo & kalender fase
+• Medan 3D Mars & galeri foto rover NASA
+• Simulator Tata Surya heliosentris & cincin Saturnus 3D

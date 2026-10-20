@@ -46,6 +46,19 @@ dependencyResolutionManagement {
                 includeGroup("com.yarnpkg")
             }
         }
+        ivy {
+            name = "Binaryen Distributions"
+            setUrl("https://github.com/WebAssembly/binaryen/releases/download")
+            patternLayout {
+                artifact("version_[revision]/[artifact]-version_[revision]-[classifier].[ext]")
+            }
+            metadataSources {
+                artifact()
+            }
+            content {
+                includeGroup("com.github.webassembly")
+            }
+        }
     }
 }
 
@@ -53,4 +66,29 @@ rootProject.name = "Countries"
 include(":composeApp")
 include(":androidApp")
 include(":webApp")
+include(":core:model")
+include(":core:network")
+include(":core:ui")
+include(":core:dynamic-api")
+include(":feature:earth")
+include(":feature:moon")
+include(":feature:mars")
+include(":feature:solarsystem")
+include(":feature:weather")
+include(":feature:satellite")
+include(":feature:hazards")
+include(":feature:economy")
+include(":feature:quiz")
+include(":feature:flight")
+include(":feature:comparison")
+include(":dfm:mars")
+include(":dfm:deepspace")
+include(":dfm:weather")
+include(":dfm:satellite")
+include(":dfm:hazards")
+include(":dfm:economy")
+include(":dfm:moon")
+include(":dfm:quiz")
+include(":dfm:flight")
+include(":dfm:comparison")
  

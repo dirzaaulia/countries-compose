@@ -18,6 +18,7 @@ import com.dirzaaulia.countries.data.satellite.SatelliteApiClient
 import com.dirzaaulia.countries.data.satellite.SatelliteRepository
 import com.dirzaaulia.countries.data.tectonic.TectonicRepositoryImpl
 import com.dirzaaulia.countries.data.tectonic.UsgsApiClient
+import com.dirzaaulia.countries.data.timezone.FinancialMarketRepository
 import com.dirzaaulia.countries.data.worldbank.WorldBankApiClient
 import com.dirzaaulia.countries.domain.repository.CountryDetailRepository
 import com.dirzaaulia.countries.domain.repository.CountryRepository
@@ -29,24 +30,24 @@ import com.dirzaaulia.countries.platform.countriesMiddlewareUrl
 import com.dirzaaulia.countries.platform.platformHttpClientEngine
 import com.dirzaaulia.countries.ui.comparison.ComparisonViewModel
 import com.dirzaaulia.countries.ui.dossier.DossierViewModel
-import com.dirzaaulia.countries.ui.globe.FlightViewModel
+import com.dirzaaulia.countries.ui.economy.EconomyViewModel
+import com.dirzaaulia.countries.ui.flight.FlightViewModel
 import com.dirzaaulia.countries.ui.globe.GlobeViewModel
 import com.dirzaaulia.countries.ui.globe.HazardViewModel
 import com.dirzaaulia.countries.ui.globe.IssViewModel
-import com.dirzaaulia.countries.ui.globe.QuizViewModel
-import com.dirzaaulia.countries.ui.globe.SpaceWeatherViewModel
+import com.dirzaaulia.countries.ui.hazards.HazardsViewModel
 import com.dirzaaulia.countries.ui.mars.MarsRoverGalleryViewModel
 import com.dirzaaulia.countries.ui.moon.LunarViewModel
+import com.dirzaaulia.countries.ui.quiz.QuizViewModel
 import com.dirzaaulia.countries.ui.satellite.SatelliteViewModel
-import com.dirzaaulia.countries.ui.tectonic.TectonicViewModel
-import com.dirzaaulia.countries.ui.timezone.TimezoneViewModel
+import com.dirzaaulia.countries.ui.weather.SpaceWeatherViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -61,10 +62,19 @@ val networkModule =
     module {
         single { jsonFormatter }
         single {
-            HttpClient(platformHttpClientEngine()) {
-                expectSuccess = false
-                install(ContentNegotiation) {
-                    json(get())
+            runCatching {
+                HttpClient(platformHttpClientEngine()) {
+                    expectSuccess = false
+                    install(ContentNegotiation) {
+                        json(get())
+                    }
+                }
+            }.getOrElse {
+                HttpClient {
+                    expectSuccess = false
+                    install(ContentNegotiation) {
+                        json(get())
+                    }
                 }
             }
         }
@@ -95,6 +105,7 @@ val repositoryModule =
         singleOf(::MarsRoverRepository)
         singleOf(::SpaceWeatherRepository)
         singleOf(::SatelliteRepository)
+        singleOf(::FinancialMarketRepository)
     }
 
 val viewModelModule =
@@ -109,8 +120,8 @@ val viewModelModule =
         viewModelOf(::SpaceWeatherViewModel)
         viewModelOf(::SatelliteViewModel)
         viewModelOf(::ComparisonViewModel)
-        viewModelOf(::TimezoneViewModel)
-        viewModelOf(::TectonicViewModel)
+        viewModelOf(::EconomyViewModel)
+        viewModelOf(::HazardsViewModel)
         viewModelOf(::LunarViewModel)
     }
 

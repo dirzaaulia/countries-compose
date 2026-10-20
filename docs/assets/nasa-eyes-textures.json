@@ -1,0 +1,131 @@
+{
+  "verifiedAt": "2026-10-19",
+  "evidence": {
+    "configuration": "https://eyes.nasa.gov/apps/solar-system/config.js",
+    "application": "https://eyes.nasa.gov/apps/solar-system/app.js"
+  },
+  "baseUrl": "https://eyes.nasa.gov/assets/static/maps/",
+  "projection": "cube",
+  "faces": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "filenameTemplate": "{layer}_{size}_{face}.{extension}",
+  "verification": "HTTP HEAD: all 60 maximum-listed color faces returned 200 and image content types.",
+  "bodies": [
+    {
+      "body": "sun",
+      "layer": "color",
+      "sizes": [
+        4,
+        512
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 512
+    },
+    {
+      "body": "mercury",
+      "layer": "color",
+      "sizes": [
+        4,
+        512,
+        4096
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 4096
+    },
+    {
+      "body": "venus",
+      "layer": "color",
+      "sizes": [
+        4,
+        512
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 512
+    },
+    {
+      "body": "earth",
+      "layer": "color",
+      "sizes": [
+        16,
+        512,
+        4096
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 4096
+    },
+    {
+      "body": "moon",
+      "layer": "color",
+      "sizes": [
+        16,
+        512,
+        4096
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 4096
+    },
+    {
+      "body": "mars",
+      "layer": "color",
+      "sizes": [
+        4,
+        512,
+        4096
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 4096
+    },
+    {
+      "body": "jupiter",
+      "layer": "color",
+      "sizes": [
+        16,
+        512,
+        4096
+      ],
+      "extension": "jpg",
+      "verifiedFaceSize": 4096
+    },
+    {
+      "body": "saturn",
+      "layer": "color",
+      "sizes": [
+        4,
+        512
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 512
+    },
+    {
+      "body": "uranus",
+      "layer": "color",
+      "sizes": [
+        4,
+        256
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 256
+    },
+    {
+      "body": "neptune",
+      "layer": "color",
+      "sizes": [
+        4,
+        256
+      ],
+      "extension": "png",
+      "verifiedFaceSize": 256
+    }
+  ],
+  "notes": [
+    "These are actual application assets, not evidence of their original mission/product attribution.",
+    "Highest resolution means highest listed for this default cube-map layer, not every Eyes surface mode.",
+    "Cube faces require geometric reprojection before use as a single equirectangular texture."
+  ]
+}

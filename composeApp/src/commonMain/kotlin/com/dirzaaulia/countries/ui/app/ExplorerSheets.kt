@@ -10,6 +10,7 @@ internal fun ExplorerSheets(
     controls: ExplorerControls,
     currentPage: Int,
     actions: ExplorerActions,
+    installManager: com.dirzaaulia.countries.core.dynamicapi.FeatureInstallManager,
 ) {
     val overlay = controls.overlay
     AppSheetsOverlay(
@@ -24,6 +25,17 @@ internal fun ExplorerSheets(
         onFlyToEpicenter = actions::flyToEpicenter,
         showSearchSheet = overlay == ExplorerOverlay.SEARCH,
         onCloseSearch = { actions.setOverlay(null) },
+        showInfoSheet = overlay == ExplorerOverlay.INFO,
+        onCloseInfo = { actions.setOverlay(null) },
+        showSettingsSheet = overlay == ExplorerOverlay.SETTINGS,
+        onCloseSettings = { actions.setOverlay(null) },
+        showOnboardingSheet = overlay == ExplorerOverlay.ONBOARDING,
+        onCloseOnboarding = {
+            com.dirzaaulia.countries.platform
+                .markFirstLaunchOnboardingCompleted()
+            actions.setOverlay(null)
+        },
+        installManager = installManager,
         onSelectSearchCountry = { country: Country -> actions.selectSearchCountry(country.id) },
         showSpaceWeatherSheet = overlay == ExplorerOverlay.SPACE_WEATHER,
         onCloseSpaceWeather = { actions.setOverlay(null) },
@@ -41,6 +53,12 @@ internal fun ExplorerSheets(
         onEpochSelected = actions::selectEpoch,
         onResetTimeLive = actions::resetLive,
         onCloseTimeMachine = { actions.setOverlay(null) },
+        isSimulationPlaying = controls.isSimulationPlaying,
+        timeMultiplier = controls.timeMultiplier,
+        isReversePlayback = controls.isReversePlayback,
+        onTogglePlayPause = actions::toggleSimulationPlayPause,
+        onToggleDirection = actions::toggleSimulationDirection,
+        onSelectSpeedMultiplier = actions::setSimulationSpeedMultiplier,
         selectedCountry = features.selectedCountry,
         liveDetails = features.dossier.liveDetails,
         globalHazards = features.hazards.globalHazards,
@@ -60,16 +78,16 @@ internal fun ExplorerSheets(
             }
         },
         onCloseCountryPicker = { actions.selectSlotForCountryPicker(null) },
-        showTimezoneSheet = features.timezone.showTimezoneSheet,
-        selectedMeridianOffset = features.timezone.selectedMeridianOffset,
+        showTimezoneSheet = features.economy.showTimezoneSheet,
+        selectedMeridianOffset = features.economy.selectedMeridianOffset,
         onCloseTimezoneSheet = actions::closeTimezoneSheet,
         onSelectTimezoneCountry = { country: Country ->
             actions.closeTimezoneSheet()
             actions.selectSearchCountry(country.id)
         },
-        showMarketSheet = features.timezone.showMarketCard,
-        activeMarkets = features.timezone.activeMarkets,
-        markets = features.timezone.markets,
+        showMarketSheet = features.economy.showMarketCard,
+        activeMarkets = features.economy.activeMarkets,
+        markets = features.economy.markets,
         onCloseMarketSheet = actions::toggleMarketCard,
         onFlyToMarket = actions::flyToMarket,
         selectedPlate = features.tectonic.selectedPlate,

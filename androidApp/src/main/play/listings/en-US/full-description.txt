@@ -1,0 +1,59 @@
+Experience our home planet and the cosmos like never before with Terra—an interactive 3D planetary explorer, real-time satellite radar, and space simulation suite.
+
+Powered by a dual-layer hardware-accelerated 3D rendering engine, Terra transforms your device into a celestial command center. Seamlessly zoom from planetary orbits down to sovereign borders, track the International Space Station live, inspect active tectonic fault lines, and journey across the Solar System.
+
+=================================
+KEY EXPLORATION FEATURES
+=================================
+
+[3D EARTH & REAL-TIME ATMOSPHERE]
+• High-definition 3D globe with photorealistic day, night, and cloud layers
+• Dynamic solar terminator showing live sunrise, sunset, and solar angles
+• Real-time NOAA SWPC Space Weather Auroral Oval modeling auroral activity at Earth's poles
+• Bidirectional Planetary Time Machine: scrub backwards and forwards to observe solstices, equinoxes, and day/night cycles across any date
+
+[LIVE SATELLITE FLEET & ISS TRACKER]
+• Live orbital radar tracking the International Space Station (ISS), Tiangong Space Station (CSS), and the Hubble Space Telescope
+• 3D Lock-On camera follow: ride alongside orbital spacecraft in real time
+• Projected ground tracks, orbital apogee/perigee telemetry, velocity, and altitude
+
+[TECTONIC PLATES & EARTHQUAKE HAZARDS]
+• Real-time USGS global seismic data streaming recent earthquakes with Richter magnitude scaling
+• Interactive tectonic plate boundaries illustrating oceanic ridges, subduction zones, and the Pacific Ring of Fire
+• Volcanic hotspot monitoring and seismic depth analysis
+
+[GLOBAL AVIATION RADAR]
+• Live transponder-based commercial aircraft flight tracking powered by OpenSky Network
+• Detailed airline route paths, aircraft origin/destination, and cruise altitudes
+• Supersonic Mach flight simulation mode with dynamic vector wake trails
+
+[3D LUNAR EXPEDITION & APOLLO SITES]
+• High-resolution 3D Moon with accurate tidal locking and libration
+• Interactive landing sites: explore Apollo 11 through 17, Chang'e, Luna, and Artemis target zones
+• Lunar calendar & phase scrubber: track waxing, waning, and lunar age across the entire year
+• Comprehensive selenological dossiers detailing lunar maria and highland geology
+
+[MARS TERRAIN & ROVER GALLERY]
+• Interactive 3D Mars globe featuring Jezero Crater, Olympus Mons, and Valles Marineris
+• Telemetry and official high-resolution photo archives from Curiosity and Perseverance rovers
+• Martian atmospheric pressure, sol calendar, and surface condition readouts
+
+[HELIOCENTRIC SOLAR SYSTEM SIMULATION]
+• Full Keplerian orbital simulation: explore Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune
+• High-precision planetary tilt, orbital periods, and retrograde motion modeling
+• 3D Saturn Cassini rings with realistic lighting and axial inclination
+• Deep-dive celestial dossiers: planetary mass, gravity, composition, and moons
+
+[GLOBAL GEOGRAPHY, FINANCE & DOSSIERS]
+• 250+ country and territory intelligence dossiers powered by REST Countries v5
+• Live market status beacons across 85 major international stock exchanges
+• World Bank economic indicators: GDP, population growth, and trade metrics
+• True Size comparative overlay: eliminate Mercator distortion by comparing country landmasses side-by-side
+• Interactive geography quiz: test your knowledge on flags, capitals, and landmarks
+
+Scientific Data Attribution:
+• NASA Jet Propulsion Laboratory (JPL) & Solar System Dynamics
+• NOAA Space Weather Prediction Center (SWPC)
+• United States Geological Survey (USGS) Earthquake Hazards Program
+• The OpenSky Network (Aviation Telemetry)
+• The World Bank Open Data & REST Countries API

@@ -19,6 +19,7 @@ screen_*.png
 screen.png
 app/release/
 keystore.jks
+service-account.json
 .agents/
 .artifacts/
 .idea/

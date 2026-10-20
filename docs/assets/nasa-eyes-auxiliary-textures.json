@@ -1,0 +1,71 @@
+{
+  "verifiedAt": "2026-10-19",
+  "baseUrl": "https://eyes.nasa.gov/assets/static/",
+  "earthCubeMaps": {
+    "directory": "maps/earth/",
+    "layers": [
+      "night",
+      "cloud",
+      "normal",
+      "specular"
+    ],
+    "sizes": [
+      16,
+      512,
+      4096
+    ],
+    "verifiedFaceSize": 4096,
+    "faces": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "filenameTemplate": "{layer}_{size}_{face}.png"
+  },
+  "ringTextures": [
+    "sprites/saturn_rings_top.png",
+    "sprites/saturn_rings_bottom.png",
+    "sprites/uranus_rings.png",
+    "sprites/neptune_rings.png"
+  ],
+  "verification": "All 24 Earth auxiliary cube faces at 4096 and all 4 ring sprites returned HTTP 200 with image content types.",
+  "cubeFrames": {
+    "evidence": "CubeMap.defaultCubeMapFaceFrames in the application bundle",
+    "axes": "U axis, V axis, outward normal; NASA Eyes coordinate system",
+    "frames": [
+      [
+        "+y",
+        "+z",
+        "+x"
+      ],
+      [
+        "-x",
+        "+z",
+        "+y"
+      ],
+      [
+        "-y",
+        "+z",
+        "-x"
+      ],
+      [
+        "+x",
+        "+z",
+        "-y"
+      ],
+      [
+        "+y",
+        "-x",
+        "+z"
+      ],
+      [
+        "+y",
+        "+x",
+        "-z"
+      ]
+    ]
+  }
+}

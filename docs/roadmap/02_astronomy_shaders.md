@@ -3,7 +3,7 @@
 ## 2.1 Live Solar Day/Night Terminator (Earth)
 **Status: ✅ DONE**
 - `AstronomyMath.calculateSunPosition()` derives subsolar point from UTC.
-- Sun direction vector fed into `EarthGLRenderer` GLSL fragment shader.
+- Sun direction vector fed into `PlanetGLRenderer` GLSL fragment shader.
 - `smoothstep` twilight band + golden-amber sunrise/sunset color.
 
 ## 2.2 Dynamic Day/Night Adaptive Border Colors
@@ -20,5 +20,5 @@
 
 ## 2.4 Sun Position Refresh on Earth GL
 **Status: ✅ DONE**
-- `AstronomyMath.calculateSunPosition()` evaluated dynamically every frame in `EarthGLRenderer.onDrawFrame()`.
+- `AstronomyMath.calculateSunPosition()` evaluated dynamically every frame in `PlanetGLRenderer.onDrawFrame()`.
 - Continuous subsolar vector updates reflect real-time planetary illumination with zero frame stalling.

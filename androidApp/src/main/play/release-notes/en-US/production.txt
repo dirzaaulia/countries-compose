@@ -1,0 +1,8 @@
+Introducing Terra: 3D Earth & Solar System!
+• Interactive 3D Earth globe with live day/night terminator & NOAA auroral oval
+• Real-time satellite tracking (ISS, Tiangong CSS, Hubble) with 3D Lock-On camera
+• Live USGS earthquakes & tectonic plate boundaries
+• Real-time commercial flight radar powered by OpenSky
+• 3D Moon explorer with Apollo landing sites & yearly phase calendar
+• 3D Mars terrain & NASA rover photo gallery
+• Heliocentric Solar System simulator with 3D Saturn Cassini rings

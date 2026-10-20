@@ -1,0 +1,59 @@
+Rasakan pengalaman menjelajahi Bumi dan alam semesta dengan Terra—aplikasi penjelajah planet 3D interaktif, radar satelit real-time, dan simulasi luar angkasa canggih.
+
+Didukung oleh mesin render 3D akselerasi perangkat keras, Terra mengubah perangkat Anda menjadi pusat kendali astronomi dan geografi. Jelajahi Bumi dari orbit hingga batas negara, pantau Stasiun Luar Angkasa Internasional (ISS) secara langsung, telusuri lempeng tektonik aktif, dan jelajahi Tata Surya.
+
+=================================
+FITUR UTAMA PENJELAJAHAN
+=================================
+
+[BUMI 3D & ATMOSFER REAL-TIME]
+• Bola dunia 3D resolusi tinggi dengan lapisan siang, malam, dan awan fotorealistik
+• Terminator matahari dinamis yang menampilkan waktu matahari terbit, terbenam, dan sudut pencahayaan real-time
+• Pemodelan Aurora Oval NOAA SWPC yang menampilkan aktivitas aurora kutub utara dan selatan
+• Mesin Waktu Planet: geser waktu ke masa lalu atau masa depan untuk mengamati perubahan musim dan siklus siang-malam
+
+[RADAR SATELIT & PELACAK ISS LANGSUNG]
+• Pelacakan orbital langsung untuk International Space Station (ISS), Stasiun Tiangong (CSS), dan Teleskop Luar Angkasa Hubble
+• Mode Kamera Lock-On 3D: ikuti pergerakan satelit di orbit secara langsung
+• Proyeksi lintasan orbit, kecepatan, ketinggian, serta telemetri apogee dan perigee
+
+[ANCAMAN BUMI & LEMPENG TEKTONIK]
+• Data gempa bumi global real-time dari USGS dengan skala magnitudo interaktif
+• Garis batas lempeng tektonik dunia, zona subduksi, dan Cincin Api Pasifik (Ring of Fire)
+• Informasi titik panas gunung berapi dan kedalaman seismik
+
+[RADAR PENERBANGAN GLOBAL]
+• Pelacakan rute penerbangan komersial global secara langsung melalui jaringan OpenSky
+• Rute penerbangan, bandara asal/tujuan, serta ketinggian jelajah pesawat
+• Mode simulasi penerbangan Supersonik Mach dengan visualisasi jalur dinamis
+
+[PENJELAJAH BULAN 3D & SITUS APOLLO]
+• Bola Bulan 3D dengan akurasi penguncian pasang surut (tidal locking) dan librasi
+• Lokasi pendaratan misi luar angkasa: Apollo 11 hingga 17, Chang'e, Luna, dan target Artemis
+• Kalender fase Bulan: amati fase sabit, purnama, dan usia Bulan sepanjang tahun
+• Informasi geologi selenologis kawah, kawah tubrukan, dan dataran tinggi Bulan
+
+[EKSPLORASI MARS & WAHANA PENJELAJAH]
+• Globe 3D Mars yang menampilkan Kawah Jezero, Gunung Olympus Mons, dan Valles Marineris
+• Galeri foto resmi dan telemetri langsung dari rover Curiosity dan Perseverance
+• Informasi kondisi atmosfer Mars, suhu, dan kalender hari Matahari (Sol)
+
+[SIMULATOR TATA SURYA HELIOSENTRIS]
+• Simulasi orbit Keplerian lengkap: Merkurius, Venus, Bumi, Mars, Jupiter, Saturnus, Uranus, dan Neptunus
+• Pemodelan kemiringan sumbu planet, periode orbit, dan gerak retrograde
+• Cincin Saturnus Cassini 3D dengan pencahayaan realistis
+• Data mendalam setiap planet: massa, gravitasi, komposisi atmosfer, dan satelit alami
+
+[PROFIL NEGARA, PASAR FINANSIAL & KUIS]
+• Profil lengkap lebih dari 250 negara dan wilayah di dunia melalui REST Countries v5
+• Status perdagangan langsung pada 85 bursa saham terkemuka dunia
+• Indikator ekonomi Bank Dunia: PDB, pertumbuhan penduduk, dan metrik perdagangan
+• Komparasi Luas Sejati (True Size): bandingkan ukuran geografis negara tanpa distorsi peta Mercator
+• Kuis geografi interaktif: uji wawasan Anda tentang bendera, ibu kota, dan fakta dunia
+
+Sumber Data Ilmiah:
+• NASA Jet Propulsion Laboratory (JPL) & Solar System Dynamics
+• NOAA Space Weather Prediction Center (SWPC)
+• United States Geological Survey (USGS)
+• The OpenSky Network (Telemetri Penerbangan)
+• Bank Dunia (World Bank) & REST Countries API

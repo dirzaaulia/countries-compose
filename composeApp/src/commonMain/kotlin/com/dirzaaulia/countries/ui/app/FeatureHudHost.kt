@@ -17,13 +17,13 @@ import com.dirzaaulia.countries.domain.country.ISSTelemetry
 import com.dirzaaulia.countries.domain.country.NasaNaturalEvent
 import com.dirzaaulia.countries.domain.satellite.SatelliteTelemetry
 import com.dirzaaulia.countries.ui.dossier.CountryDossierSheet
+import com.dirzaaulia.countries.ui.flight.FlightRouteHudCard
 import com.dirzaaulia.countries.ui.globe.CountryPeekBar
 import com.dirzaaulia.countries.ui.globe.FloatingExplorerBar
-import com.dirzaaulia.countries.ui.hud.FlightRouteHudCard
-import com.dirzaaulia.countries.ui.hud.HazardDetailSheet
+import com.dirzaaulia.countries.ui.hazards.HazardDetailSheet
 import com.dirzaaulia.countries.ui.hud.ISSTelemetryCard
 import com.dirzaaulia.countries.ui.hud.MissionControlTopBar
-import com.dirzaaulia.countries.ui.hud.QuizHudCard
+import com.dirzaaulia.countries.ui.quiz.QuizHudCard
 import com.dirzaaulia.countries.ui.satellite.SatelliteTelemetrySheet
 
 @Composable
@@ -47,7 +47,7 @@ fun BoxScope.FeatureHudHost(
         onToggleHazards = actions::toggleHazards,
         showAurora = controls.showAurora,
         onToggleAurora = actions::toggleAurora,
-        showTimezones = features.timezone.isTimezoneLayerActive,
+        showTimezones = features.economy.isTimezoneLayerActive,
         onToggleTimezones = actions::toggleTimezoneLayer,
         showTectonic = features.tectonic.isTectonicLayerActive,
         onToggleTectonic = actions::toggleTectonicLayer,
@@ -64,6 +64,8 @@ fun BoxScope.FeatureHudHost(
         onOpenLegend = { actions.setOverlay(ExplorerOverlay.LEGEND) },
         onOpenSearch = { actions.setOverlay(ExplorerOverlay.SEARCH) },
         onOpenSpaceWeather = { actions.setOverlay(ExplorerOverlay.SPACE_WEATHER) },
+        onOpenInfo = { actions.setOverlay(ExplorerOverlay.INFO) },
+        onOpenSettings = { actions.setOverlay(ExplorerOverlay.SETTINGS) },
         modifier = Modifier.align(Alignment.TopCenter),
     )
 
@@ -83,9 +85,16 @@ fun BoxScope.FeatureHudHost(
     }
     hazard?.let { HazardHud(it, actions) }
     iss?.let { IssHud(it, actions) }
-    satellite?.let { SatelliteHud(it, features.satellite.nextPassOverSelectedCountry, actions, country) }
+    satellite?.let {
+        SatelliteHud(
+            satellite = it,
+            nextPassOverhead = features.satellite.nextPassOverSelectedCountry,
+            actions = actions,
+            selectedCountry = country,
+            isLockOn = features.satellite.isLockOnFollow,
+        )
+    }
     if (features.flight.isFlightMode &&
-        features.flight.flightOrigin != null &&
         features.flight.flightDestination != null
     ) {
         FlightHud(features, controls, actions)
@@ -154,6 +163,7 @@ private fun SatelliteHud(
     nextPassOverhead: String?,
     actions: ExplorerActions,
     selectedCountry: Country?,
+    isLockOn: Boolean,
 ) {
     LaunchedEffect(satellite.id, selectedCountry?.id) {
         if (selectedCountry != null) {
@@ -165,8 +175,10 @@ private fun SatelliteHud(
         satellite = satellite,
         nextPassOverhead = if (selectedCountry != null) nextPassOverhead else null,
         onClose = { actions.selectSatellite(null) },
-        onCenterView = {
-            actions.selectSatellite(null)
+        onCenterView = { actions.flyTo(satellite.lat, satellite.lng, 1.6f) },
+        isLockOn = isLockOn,
+        onToggleLockOn = {
+            actions.toggleLockOnSatellite()
             actions.flyTo(satellite.lat, satellite.lng, 1.6f)
         },
     )

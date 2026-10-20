@@ -16,11 +16,26 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.spotless)
     alias(libs.plugins.gpp)
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
     namespace = "com.dirzaaulia.countries"
     compileSdk = 37
+    dynamicFeatures +=
+        setOf(
+            ":dfm:mars",
+            ":dfm:deepspace",
+            ":dfm:weather",
+            ":dfm:satellite",
+            ":dfm:hazards",
+            ":dfm:economy",
+            ":dfm:moon",
+            ":dfm:quiz",
+            ":dfm:flight",
+            ":dfm:comparison",
+        )
 
     defaultConfig {
         applicationId = "com.dirzaaulia.countries"
@@ -113,11 +128,21 @@ android {
 
 dependencies {
     implementation(project(":composeApp"))
+    implementation(project(":core:dynamic-api"))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.no.op)
+    
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
 
 spotless {
@@ -155,9 +180,30 @@ tasks.register("incrementBuildNumber") {
         if (versionPropsFile.exists()) {
             versionPropsFile.inputStream().use { versionProps.load(it) }
             val current = versionProps.getProperty("VERSION_BUILD", "7").toInt()
-            versionProps.setProperty("VERSION_BUILD", (current + 1).toString())
+            val newBuild = current + 1
+            versionProps.setProperty("VERSION_BUILD", newBuild.toString())
             versionPropsFile.outputStream().use { versionProps.store(it, "Auto-incremented by build runner") }
-            println("🚀 Incremented build number to ${current + 1}")
+            println("🚀 Incremented build number to $newBuild")
+            
+            val major = versionProps.getProperty("VERSION_MAJOR", "1").toInt()
+            val minor = versionProps.getProperty("VERSION_MINOR", "0").toInt()
+            val patch = versionProps.getProperty("VERSION_PATCH", "0").toInt()
+            val targetTrack = providers.gradleProperty("track").getOrElse("internal")
+            
+            val versionName = when (targetTrack.lowercase()) {
+                "production", "prod" -> "$major.$minor.$patch"
+                "beta" -> "$major.$minor.$patch-beta.$newBuild"
+                "alpha" -> "$major.$minor.$patch-alpha.$newBuild"
+                else -> "$major.$minor.$patch-internal.$newBuild"
+            }
+            
+            val appInfoSheetFile = rootProject.file("core/ui/src/commonMain/kotlin/com/dirzaaulia/countries/ui/components/AppInfoSheet.kt")
+            if (appInfoSheetFile.exists()) {
+                val content = appInfoSheetFile.readText()
+                val updatedContent = content.replace(Regex("""text = "v[\d\.\-a-zA-Z]+""""), """text = "v$versionName"""")
+                appInfoSheetFile.writeText(updatedContent)
+                println("🚀 Updated AppInfoSheet.kt version to v$versionName")
+            }
         }
     }
 }

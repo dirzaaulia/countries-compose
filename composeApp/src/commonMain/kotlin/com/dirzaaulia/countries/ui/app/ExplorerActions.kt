@@ -11,14 +11,14 @@ import com.dirzaaulia.countries.domain.tectonic.Earthquake
 import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.platform.currentEpochMillis
 import com.dirzaaulia.countries.ui.comparison.ComparisonViewModel
-import com.dirzaaulia.countries.ui.globe.FlightViewModel
+import com.dirzaaulia.countries.ui.economy.EconomyViewModel
+import com.dirzaaulia.countries.ui.flight.FlightViewModel
 import com.dirzaaulia.countries.ui.globe.GlobeViewModel
 import com.dirzaaulia.countries.ui.globe.HazardViewModel
 import com.dirzaaulia.countries.ui.globe.IssViewModel
-import com.dirzaaulia.countries.ui.globe.QuizViewModel
+import com.dirzaaulia.countries.ui.hazards.HazardsViewModel
+import com.dirzaaulia.countries.ui.quiz.QuizViewModel
 import com.dirzaaulia.countries.ui.satellite.SatelliteViewModel
-import com.dirzaaulia.countries.ui.tectonic.TectonicViewModel
-import com.dirzaaulia.countries.ui.timezone.TimezoneViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -27,13 +27,13 @@ internal fun ExplorerFeatures.isAnySheetOpen(
     page: Int,
 ): Boolean =
     (selectedCountry != null && globe.showCountryDossier) ||
-        (controls.overlay != null && (controls.overlay != ExplorerOverlay.TIME_MACHINE || page == 1)) ||
+        controls.overlay != null ||
         hazards.selectedHazard != null ||
         iss.selectedIss != null ||
         comparison.showComparisonSheet ||
         comparison.showCountrySelectorForSlot != null ||
-        timezone.showTimezoneSheet ||
-        timezone.showMarketCard ||
+        economy.showTimezoneSheet ||
+        economy.showMarketCard ||
         tectonic.selectedPlate != null ||
         tectonic.selectedEarthquake != null
 
@@ -49,12 +49,27 @@ class ExplorerActions(
     private val flightVm: FlightViewModel,
     private val satelliteVm: SatelliteViewModel,
     private val comparisonVm: ComparisonViewModel,
-    private val timezoneVm: TimezoneViewModel,
-    private val tectonicVm: TectonicViewModel,
+    private val economyVm: EconomyViewModel,
+    private val hazardsVm: HazardsViewModel,
     private val features: ExplorerFeatures,
     private val update: ((ExplorerControls) -> ExplorerControls) -> Unit,
     private val onSelectPage: ((Int) -> Unit)? = null,
+    private val checkFeatureInstalled: ((String) -> Boolean)? = null,
+    private val onRequestFeatureInstall: ((String, String, () -> Unit) -> Unit)? = null,
 ) {
+    private fun requireFeature(
+        featureId: String,
+        title: String,
+        action: () -> Unit,
+    ) {
+        val installed = checkFeatureInstalled?.invoke(featureId) ?: true
+        if (installed) {
+            action()
+        } else {
+            onRequestFeatureInstall?.invoke(featureId, title, action)
+        }
+    }
+
     fun snapCamera(
         planetId: PlanetId,
         pitch: Float,
@@ -71,15 +86,48 @@ class ExplorerActions(
         onSelectPage?.invoke(page)
     }
 
-    fun setOverlay(overlay: ExplorerOverlay?) = update { it.copy(overlay = overlay) }
+    fun setOverlay(overlay: ExplorerOverlay?) {
+        when (overlay) {
+            ExplorerOverlay.METEOROLOGY, ExplorerOverlay.SPACE_WEATHER -> {
+                requireFeature("weather", "Weather & Space Weather") {
+                    update { it.copy(overlay = overlay) }
+                }
+            }
+            ExplorerOverlay.WORLD_BANK -> {
+                requireFeature("economy", "World Bank & Stock Exchanges") {
+                    update { it.copy(overlay = overlay) }
+                }
+            }
+            ExplorerOverlay.NASA_CRISIS -> {
+                requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+                    update { it.copy(overlay = overlay) }
+                }
+            }
+            else -> update { it.copy(overlay = overlay) }
+        }
+    }
 
     fun toggleBorders() = update { it.copy(showBorders = !it.showBorders) }
 
-    fun toggleSatellites() = update { it.copy(showSatellites = !it.showSatellites) }
+    fun toggleControlsGuide(show: Boolean? = null) = update { it.copy(showControlsGuide = show ?: !it.showControlsGuide) }
 
-    fun toggleHazards() = update { it.copy(showHazards = !it.showHazards) }
+    fun toggleSatellites() {
+        requireFeature("satellite", "Orbital Satellite Tracking") {
+            update { it.copy(showSatellites = !it.showSatellites) }
+        }
+    }
 
-    fun toggleAurora() = update { it.copy(showAurora = !it.showAurora) }
+    fun toggleHazards() {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            update { it.copy(showHazards = !it.showHazards) }
+        }
+    }
+
+    fun toggleAurora() {
+        requireFeature("weather", "Weather & Space Weather") {
+            update { it.copy(showAurora = !it.showAurora) }
+        }
+    }
 
     fun toggleTimeMachine() =
         update {
@@ -105,17 +153,41 @@ class ExplorerActions(
             ?.let { selectCountry(it.id) }
     }
 
-    fun toggleFlightMode() = flightVm.toggleFlightMode(features.globe.countries)
+    fun toggleFlightMode() {
+        requireFeature("flight", "Supersonic Flight Simulator") {
+            flightVm.toggleFlightMode(features.globe.countries)
+        }
+    }
 
-    fun randomFlightRoute() = flightVm.generateRandomFlightRoute(features.globe.countries)
+    fun randomFlightRoute() {
+        requireFeature("flight", "Supersonic Flight Simulator") {
+            flightVm.generateRandomFlightRoute(features.globe.countries)
+        }
+    }
 
-    fun setFlightOrigin(country: Country) = flightVm.setFlightOrigin(country)
+    fun setFlightOrigin(country: Country) {
+        requireFeature("flight", "Supersonic Flight Simulator") {
+            flightVm.setFlightOrigin(country)
+        }
+    }
 
-    fun setFlightDestination(country: Country) = flightVm.setFlightDestination(country)
+    fun setFlightDestination(country: Country) {
+        requireFeature("flight", "Supersonic Flight Simulator") {
+            flightVm.setFlightDestination(country)
+        }
+    }
 
-    fun toggleQuizMode() = quizVm.toggleQuizMode(features.globe.countries)
+    fun toggleQuizMode() {
+        requireFeature("quiz", "Geography Quiz Challenge") {
+            quizVm.toggleQuizMode(features.globe.countries)
+        }
+    }
 
-    fun nextQuizQuestion() = quizVm.generateNextQuizQuestion(features.globe.countries)
+    fun nextQuizQuestion() {
+        requireFeature("quiz", "Geography Quiz Challenge") {
+            quizVm.generateNextQuizQuestion(features.globe.countries)
+        }
+    }
 
     fun onCountryTap(id: String?) {
         if (features.quiz.isQuizMode && features.quiz.quizTargetCountry != null) {
@@ -139,31 +211,59 @@ class ExplorerActions(
     }
 
     fun flyToEpicenter(hazard: NasaNaturalEvent) {
-        setOverlay(null)
-        hazardVm.selectHazard(hazard)
-        flyTo(hazard.lat, hazard.lng, 2.2f)
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            setOverlay(null)
+            hazardVm.selectHazard(hazard)
+            flyTo(hazard.lat, hazard.lng, 2.2f)
+        }
     }
 
-    fun scrubStarted() = update { it.copy(isTimeMachineLive = false) }
+    fun scrubStarted() = update { it.copy(isTimeMachineLive = false, isSimulationPlaying = false) }
 
     fun selectEpoch(epoch: Long) {
-        update { it.copy(currentTimeMillis = epoch) }
-        timezoneVm.updateTime(epoch)
+        update { it.copy(currentTimeMillis = epoch, isTimeMachineLive = false) }
+        economyVm.updateTime(epoch)
     }
 
     fun resetLive() {
         val now = currentEpochMillis()
-        update { it.copy(currentTimeMillis = now, isTimeMachineLive = true) }
-        timezoneVm.updateTime(now)
+        update { it.copy(currentTimeMillis = now, isTimeMachineLive = true, isSimulationPlaying = false) }
+        economyVm.updateTime(now)
     }
 
-    fun selectHazard(hazard: NasaNaturalEvent?) = hazardVm.selectHazard(hazard)
+    fun toggleSimulationPlayPause() = update { it.copy(isSimulationPlaying = !it.isSimulationPlaying, isTimeMachineLive = false) }
 
-    fun selectIss(telemetry: ISSTelemetry) = issVm.selectIss(telemetry)
+    fun toggleSimulationDirection() = update { it.copy(isReversePlayback = !it.isReversePlayback) }
+
+    fun setSimulationSpeedMultiplier(mult: Float) = update { it.copy(timeMultiplier = mult) }
+
+    fun selectHazard(hazard: NasaNaturalEvent?) {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardVm.selectHazard(hazard)
+        }
+    }
+
+    fun selectIss(telemetry: ISSTelemetry) {
+        requireFeature("satellite", "Orbital Satellite Tracking") {
+            issVm.selectIss(telemetry)
+        }
+    }
 
     fun clearIss() = issVm.selectIss(null)
 
-    fun selectSatellite(sat: SatelliteTelemetry?) = satelliteVm.selectSatellite(sat)
+    fun selectSatellite(sat: SatelliteTelemetry?) {
+        requireFeature("satellite", "Orbital Satellite Tracking") {
+            satelliteVm.selectSatellite(sat)
+        }
+    }
+
+    fun toggleLockOnSatellite(enabled: Boolean? = null) {
+        requireFeature("satellite", "Orbital Satellite Tracking") {
+            satelliteVm.toggleLockOnFollow(enabled)
+        }
+    }
+
+    fun releaseSatelliteLockOn() = satelliteVm.releaseLockOn()
 
     fun calculateNextPassForCountry(
         lat: Double,
@@ -174,26 +274,34 @@ class ExplorerActions(
         countryA: Country,
         countryB: Country? = null,
     ) {
-        setDossierOpen(false)
-        comparisonVm.startComparison(countryA, countryB)
-        if (countryB != null) {
-            flyTo(countryB.center.lat, countryB.center.lng, 2.2f)
+        requireFeature("comparison", "Country Comparison & True Size") {
+            setDossierOpen(false)
+            comparisonVm.startComparison(countryA, countryB)
+            if (countryB != null) {
+                flyTo(countryB.center.lat, countryB.center.lng, 2.2f)
+            }
         }
     }
 
     fun setComparisonCountryA(country: Country) {
-        comparisonVm.setCountryA(country)
+        requireFeature("comparison", "Country Comparison & True Size") {
+            comparisonVm.setCountryA(country)
+        }
     }
 
     fun setComparisonCountryB(country: Country) {
-        comparisonVm.setCountryB(country)
-        flyTo(country.center.lat, country.center.lng, 2.2f)
+        requireFeature("comparison", "Country Comparison & True Size") {
+            comparisonVm.setCountryB(country)
+            flyTo(country.center.lat, country.center.lng, 2.2f)
+        }
     }
 
     fun swapComparisonCountries() {
-        comparisonVm.swapCountries()
-        features.comparison.countryA?.let { countryA ->
-            flyTo(countryA.center.lat, countryA.center.lng, 2.2f)
+        requireFeature("comparison", "Country Comparison & True Size") {
+            comparisonVm.swapCountries()
+            features.comparison.countryA?.let { countryA ->
+                flyTo(countryA.center.lat, countryA.center.lng, 2.2f)
+            }
         }
     }
 
@@ -205,35 +313,75 @@ class ExplorerActions(
         comparisonVm.setShowCountrySelectorForSlot(slot)
     }
 
-    fun toggleTimezoneLayer() = timezoneVm.toggleTimezoneLayer()
+    fun toggleTimezoneLayer() {
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.toggleTimezoneLayer()
+        }
+    }
 
-    fun toggleMarketCard() = timezoneVm.toggleMarketCard()
+    fun toggleMarketCard() {
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.toggleMarketCard()
+        }
+    }
 
-    fun toggleMarketLayer() = timezoneVm.toggleMarketLayer()
+    fun toggleMarketLayer() {
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.toggleMarketLayer()
+        }
+    }
 
-    fun selectMarket(market: FinancialMarket?) = timezoneVm.selectMarket(market)
+    fun selectMarket(market: FinancialMarket?) {
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.selectMarket(market)
+        }
+    }
 
     fun flyToMarket(market: FinancialMarket) {
-        timezoneVm.selectMarket(market)
-        flyTo(market.lat, market.lng, 2.2f)
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.selectMarket(market)
+            flyTo(market.lat, market.lng, 2.2f)
+        }
     }
 
-    fun selectMeridian(utcOffset: Int?) = timezoneVm.selectMeridian(utcOffset)
+    fun selectMeridian(utcOffset: Int?) {
+        requireFeature("economy", "World Bank & Stock Exchanges") {
+            economyVm.selectMeridian(utcOffset)
+        }
+    }
 
-    fun closeTimezoneSheet() = timezoneVm.setSheetOpen(false)
+    fun closeTimezoneSheet() = economyVm.setSheetOpen(false)
 
-    fun updateTimezoneTime(epochMillis: Long) = timezoneVm.updateTime(epochMillis)
+    fun updateTimezoneTime(epochMillis: Long) = economyVm.updateTime(epochMillis)
 
-    fun toggleTectonicLayer() = tectonicVm.toggleTectonicLayer()
+    fun toggleTectonicLayer() {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardsVm.toggleTectonicLayer()
+        }
+    }
 
-    fun selectPlate(plate: TectonicPlate?) = tectonicVm.selectPlate(plate)
+    fun selectPlate(plate: TectonicPlate?) {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardsVm.selectPlate(plate)
+        }
+    }
 
-    fun selectEarthquake(quake: Earthquake?) = tectonicVm.selectEarthquake(quake)
+    fun selectEarthquake(quake: Earthquake?) {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardsVm.selectEarthquake(quake)
+        }
+    }
 
     fun flyToEarthquake(quake: Earthquake) {
-        tectonicVm.selectEarthquake(quake)
-        flyTo(quake.lat, quake.lng, 2.2f)
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardsVm.selectEarthquake(quake)
+            flyTo(quake.lat, quake.lng, 2.2f)
+        }
     }
 
-    fun setMinMagnitude(mag: Double) = tectonicVm.setMinMagnitude(mag)
+    fun setMinMagnitude(mag: Double) {
+        requireFeature("hazards", "Geology Hazards & NASA Crisis") {
+            hazardsVm.setMinMagnitude(mag)
+        }
+    }
 }

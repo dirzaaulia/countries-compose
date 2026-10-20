@@ -11,6 +11,34 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/androidApp" />
             <option value="$PROJECT_DIR$/composeApp" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/dynamic-api" />
+            <option value="$PROJECT_DIR$/core/model" />
+            <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/dfm" />
+            <option value="$PROJECT_DIR$/dfm/comparison" />
+            <option value="$PROJECT_DIR$/dfm/deepspace" />
+            <option value="$PROJECT_DIR$/dfm/economy" />
+            <option value="$PROJECT_DIR$/dfm/flight" />
+            <option value="$PROJECT_DIR$/dfm/hazards" />
+            <option value="$PROJECT_DIR$/dfm/mars" />
+            <option value="$PROJECT_DIR$/dfm/moon" />
+            <option value="$PROJECT_DIR$/dfm/quiz" />
+            <option value="$PROJECT_DIR$/dfm/satellite" />
+            <option value="$PROJECT_DIR$/dfm/weather" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/comparison" />
+            <option value="$PROJECT_DIR$/feature/earth" />
+            <option value="$PROJECT_DIR$/feature/economy" />
+            <option value="$PROJECT_DIR$/feature/flight" />
+            <option value="$PROJECT_DIR$/feature/hazards" />
+            <option value="$PROJECT_DIR$/feature/mars" />
+            <option value="$PROJECT_DIR$/feature/moon" />
+            <option value="$PROJECT_DIR$/feature/quiz" />
+            <option value="$PROJECT_DIR$/feature/satellite" />
+            <option value="$PROJECT_DIR$/feature/solarsystem" />
+            <option value="$PROJECT_DIR$/feature/weather" />
             <option value="$PROJECT_DIR$/webApp" />
           </set>
         </option>

@@ -11,7 +11,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.dirzaaulia.countries.composeapp"
         compileSdk = 37
         minSdk = 29
@@ -25,22 +25,37 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor)
+            api(project(":core:model"))
+            api(project(":core:network"))
+            api(project(":core:ui"))
+            api(project(":core:dynamic-api"))
+            api(project(":feature:earth"))
+            api(project(":feature:moon"))
+            api(project(":feature:mars"))
+            api(project(":feature:solarsystem"))
+            api(project(":feature:weather"))
+            api(project(":feature:satellite"))
+            api(project(":feature:hazards"))
+            api(project(":feature:economy"))
+            api(project(":feature:quiz"))
+            api(project(":feature:flight"))
+            api(project(":feature:comparison"))
+            api(compose.runtime)
+            api(compose.foundation)
+            api(compose.material3)
+            api(compose.materialIconsExtended)
+            api(compose.ui)
+            api(compose.components.resources)
+            api(libs.kotlinx.serialization.json)
+            api(libs.ktor.client.core)
+            api(libs.ktor.client.content.negotiation)
+            api(libs.ktor.serialization.kotlinx.json)
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+            api(libs.androidx.lifecycle.viewmodel)
+            api(libs.coil.compose)
+            api(libs.coil.network.ktor)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -60,10 +75,6 @@ kotlin {
 
 dependencies {
     detektPlugins(libs.detekt.compose.rules)
-}
-
-compose.resources {
-    packageOfResClass = "com.dirzaaulia.countries.generated.resources"
 }
 
 spotless {

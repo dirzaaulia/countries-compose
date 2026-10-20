@@ -19,19 +19,19 @@ import com.dirzaaulia.countries.domain.tectonic.TectonicPlate
 import com.dirzaaulia.countries.ui.comparison.ComparisonUiState
 import com.dirzaaulia.countries.ui.comparison.CountryComparisonSheet
 import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
-import com.dirzaaulia.countries.ui.dossier.MeteorologyStationSheet
-import com.dirzaaulia.countries.ui.dossier.NasaCrisisMonitorSheet
-import com.dirzaaulia.countries.ui.dossier.WorldBankDashboardSheet
-import com.dirzaaulia.countries.ui.globe.SpaceWeatherHudCard
-import com.dirzaaulia.countries.ui.globe.SpaceWeatherUiState
+import com.dirzaaulia.countries.ui.economy.GlobalMarketSheet
+import com.dirzaaulia.countries.ui.economy.GlobalTimezoneSheet
+import com.dirzaaulia.countries.ui.economy.WorldBankDashboardSheet
+import com.dirzaaulia.countries.ui.hazards.EarthquakeDetailSheet
+import com.dirzaaulia.countries.ui.hazards.NasaCrisisMonitorSheet
+import com.dirzaaulia.countries.ui.hazards.TectonicPlateSheet
 import com.dirzaaulia.countries.ui.hud.CountrySearchSheet
 import com.dirzaaulia.countries.ui.hud.MissionLegendSheet
 import com.dirzaaulia.countries.ui.hud.PlanetaryTimeMachineSheet
 import com.dirzaaulia.countries.ui.solarsystem.SolarSystemView
-import com.dirzaaulia.countries.ui.tectonic.EarthquakeDetailSheet
-import com.dirzaaulia.countries.ui.tectonic.TectonicPlateSheet
-import com.dirzaaulia.countries.ui.timezone.GlobalMarketSheet
-import com.dirzaaulia.countries.ui.timezone.GlobalTimezoneSheet
+import com.dirzaaulia.countries.ui.weather.MeteorologyStationSheet
+import com.dirzaaulia.countries.ui.weather.SpaceWeatherHudCard
+import com.dirzaaulia.countries.ui.weather.SpaceWeatherUiState
 
 @Composable
 fun AppSheetsOverlay(
@@ -47,6 +47,15 @@ fun AppSheetsOverlay(
     showSearchSheet: Boolean,
     onCloseSearch: () -> Unit,
     onSelectSearchCountry: (Country) -> Unit,
+    showInfoSheet: Boolean = false,
+    onCloseInfo: () -> Unit = {},
+    showSettingsSheet: Boolean = false,
+    onCloseSettings: () -> Unit = {},
+    showOnboardingSheet: Boolean = false,
+    onCloseOnboarding: () -> Unit = {},
+    installManager: com.dirzaaulia.countries.core.dynamicapi.FeatureInstallManager =
+        com.dirzaaulia.countries.core.dynamicapi
+            .FeatureInstallManager(),
     showSpaceWeatherSheet: Boolean = false,
     onCloseSpaceWeather: () -> Unit = {},
     spaceWeatherState: SpaceWeatherUiState = SpaceWeatherUiState(),
@@ -60,6 +69,12 @@ fun AppSheetsOverlay(
     onEpochSelected: (Long) -> Unit,
     onResetTimeLive: () -> Unit,
     onCloseTimeMachine: () -> Unit,
+    isSimulationPlaying: Boolean = false,
+    timeMultiplier: Float = 1f,
+    isReversePlayback: Boolean = false,
+    onTogglePlayPause: () -> Unit = {},
+    onToggleDirection: () -> Unit = {},
+    onSelectSpeedMultiplier: (Float) -> Unit = {},
     selectedCountry: Country?,
     liveDetails: LiveCountryDetails?,
     globalHazards: List<NasaNaturalEvent>,
@@ -127,6 +142,26 @@ fun AppSheetsOverlay(
         )
     }
 
+    if (showInfoSheet && isSheetOpen) {
+        com.dirzaaulia.countries.ui.components.AppInfoSheet(
+            onClose = onCloseInfo,
+        )
+    }
+
+    if (showSettingsSheet && isSheetOpen) {
+        com.dirzaaulia.countries.ui.components.AppSettingsSheet(
+            installManager = installManager,
+            onClose = onCloseSettings,
+        )
+    }
+
+    if (showOnboardingSheet && isSheetOpen) {
+        com.dirzaaulia.countries.ui.components.AppOnboardingSheet(
+            installManager = installManager,
+            onCompleteOnboarding = onCloseOnboarding,
+        )
+    }
+
     if (showSpaceWeatherSheet && isSheetOpen) {
         SpaceWeatherHudCard(
             uiState = spaceWeatherState,
@@ -135,7 +170,7 @@ fun AppSheetsOverlay(
         )
     }
 
-    if (showTimeMachine && currentPage == 0 && isSheetOpen) {
+    if (showTimeMachine && isSheetOpen) {
         PlanetaryTimeMachineSheet(
             epochMillis = currentTimeMillis,
             isLive = isTimeMachineLive,
@@ -143,6 +178,12 @@ fun AppSheetsOverlay(
             onEpochSelected = onEpochSelected,
             onResetLive = onResetTimeLive,
             onClose = onCloseTimeMachine,
+            isSimulationPlaying = isSimulationPlaying,
+            timeMultiplier = timeMultiplier,
+            isReversePlayback = isReversePlayback,
+            onTogglePlayPause = onTogglePlayPause,
+            onToggleDirection = onToggleDirection,
+            onSelectSpeedMultiplier = onSelectSpeedMultiplier,
         )
     }
 

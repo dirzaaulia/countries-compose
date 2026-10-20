@@ -189,7 +189,7 @@ Enforce strict boundaries across architectural layers:
 ## 🛡️ 10. CRITICAL ARCHITECTURAL INVARIANTS (DO NOT BREAK)
 
 ### 1. Dual-Layer Hybrid Rendering Engine
-- **Underneath**: Hardware-accelerated 3D sphere rendered via OpenGL ES on Android (`EarthGLRenderer.kt` in `androidMain`) and WebGL on Web (`PlanetWebGLRenderer.kt` in `wasmJsMain`).
+- **Underneath**: Hardware-accelerated 3D sphere rendered via OpenGL ES on Android (`PlanetGLRenderer.kt` in `androidMain`) and WebGL on Web (`PlanetWebGLRenderer.kt` in `wasmJsMain`).
 - **On Top**: Jetpack Compose `Canvas` overlay in `commonMain` (`GlobeView.kt`) projecting dynamic vector data: country borders, ISS orbital tracks, flight paths, Apollo landing sites, and weather particles.
 - **DO NOT** replace the 3D OpenGL/WebGL sphere with 2D Canvas drawing, and do not remove 2D Canvas overlays. Synchronize layers via shared camera state (`rotationX`, `rotationY`, `zoom`).
 
@@ -238,3 +238,4 @@ Enforce strict boundaries across architectural layers:
   - `com.dirzaaulia.countries.util.*`: Pure multiplatform formatters and helpers.
 - **Expect/Actual Package Parity**:
   - Every `expect` in `commonMain` and its corresponding `actual` in `androidMain` and `wasmJsMain` **MUST reside in the exact same package** (`com.dirzaaulia.countries.platform`) and matching folder structure.
+\n## 11. Testing & Screenshot Pipeline\nSee [Testing & Screenshots](docs/testing.md) for instructions on running automated Play Store screenshot generation via Compose instrumented tests.

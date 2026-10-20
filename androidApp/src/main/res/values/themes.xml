@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Countries" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Countries" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#050508</item>
+    </style>
     <style name="Theme.Countries.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#03060C</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- Background color of the splash screen matching FootballClips -->
+        <item name="windowSplashScreenBackground">#050508</item>
+        <!-- Animated vector icon to be displayed -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_splash_terra</item>
+        <item name="windowSplashScreenAnimationDuration">800</item>
+        <!-- Post-splash theme -->
         <item name="postSplashScreenTheme">@style/Theme.Countries</item>
     </style>
 </resources>

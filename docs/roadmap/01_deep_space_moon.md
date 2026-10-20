@@ -12,7 +12,7 @@
 **Status: ✅ DONE**
 - Dedicated `MoonView.kt` — HorizontalPager page 1.
 - NASA LRO equirectangular texture (2048×1024, 2:1 ratio) — no black patches.
-- `EarthGLRenderer` reused with `isMoonMode = true`.
+- `PlanetGLRenderer` reused with `isMoonMode = true`.
 - Phase terminator via elongation $\to$ sun direction vector (`AstronomyMath.calculateMoonInfo()`).
 - Apollo 11–17 landing site beacons with tap-to-inspect mission dossier card.
 - Touch drag (pitch/yaw) + pinch-to-zoom.
@@ -57,23 +57,24 @@
 - Balanced touch drag sensitivity across Earth, Moon, and Mars (0.38f) to eliminate sluggish Earth rotation.
 
 ## 1.8 Universal Planetary Dossier & Atmospheric Specs Sheet (Task 87 - P1)
-**Status: ⏳ PLANNED**
-- M3 `AdaptiveInfoSheet` presenting comprehensive physical dimensions, surface gravity, escape velocity, axial tilt, and solar flux.
-- Atmospheric composition breakdown with segmented bar visualization.
-- Extreme diurnal temperature ranges and environmental telemetry.
+**Status: ✅ DONE**
+- M3 `AdaptiveInfoSheet` (`PlanetaryDossierSheet.kt`) presenting comprehensive physical dimensions, surface gravity, escape velocity, axial tilt, and solar flux across all 9 celestial bodies.
+- Atmospheric composition breakdown with segmented bar visualization (`PlanetaryAtmosphereBar.kt`).
+- Extreme diurnal temperature ranges thermal gauge (`PlanetaryTemperatureGauge.kt`) and scientific highlights.
+- Accessible directly from both `GenericPlanetView` and `SolarSystemView`.
 
 ## 1.9 Planetary Surface Features & Historical Mission Landing Sites (Task 88 - P1)
-**Status: ⏳ PLANNED**
+**Status: ✅ DONE**
 - 2D-on-3D projection beacons for surface features (Caloris, Maxwell Montes, Great Red Spot, Olympus Mons).
 - Historic robotic exploration markers (Venera 9-14, MESSENGER, Voyager 2, Galileo, Cassini plunge).
 - Tap-to-inspect mission dossiers with launch dates, instruments, and scientific discoveries.
 
 ## 1.10 Natural Satellites & Major Moons System (Task 89 - P1)
-**Status: ⏳ PLANNED**
+**Status: ✅ DONE**
 - Major moons orbital carousel and mini-dossiers: Jupiter's Galilean moons (Io, Europa, Ganymede, Callisto), Saturn's moons (Titan, Enceladus), Neptune's Triton.
 - Orbital scale, tidal heating, and ocean world / astrobiology habitability ratings.
 
 ## 1.11 Saturn 3D Ring System & Interior Core Visualizer (Tasks 90 & 91 - P2)
-**Status: ⏳ PLANNED**
+**Status: ⏳ IN PROGRESS (Task 91 DONE)**
 - Hardware-accelerated 3D planar ring geometry for Saturn with Cassini Division, Encke Gap, and ring thickness/composition telemetry.
 - Interactive X-Ray cross-section HUD displaying internal layers (core, mantle, liquid metallic hydrogen, atmosphere).
