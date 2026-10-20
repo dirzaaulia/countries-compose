@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dirzaaulia.countries.domain.astronomy.EclipseFeed
 import com.dirzaaulia.countries.domain.astronomy.MoonInfo
+import com.dirzaaulia.countries.ui.components.MinimalistCloseButton
 import com.dirzaaulia.countries.ui.components.SemanticIcon
 import com.dirzaaulia.countries.ui.components.UiSymbol
 
@@ -41,6 +42,7 @@ fun MoonScrubberHud(
     onDaySelected: (Int) -> Unit,
     onShowDetailSheet: () -> Unit,
     modifier: Modifier = Modifier,
+    onClose: () -> Unit = {},
 ) {
     val todayDate = remember(currentYear, todayDayOfYear) { formatIsoDate(currentYear, todayDayOfYear) }
     val nextEclipse = remember(eclipseFeed, todayDate) { eclipseFeed?.events?.firstOrNull { it.date >= todayDate } }
@@ -76,6 +78,7 @@ fun MoonScrubberHud(
                 totalDaysInYear = totalDaysInYear,
                 onDaySelected = onDaySelected,
                 onShowDetailSheet = onShowDetailSheet,
+                onClose = onClose,
             )
 
             if (!isEclipseFeedLoading) {
@@ -127,6 +130,7 @@ private fun MoonHudHeader(
     onDaySelected: (Int) -> Unit,
     onShowDetailSheet: () -> Unit,
     modifier: Modifier = Modifier,
+    onClose: () -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -171,11 +175,17 @@ private fun MoonHudHeader(
             }
         }
 
-        MoonDayControls(
-            selectedDayOfYear = selectedDayOfYear,
-            todayDayOfYear = todayDayOfYear,
-            totalDaysInYear = totalDaysInYear,
-            onDaySelected = onDaySelected,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MoonDayControls(
+                selectedDayOfYear = selectedDayOfYear,
+                todayDayOfYear = todayDayOfYear,
+                totalDaysInYear = totalDaysInYear,
+                onDaySelected = onDaySelected,
+            )
+            MinimalistCloseButton(onClick = onClose)
+        }
     }
 }

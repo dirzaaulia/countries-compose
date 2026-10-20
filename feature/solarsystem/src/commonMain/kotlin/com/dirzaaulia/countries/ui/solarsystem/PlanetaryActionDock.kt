@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+import com.dirzaaulia.countries.ui.components.SemanticIcon
+import com.dirzaaulia.countries.ui.components.UiSymbol
+
 @Composable
 fun PlanetaryActionDock(
     showTimeMachine: Boolean,
@@ -28,12 +31,35 @@ fun PlanetaryActionDock(
     hasInterior: Boolean = false,
     onOpenInterior: () -> Unit = {},
     onOpenSettings: () -> Unit = {},
+    showLunarPhase: Boolean = false,
+    onToggleLunarPhase: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.End,
     ) {
+        // Lunar Phase & Calendar Button (Moon View)
+        if (onToggleLunarPhase != null) {
+            Surface(
+                onClick = onToggleLunarPhase,
+                shape = CircleShape,
+                color = if (showLunarPhase) Color(0xFFFFD54F).copy(alpha = 0.3f) else Color(0xF209111E),
+                border = BorderStroke(1.dp, if (showLunarPhase) Color(0xFFFFD54F) else Color(0x5538BDF8)),
+                shadowElevation = 8.dp,
+                modifier = Modifier.size(42.dp),
+            ) {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    SemanticIcon(
+                        symbol = UiSymbol.Moon,
+                        contentDescription = "Lunar Phase & Calendar",
+                        tint = if (showLunarPhase) Color(0xFFFFD54F) else Color.White,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
+            }
+        }
+
         // Time Machine Button
         Surface(
             onClick = onToggleTimeMachine,

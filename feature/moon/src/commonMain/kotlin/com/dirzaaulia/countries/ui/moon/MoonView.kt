@@ -63,6 +63,7 @@ fun MoonView(
     val scope = rememberCoroutineScope()
     val moonViewState = rememberMoonViewState(moonInfo)
     var inputMode by remember { mutableStateOf(if (isWasmTarget) AppInputMode.MOUSE_KEYBOARD else AppInputMode.TOUCH) }
+    var showLunarPhaseScrubber by remember { mutableStateOf(false) }
 
     val isFarSideActive =
         remember(state.rotationY) {
@@ -89,6 +90,7 @@ fun MoonView(
 
     com.dirzaaulia.countries.platform.PlatformBackHandler {
         when {
+            showLunarPhaseScrubber -> showLunarPhaseScrubber = false
             moonViewState.selectedLandmark != null -> moonViewState.selectedLandmark = null
             moonViewState.showMoonDetailSheet -> moonViewState.showMoonDetailSheet = false
             else -> onBackToSolarSystem()
@@ -195,6 +197,8 @@ fun MoonView(
                 onToggleTimeMachine = onToggleTimeMachine,
                 onOpenDossier = { moonViewState.showMoonDetailSheet = true },
                 onOpenSettings = onOpenSettings,
+                showLunarPhase = showLunarPhaseScrubber,
+                onToggleLunarPhase = { showLunarPhaseScrubber = !showLunarPhaseScrubber },
                 modifier =
                     Modifier
                         .align(Alignment.BottomEnd)
@@ -226,7 +230,7 @@ fun MoonView(
             },
         )
 
-        if (moonViewState.selectedLandmark == null && !showTimeMachine) {
+        if (showLunarPhaseScrubber && moonViewState.selectedLandmark == null && !showTimeMachine) {
             MoonScrubberHud(
                 displayedMoonInfo = moonViewState.displayedMoonInfo,
                 currentYear = moonViewState.currentYear,
@@ -237,6 +241,7 @@ fun MoonView(
                 isEclipseFeedLoading = isEclipseFeedLoading,
                 onDaySelected = { moonViewState.selectedDayOfYear = it },
                 onShowDetailSheet = { moonViewState.showMoonDetailSheet = true },
+                onClose = { showLunarPhaseScrubber = false },
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
